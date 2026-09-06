@@ -1,6 +1,6 @@
 # EnsuredXDS — shared UI library
 
-`@ensured/xds` is the common React design system for EnsuredUI and future microfrontends. It owns reusable components, charts, theme providers, design tokens, CSS and their Storybook stories. I
+`@ensured/xds` is the common React design system for EnsuredUI and future microfrontends. It owns reusable components, charts, theme providers, design tokens, CSS and their Storybook stories.
 ## Develop
 
 ```sh
