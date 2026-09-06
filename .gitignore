@@ -1,0 +1,24 @@
+# Dependencies, build output and local tools
+node_modules/
+dist/
+coverage/
+storybook-static/
+test-results/
+.vscode/
+.DS_Store
+*.log
+*.tsbuildinfo
+
+# Credentials and local environment; only the canonical template is versioned
+.env*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Downloaded datasets/models and runtime-uploaded private documents
+worldcities.csv
+simplemaps_worldcities_*
+*.traineddata
+storage/registration-documents/
+storage/uploads/
