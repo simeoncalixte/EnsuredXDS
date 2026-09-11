@@ -50,3 +50,5 @@ export * from './components/ToggleSwitch.js'
 export * from './components/ThemeToggle.js'
 export * from './components/Typography.js'
 export * from './components/ValidationMessage.js'
+
+export * from './components/ScrollableNavigation.js'
