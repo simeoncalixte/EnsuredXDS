@@ -52,3 +52,5 @@ export { default as StatCard } from './StatCard.js'
 export { default as HeroHeader } from './HeroHeader.js'
 export { default as ThemeToggle } from './ThemeToggle.js'
 export { default as SelectionCard } from './SelectionCard.js'
+
+export * from './ScrollableNavigation.js'
