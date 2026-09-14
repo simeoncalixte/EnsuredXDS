@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "library": "@ensured/xds",
+  "components": [
+    {
+      "id": "xds.input",
+      "version": 1,
+      "export": "@ensured/xds/components/Input",
+      "fieldTypes": [
+        "text",
+        "date"
+      ],
+      "description": "Single-line text or date"
+    },
+    {
+      "id": "xds.number",
+      "version": 1,
+      "export": "@ensured/xds/components/NumberInput",
+      "fieldTypes": [
+        "number",
+        "integer",
+        "currency",
+        "percentage"
+      ],
+      "description": "Numeric input with units and constraints"
+    },
+    {
+      "id": "xds.select",
+      "version": 1,
+      "export": "@ensured/xds/components/Select",
+      "fieldTypes": [
+        "select",
+        "boolean",
+        "radio"
+      ],
+      "description": "Single choice from a picklist"
+    },
+    {
+      "id": "xds.checkbox",
+      "version": 1,
+      "export": "@ensured/xds/components/Checkbox",
+      "fieldTypes": [
+        "multiselect"
+      ],
+      "description": "Multiple choices from a picklist"
+    },
+    {
+      "id": "xds.textarea",
+      "version": 1,
+      "export": "@ensured/xds/components/Textarea",
+      "fieldTypes": [
+        "textarea"
+      ],
+      "description": "Multi-line text"
+    }
+  ]
+}

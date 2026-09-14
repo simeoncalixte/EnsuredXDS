@@ -6,7 +6,8 @@
   "description": "Shared React components and themes for Ensured applications",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "schema"
   ],
   "sideEffects": [
     "**/*.css"
@@ -39,7 +40,8 @@
       "types": "./dist/components/index.d.ts",
       "import": "./dist/components/index.js"
     },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./schema/component-registry.json": "./schema/component-registry.json"
   },
   "scripts": {
     "build": "node scripts/clean.mjs && tsc -p tsconfig.build.json && node scripts/copy-css.mjs",
@@ -48,7 +50,9 @@
     "prepack": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "npm run build && node --test test/package.test.mjs"
+    "test": "npm run build && node --test test/package.test.mjs",
+    "sync:schema-registry": "node scripts/sync-schema-registry.mjs",
+    "check:schema-registry": "node scripts/sync-schema-registry.mjs --check"
   },
   "peerDependencies": {
     "react": "^19.0.0",

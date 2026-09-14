@@ -41,3 +41,12 @@ npm run build-storybook
 The package test installs the actual packed artifact into an isolated consumer and builds an application through the exported API. It also rejects source dependencies that escape the library directory. It uses the local npm cache; run `npm ci` first.
 
 Typography uses Inter, Manrope and Material Symbols where available. The host owns font loading (or self-hosting); the library does not fetch fonts. Standalone Storybook loads them through its preview head.
+
+### Schema component registry
+
+`@ensured/xds/schema/component-registry.json` exposes approved form controls,
+versions, field types, descriptions, and public component exports. The API and
+workbench consume reviewed copies of this metadata; generated schemas cannot
+import arbitrary components. Use `npm run sync:schema-registry` to update both
+sibling consumers and `npm run check:schema-registry` to verify parity. Add a
+workbench adapter before extending supported types or introducing new controls.
