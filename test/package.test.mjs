@@ -30,6 +30,8 @@ test('a packed artifact builds in a separate consumer with exported components, 
   try {
     const packed = JSON.parse(execFileSync('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', temp], { cwd: root, encoding: 'utf8' }))[0];
     assert.ok(packed.files.some(f => f.path === 'dist/index.d.ts'));
+    assert.ok(packed.files.some(f => f.path === 'schema/component-registry.json'));
+    assert.equal(JSON.parse(readFileSync(join(root,'package.json'),'utf8')).exports['./schema/component-registry.json'],'./schema/component-registry.json');
     assert.ok(packed.files.some(f => f.path === 'dist/colors.css'));
     assert.ok(!packed.files.some(f => f.path.includes('.stories.') || f.path.includes('node_modules/')));
     const deps = { '@ensured/xds': `file:${join(temp, packed.filename)}` };
