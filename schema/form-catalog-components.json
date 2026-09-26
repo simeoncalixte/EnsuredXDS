@@ -1,0 +1,8 @@
+[
+  "xds.input",
+  "xds.number",
+  "xds.select",
+  "xds.checkbox",
+  "xds.textarea",
+  "xds.requested-coverage"
+]

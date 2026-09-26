@@ -52,3 +52,6 @@ export * from './components/Typography.js'
 export * from './components/ValidationMessage.js'
 
 export * from './components/ScrollableNavigation.js'
+
+export * from './components/CurrencyInput.js'
+export * from './components/RequestedCoverageEditor.js'

@@ -44,9 +44,76 @@ Typography uses Inter, Manrope and Material Symbols where available. The host ow
 
 ### Schema component registry
 
-`@ensured/xds/schema/component-registry.json` exposes approved form controls,
-versions, field types, descriptions, and public component exports. The API and
-workbench consume reviewed copies of this metadata; generated schemas cannot
-import arbitrary components. Use `npm run sync:schema-registry` to update both
-sibling consumers and `npm run check:schema-registry` to verify parity. Add a
-workbench adapter before extending supported types or introducing new controls.
+`@ensured/xds/schema/component-registry.json` exposes form controls and UI section
+components, versions, field types, descriptions, and public component exports.
+The generated manifest includes the entire registry. The older API, workbench,
+and pipeline shared `xds-components.json` catalogs contain only the IDs in
+`schema/form-catalog-components.json`, which have existing workbench adapters.
+Use `npm run sync:schema-registry` to update those three copies and
+`npm run check:schema-registry` to verify parity. Add a workbench adapter before
+adding an ID to that legacy catalog allowlist. Registering a component in the
+generated manifest makes its definition available to `UiRefiner`; it does not
+implement runtime rendering or data binding for it.
+
+### Generate prop schemas from TypeScript
+
+```sh
+npm run generate:component-manifest
+# Also copy the result into the sibling pipeline shared package:
+npm run generate:component-manifest -- --sync
+# Check both generated copies without writing:
+npm run generate:component-manifest -- --sync --check
+npm run test:component-manifest
+```
+
+`scripts/component-manifest.mjs` exports `createPropsExtractor(tsconfigPath)`
+and `generateComponentManifest({ tsconfigPath, componentsDirectory, registry })`.
+The extractor returns a function accepting a source file and export name
+(default: `default`). It uses the TypeScript compiler without importing or
+executing the React components. It handles inherited props, primitives, literal
+unions, null, arrays, nested objects, and string-keyed records. Optional props
+remain optional; supported required props appear in JSON Schema `required`.
+
+The generator enriches all 53 registered components and writes
+`schema/component-manifest.generated.json`. IDs, versions, descriptions,
+bindings, and data schemas still come from the reviewed registry. Existing
+`propsSchema` constraints are retained through `allOf`; TypeScript cannot infer
+business rules such as maximum text length. An `exportName` registry entry can
+select a named component export. New component approval remains explicit.
+
+Coverage includes inputs, buttons, cards, dialogs, collapsible sections, headings, named
+typography exports, validation/status displays, form steps/tabs, grids, tables,
+charts, documents, checklists, and activity displays. New entries use `kind` to
+distinguish `field`, `action`, `layout`, `display`, and `navigation`; the existing
+subject-owned coverage editor remains `composite`. Empty `fieldTypes` means the
+component is not mapped to a scalar field type (uploads also need a dedicated
+binding). Application shell navigation (`Navigation`, `SideNavBar`, its
+`SideBarNav` alias, `ScrollableNavigation`) and `ThemeToggle` are excluded.
+
+`excludedProps` reports callbacks, renderer-owned props (`value`, `children`,
+`ref`, styles, etc.), and unsupported types. The renderer must supply any
+required excluded props. Unconstrained `any`/`unknown`, recursive objects,
+tuples, class instances, and non-JSON union branches need explicit handling;
+the generator does not silently weaken them. Component prop unions are emitted
+as separate `anyOf` schemas, preserving each branch's requirements and allowed
+properties; excluded props include a zero-based `branch` index. Generic data
+props remain excluded when their type cannot be resolved. Styled typography
+uses its concrete base signature rather than its polymorphic overload;
+`as` and `forwardedAs` remain renderer-owned. Other overloaded signatures are
+rejected. React node props (including section titles typed as `ReactNode`) and
+objects containing callbacks still require renderer-supplied content. Runtime
+default values are not extracted. Serializable HTML props are included, but
+serializability alone is not approval to expose every prop to an agent.
+
+The generated file is separate from the existing `xds-components.json` contract.
+After `--sync`, a pipeline service can load the generated catalog with:
+
+```ts
+import manifest from '@ensured/pipeline-shared/formCatalog/xds-components.generated.json';
+const components = manifest.components;
+```
+
+Pass the relevant component schemas to the agent and validate its selected props
+with AJV. Keep `excludedProps` for diagnostics rather than adding them to prompts.
+Build the shared package after syncing when consuming its published `dist` files;
+the workspace Jest mappings already resolve the JSON from source.
