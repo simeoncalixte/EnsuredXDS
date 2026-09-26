@@ -17,6 +17,8 @@ export type RequestedCoverageEditorProps = {
   allowRename?: boolean
   allowReorder?: boolean
   termsMaxLength?: number
+  readOnly?: boolean
+  renderInput?: (index: number, key: string, label: string, control: React.ReactNode) => React.ReactNode
   renderAdditionalFields?: (coverage: RequestedCoverage, onChange: (coverage: RequestedCoverage) => void) => React.ReactNode
 }
 const Panel = styled.section`
@@ -41,7 +43,8 @@ const Footer = styled.button`width: 100%; padding: 16px; border: 1px dashed ${co
 const Moves = styled.div`display: flex; gap: 2px; align-items: center;`
 const monetary = (value: unknown) => value == null || value === '' || typeof value === 'number' || (typeof value === 'string' && /^\d+(\.\d+)?$/.test(value))
 
-export function RequestedCoverageEditor({ value, onChange, title = 'Requested Coverage', description = 'Add the coverage types and limits you are requesting for this property or risk. Include any special terms or notes.', allowRename = true, allowReorder = true, termsMaxLength = 500, renderAdditionalFields }: RequestedCoverageEditorProps) {
+export function RequestedCoverageEditor({ value, onChange, title = 'Requested Coverage', description = 'Add the coverage types and limits you are requesting for this property or risk. Include any special terms or notes.', allowRename = true, allowReorder = true, termsMaxLength = 500, renderAdditionalFields, readOnly = false, renderInput }: RequestedCoverageEditorProps) {
+  const decorate = (index: number, key: string, label: string, control: React.ReactNode) => renderInput?.(index,key,label,control) ?? control
   const dragIndex = useRef<number | null>(null)
   const [announcement, announce] = useState('')
   const update = (index: number, row: RequestedCoverage) => onChange(value.map((v, i) => i === index ? row : v))
@@ -52,7 +55,7 @@ export function RequestedCoverageEditor({ value, onChange, title = 'Requested Co
   }
   const add = () => onChange([...value, { coverageId: crypto.randomUUID(), name: 'New Coverage', selected: true, limit: null, deductible: null, terms: '' }])
   return <Panel aria-label={title}>
-    <Header><div><h3>{title}</h3><p>{description}</p></div><Count>{value.length} {value.length === 1 ? 'coverage' : 'coverages'}</Count><Button type="button" onClick={add}>＋ Add Coverage</Button></Header>
+    <Header><div><h3>{title}</h3><p>{description}</p></div><Count>{value.length} {value.length === 1 ? 'coverage' : 'coverages'}</Count><Button type="button" disabled={readOnly} onClick={add}>＋ Add Coverage</Button></Header>
     {allowRename && <p>You can rename each requested coverage title to match the submission.</p>}
     <span role="status" style={{position:'absolute',width:1,height:1,overflow:'hidden',clipPath:'inset(50%)'}}>{announcement}</span>
     {value.map((row, index) => {
@@ -65,22 +68,22 @@ export function RequestedCoverageEditor({ value, onChange, title = 'Requested Co
             <Button type="button" size="sm" variant="ghost" aria-label={`Move ${name} down`} disabled={index === value.length - 1} onClick={() => move(index, index + 1)}>↓</Button>
           </Moves>}
           <NumberBadge>{index + 1}</NumberBadge>
-          <Name>{allowRename ? <input aria-label={`Coverage ${index + 1} title`} value={row.name ?? ''} onChange={e => update(index, {...row, name:e.target.value})} /> : <strong>{name}</strong>}{row.description && <p>{row.description}</p>}</Name>
-          <Button type="button" variant="ghost" tone="danger" aria-label={`Remove ${name}`} onClick={() => onChange(value.filter((_, i) => i !== index))}>Remove</Button>
+          <Name>{decorate(index, 'name', `${name} name`, allowRename ? <input aria-label={`Coverage ${index + 1} title`} value={row.name ?? ''} readOnly={readOnly} onChange={e => update(index, {...row, name:e.target.value})} /> : <strong>{name}</strong>)}{row.description && <p>{row.description}</p>}</Name>
+          <Button type="button" variant="ghost" tone="danger" aria-label={`Remove ${name}`} disabled={readOnly} onClick={() => onChange(value.filter((_, i) => i !== index))}>Remove</Button>
         </CardHeader>
         <Grid>
-          <Field><span>Requested</span><Control as="select" aria-label={`${name} requested`} value={row.selected === false ? 'no' : 'yes'} onChange={e => update(index, {...row, selected:e.target.value === 'yes'})}><option value="yes">Yes</option><option value="no">No</option></Control></Field>
+          <Field><span>Requested</span>{decorate(index, 'selected', `${name} requested`, <Control as="select" disabled={readOnly} aria-label={`${name} requested`} value={row.selected === false ? 'no' : 'yes'} onChange={e => update(index, {...row, selected:e.target.value === 'yes'})}><option value="yes">Yes</option><option value="no">No</option></Control>)}</Field>
           {(['limit', 'deductible'] as const).map(key => {
             const label = key === 'limit' ? 'Limit' : 'Deductible'
             const currencyKey = key === 'limit' ? 'limitCurrencyCode' : 'deductibleCurrencyCode'
-            return <Field key={key}><span>{label}</span>{monetary(row[key]) ? <CurrencyInput label={`${name} ${label.toLowerCase()}`} value={row[key]} currencyCode={row[currencyKey] ?? row.currencyCode ?? ''} onChange={amount => update(index, {...row, [key]:amount})} onCurrencyChange={code => update(index, {...row, [currencyKey]:code})} /> : typeof row[key] === 'string' ? <Control aria-label={`${name} ${label.toLowerCase()} terms`} value={row[key]} onChange={e => update(index, {...row, [key]:e.target.value})} /> : <p>See additional parameters below.</p>}</Field>
+            return <Field key={key}><span>{label}</span>{monetary(row[key]) ? <CurrencyInput disabled={readOnly} renderInput={renderInput ? (input,control)=>decorate(index,input==='amount'?key:currencyKey,`${name} ${label.toLowerCase()} ${input==='amount'?'amount':'currency'}`,control) : undefined} label={`${name} ${label.toLowerCase()}`} value={row[key]} currencyCode={row[currencyKey] ?? row.currencyCode ?? ''} onChange={amount => update(index, {...row, [key]:amount})} onCurrencyChange={code => update(index, {...row, [currencyKey]:code})} /> : typeof row[key] === 'string' ? decorate(index,key,`${name} ${label.toLowerCase()} terms`, <Control readOnly={readOnly} aria-label={`${name} ${label.toLowerCase()} terms`} value={row[key]} onChange={e => update(index, {...row, [key]:e.target.value})} />) : <p>See additional parameters below.</p>}</Field>
           })}
         </Grid>
-        <Field><span>Additional Terms (Optional)</span><Terms rows={1} aria-label={`${name} additional terms`} value={row.terms ?? ''} maxLength={termsMaxLength} onChange={e => update(index, {...row, terms:e.target.value})} /><p style={{textAlign:'right'}}>{(row.terms ?? '').length}/{termsMaxLength}</p></Field>
+        <Field><span>Additional Terms (Optional)</span>{decorate(index,'terms',`${name} additional terms`, <Terms readOnly={readOnly} rows={1} aria-label={`${name} additional terms`} value={row.terms ?? ''} maxLength={termsMaxLength} onChange={e => update(index, {...row, terms:e.target.value})} />)}<p style={{textAlign:'right'}}>{(row.terms ?? '').length}/{termsMaxLength}</p></Field>
         {renderAdditionalFields?.(row, next => update(index, next))}
       </Card>
     })}
-    <Footer type="button" onClick={add}>⊕ Add Another Coverage<p>Add additional coverage types to your request</p></Footer>
+    <Footer type="button" disabled={readOnly} onClick={add}>⊕ Add Another Coverage<p>Add additional coverage types to your request</p></Footer>
   </Panel>
 }
 export default RequestedCoverageEditor

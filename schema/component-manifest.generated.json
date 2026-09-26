@@ -781,6 +781,12 @@
               }
             ]
           },
+          "editDisabled": {
+            "type": "boolean"
+          },
+          "editLabel": {
+            "type": "string"
+          },
           "enterKeyHint": {
             "anyOf": [
               {
@@ -1435,6 +1441,11 @@
         },
         {
           "name": "onDurationChangeCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onEdit",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
         },
@@ -9911,6 +9922,9 @@
           "description": {
             "type": "string"
           },
+          "readOnly": {
+            "type": "boolean"
+          },
           "termsMaxLength": {
             "type": "number"
           },
@@ -10012,6 +10026,11 @@
           "reason": "Function or constructor supplied by the UI"
         },
         {
+          "name": "renderInput",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
           "name": "value",
           "required": true,
           "reason": "Owned by the UI renderer/data binding"
@@ -10060,6 +10079,11 @@
         {
           "name": "onCurrencyChange",
           "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "renderInput",
+          "required": false,
           "reason": "Function or constructor supplied by the UI"
         },
         {
