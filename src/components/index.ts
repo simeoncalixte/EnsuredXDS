@@ -54,3 +54,6 @@ export { default as ThemeToggle } from './ThemeToggle.js'
 export { default as SelectionCard } from './SelectionCard.js'
 
 export * from './ScrollableNavigation.js'
+
+export * from './CurrencyInput.js'
+export * from './RequestedCoverageEditor.js'

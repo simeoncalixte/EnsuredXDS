@@ -52,6 +52,501 @@
         "textarea"
       ],
       "description": "Multi-line text"
+    },
+    {
+      "id": "xds.requested-coverage",
+      "version": 1,
+      "export": "@ensured/xds/components/RequestedCoverageEditor",
+      "kind": "composite",
+      "fieldTypes": [],
+      "binding": "coverages",
+      "scope": "subject",
+      "description": "Requested coverage cards with editable titles, requested selection, independent limit and deductible currencies, additional terms, add/remove and reorder. Owns the entire subject coverages collection; do not generate duplicate coverage fields.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "allowRename": {
+            "type": "boolean"
+          },
+          "allowReorder": {
+            "type": "boolean"
+          },
+          "termsMaxLength": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5000
+          }
+        }
+      },
+      "dataSchema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "coverageId": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "selected": {
+              "type": "boolean"
+            },
+            "description": {
+              "type": "string"
+            },
+            "limit": {
+              "type": [
+                "number",
+                "string",
+                "object",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "deductible": {
+              "type": [
+                "number",
+                "string",
+                "object",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "currencyCode": {
+              "type": "string",
+              "pattern": "^([A-Z]{3})?$"
+            },
+            "limitCurrencyCode": {
+              "type": "string",
+              "pattern": "^([A-Z]{3})?$"
+            },
+            "deductibleCurrencyCode": {
+              "type": "string",
+              "pattern": "^([A-Z]{3})?$"
+            },
+            "terms": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "xds.currency",
+      "version": 1,
+      "export": "@ensured/xds/components/CurrencyInput",
+      "kind": "field",
+      "fieldTypes": [
+        "currency"
+      ],
+      "description": "Amount with a separate currency selector; the renderer binds amount and currency independently."
+    },
+    {
+      "id": "xds.range",
+      "version": 1,
+      "export": "@ensured/xds/components/Range",
+      "kind": "field",
+      "fieldTypes": [
+        "number",
+        "integer",
+        "percentage"
+      ],
+      "description": "Numeric slider with minimum, maximum and step."
+    },
+    {
+      "id": "xds.toggle-switch",
+      "version": 1,
+      "export": "@ensured/xds/components/ToggleSwitch",
+      "kind": "field",
+      "fieldTypes": [
+        "boolean"
+      ],
+      "description": "Boolean on/off switch."
+    },
+    {
+      "id": "xds.segmented-switch",
+      "version": 1,
+      "export": "@ensured/xds/components/SegmentedSwitch",
+      "kind": "field",
+      "fieldTypes": [
+        "select",
+        "radio",
+        "boolean"
+      ],
+      "description": "Single choice using string options with an index value, or label/value options with a string value."
+    },
+    {
+      "id": "xds.masked-secret-input",
+      "version": 1,
+      "export": "@ensured/xds/components/MaskedSecretInput",
+      "kind": "field",
+      "fieldTypes": [
+        "text"
+      ],
+      "description": "Secret text input with a visibility control."
+    },
+    {
+      "id": "xds.file-dropzone",
+      "version": 1,
+      "export": "@ensured/xds/components/FileDropzone",
+      "kind": "field",
+      "fieldTypes": [],
+      "description": "File upload dropzone; files and upload callbacks are supplied by the renderer."
+    },
+    {
+      "id": "xds.selection-card",
+      "version": 1,
+      "export": "@ensured/xds/components/SelectionCard",
+      "kind": "field",
+      "fieldTypes": [
+        "select",
+        "radio",
+        "boolean"
+      ],
+      "description": "Selectable card with title, description content and selection callbacks."
+    },
+    {
+      "id": "xds.form-field",
+      "version": 1,
+      "export": "@ensured/xds/components/FormField",
+      "kind": "field",
+      "fieldTypes": [
+        "text",
+        "date",
+        "number",
+        "integer"
+      ],
+      "description": "Labeled HTML input with an inline validation error."
+    },
+    {
+      "id": "xds.button",
+      "version": 1,
+      "export": "@ensured/xds/components/Button",
+      "kind": "action",
+      "fieldTypes": [],
+      "description": "Form action button; the renderer supplies content and action handlers."
+    },
+    {
+      "id": "xds.card",
+      "version": 1,
+      "export": "@ensured/xds/components/Card",
+      "kind": "layout",
+      "fieldTypes": [],
+      "description": "Card container for fields and section content."
+    },
+    {
+      "id": "xds.collapsible-section",
+      "version": 1,
+      "export": "@ensured/xds/components/CollapsibleSection",
+      "kind": "layout",
+      "fieldTypes": [],
+      "description": "Collapsible section with a heading, description and count; the renderer supplies content and toggle behavior."
+    },
+    {
+      "id": "xds.section-header",
+      "version": 1,
+      "export": "@ensured/xds/components/SectionHeader",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Section heading with subtitle and optional action."
+    },
+    {
+      "id": "xds.hero-header",
+      "version": 1,
+      "export": "@ensured/xds/components/HeroHeader",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Page or section title with subtitle and tag."
+    },
+    {
+      "id": "xds.validation-message",
+      "version": 1,
+      "export": "@ensured/xds/components/ValidationMessage",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Accessible validation message; the renderer supplies message content."
+    },
+    {
+      "id": "xds.badge",
+      "version": 1,
+      "export": "@ensured/xds/components/Badge",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Compact status badge."
+    },
+    {
+      "id": "xds.confidence-badge",
+      "version": 1,
+      "export": "@ensured/xds/components/ConfidenceBadge",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Confidence classification badge."
+    },
+    {
+      "id": "xds.progress-bar",
+      "version": 1,
+      "export": "@ensured/xds/components/ProgressBar",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Progress indicator with label and status."
+    },
+    {
+      "id": "xds.stepper",
+      "version": 1,
+      "export": "@ensured/xds/components/Stepper",
+      "kind": "navigation",
+      "fieldTypes": [],
+      "description": "Step indicator for a multi-step form or section flow."
+    },
+    {
+      "id": "xds.sub-navigation",
+      "version": 1,
+      "export": "@ensured/xds/components/SubNavigation",
+      "kind": "navigation",
+      "fieldTypes": [],
+      "description": "Tabs for navigating form sections."
+    },
+    {
+      "id": "xds.breadcrumb",
+      "version": 1,
+      "export": "@ensured/xds/components/Breadcrumb",
+      "kind": "navigation",
+      "fieldTypes": [],
+      "description": "Breadcrumb trail within a form or section flow."
+    },
+    {
+      "id": "xds.document-row",
+      "version": 1,
+      "export": "@ensured/xds/components/DocumentRow",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Document summary with status and renderer-provided actions."
+    },
+    {
+      "id": "xds.info-card",
+      "version": 1,
+      "export": "@ensured/xds/components/InfoCard",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Informational card with optional actions and content."
+    },
+    {
+      "id": "xds.metric-card",
+      "version": 1,
+      "export": "@ensured/xds/components/MetricCard",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Metric summary card."
+    },
+    {
+      "id": "xds.stat-card",
+      "version": 1,
+      "export": "@ensured/xds/components/StatCard",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Statistic summary card."
+    },
+    {
+      "id": "xds.bento-step",
+      "version": 1,
+      "export": "@ensured/xds/components/BentoStep",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Numbered explanatory step with title and body."
+    },
+    {
+      "id": "xds.icon-grid",
+      "version": 1,
+      "export": "@ensured/xds/components/IconGrid",
+      "kind": "layout",
+      "fieldTypes": [],
+      "description": "Grid of labeled icons supplied by the renderer."
+    },
+    {
+      "id": "xds.connected-grid",
+      "version": 1,
+      "export": "@ensured/xds/components/ConnectedGrid",
+      "kind": "layout",
+      "fieldTypes": [],
+      "description": "Configurable row/column layout with renderer-provided cells."
+    },
+    {
+      "id": "xds.connected-grid-workspace",
+      "version": 1,
+      "export": "@ensured/xds/components/ConnectedGridWorkspace",
+      "kind": "layout",
+      "fieldTypes": [],
+      "description": "Interactive grid workspace with renderer-provided component templates."
+    },
+    {
+      "id": "xds.data-table",
+      "version": 1,
+      "export": "@ensured/xds/components/DataTable",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Tabular section data using legacy rows or generic columns and data; generic data and render functions require renderer bindings."
+    },
+    {
+      "id": "xds.activity-feed",
+      "version": 1,
+      "export": "@ensured/xds/components/ActivityFeed",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Activity history in a section."
+    },
+    {
+      "id": "xds.avatar-stack",
+      "version": 1,
+      "export": "@ensured/xds/components/AvatarStack",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Compact list of participant avatars."
+    },
+    {
+      "id": "xds.onboarding-checklist",
+      "version": 1,
+      "export": "@ensured/xds/components/OnboardingChecklist",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Checklist of tasks and completion state."
+    },
+    {
+      "id": "xds.deal-card",
+      "version": 1,
+      "export": "@ensured/xds/components/DealCard",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Deal summary card for a section."
+    },
+    {
+      "id": "xds.kanban-board",
+      "version": 1,
+      "export": "@ensured/xds/components/KanbanBoard",
+      "kind": "layout",
+      "fieldTypes": [],
+      "description": "Workflow board with stages and items; move handlers and custom cards are renderer-provided."
+    },
+    {
+      "id": "xds.gauge-chart",
+      "version": 1,
+      "export": "@ensured/xds/components/GaugeChart",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Gauge for a bound numeric value and thresholds."
+    },
+    {
+      "id": "xds.heatmap-chart",
+      "version": 1,
+      "export": "@ensured/xds/components/HeatmapChart",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Heatmap of section data."
+    },
+    {
+      "id": "xds.multi-line-chart",
+      "version": 1,
+      "export": "@ensured/xds/components/MultiLineChart",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Multiple line series for section data."
+    },
+    {
+      "id": "xds.time-series-chart",
+      "version": 1,
+      "export": "@ensured/xds/components/TimeSeriesChart",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Time series chart for section data."
+    },
+    {
+      "id": "xds.stacked-bar-chart",
+      "version": 1,
+      "export": "@ensured/xds/components/StackedBarChart",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Stacked bar series for section data."
+    },
+    {
+      "id": "xds.page-title",
+      "version": 1,
+      "export": "@ensured/xds/components/Typography",
+      "exportName": "PageTitle",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Page heading. The renderer supplies children."
+    },
+    {
+      "id": "xds.page-subtitle",
+      "version": 1,
+      "export": "@ensured/xds/components/Typography",
+      "exportName": "PageSubtitle",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Supporting page description. The renderer supplies children."
+    },
+    {
+      "id": "xds.small-text",
+      "version": 1,
+      "export": "@ensured/xds/components/Typography",
+      "exportName": "SmallText",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Helper or caption text. The renderer supplies children."
+    },
+    {
+      "id": "xds.section-small-title",
+      "version": 1,
+      "export": "@ensured/xds/components/Typography",
+      "exportName": "SectionSmallTitle",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Small section heading. The renderer supplies children."
+    },
+    {
+      "id": "xds.bullet-list",
+      "version": 1,
+      "export": "@ensured/xds/components/Typography",
+      "exportName": "BulletList",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Bulleted list container. The renderer supplies children."
+    },
+    {
+      "id": "xds.list-item",
+      "version": 1,
+      "export": "@ensured/xds/components/Typography",
+      "exportName": "ListItem",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "List item content. The renderer supplies children."
+    },
+    {
+      "id": "xds.error-text",
+      "version": 1,
+      "export": "@ensured/xds/components/Typography",
+      "exportName": "ErrorText",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Inline error text. The renderer supplies children."
+    },
+    {
+      "id": "xds.modal",
+      "version": 1,
+      "export": "@ensured/xds/components/Modal",
+      "kind": "layout",
+      "fieldTypes": [],
+      "description": "Dialog for a form or section; the renderer supplies body, footer and close behavior."
     }
   ]
 }

@@ -41,7 +41,8 @@
       "import": "./dist/components/index.js"
     },
     "./styles.css": "./dist/styles.css",
-    "./schema/component-registry.json": "./schema/component-registry.json"
+    "./schema/component-registry.json": "./schema/component-registry.json",
+    "./schema/component-manifest.generated.json": "./schema/component-manifest.generated.json"
   },
   "scripts": {
     "build": "node scripts/clean.mjs && tsc -p tsconfig.build.json && node scripts/copy-css.mjs",
@@ -50,9 +51,11 @@
     "prepack": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "npm run build && node --test test/package.test.mjs",
+    "test": "npm run build && node --test test/package.test.mjs test/component-manifest.test.mjs",
     "sync:schema-registry": "node scripts/sync-schema-registry.mjs",
-    "check:schema-registry": "node scripts/sync-schema-registry.mjs --check"
+    "check:schema-registry": "node scripts/sync-schema-registry.mjs --check",
+    "generate:component-manifest": "node scripts/generate-component-manifest.mjs",
+    "test:component-manifest": "node --test test/component-manifest.test.mjs"
   },
   "peerDependencies": {
     "react": "^19.0.0",
