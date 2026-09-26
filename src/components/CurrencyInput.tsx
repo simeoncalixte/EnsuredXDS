@@ -9,6 +9,7 @@ export type CurrencyInputProps = {
   currencyCode?: string
   currencies?: string[]
   disabled?: boolean
+  renderInput?: (key: 'amount' | 'currencyCode', control: React.ReactNode) => React.ReactNode
   onChange: (value: number | null) => void
   onCurrencyChange: (currency: string) => void
 }
@@ -24,16 +25,17 @@ const Group = styled.div`
 const format = (value: CurrencyInputProps['value']) => value == null || value === '' ? '' : Number(value).toLocaleString('en-US', { maximumFractionDigits: 10 })
 
 /** Commas are display-only; the controlled value remains numeric (or null when cleared). */
-export function CurrencyInput({ label, value, currencyCode = '', currencies = coverageCurrencies, disabled, onChange, onCurrencyChange }: CurrencyInputProps) {
+export function CurrencyInput({ label, value, currencyCode = '', currencies = coverageCurrencies, disabled, onChange, onCurrencyChange, renderInput }: CurrencyInputProps) {
   const [focused, setFocused] = useState(false)
   const [draft, setDraft] = useState(format(value))
   useEffect(() => { if (!focused) setDraft(format(value)) }, [value, focused])
+  const decorate = (key: 'amount' | 'currencyCode', control: React.ReactNode) => renderInput ? <div style={{display:'flex',minWidth:0,flex:key==='amount'?1:undefined}}>{renderInput(key,control)}</div> : control
   return <Group>
-    <select aria-label={`${label} currency`} value={currencyCode} disabled={disabled} onChange={e => onCurrencyChange(e.target.value)}>
+    {decorate('currencyCode', <select aria-label={`${label} currency`} value={currencyCode} disabled={disabled} onChange={e => onCurrencyChange(e.target.value)}>
       <option value="">Currency</option>
       {[...new Set([...currencies, ...(currencyCode ? [currencyCode] : [])])].map(code => <option key={code} value={code}>{code}</option>)}
-    </select>
-    <input aria-label={`${label} amount`} inputMode="decimal" placeholder="Amount" value={draft} disabled={disabled}
+    </select>)}
+    {decorate('amount', <input aria-label={`${label} amount`} inputMode="decimal" placeholder="Amount" value={draft} disabled={disabled}
       onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
       onChange={e => {
         const raw = e.target.value.replace(/,/g, '')
@@ -41,7 +43,7 @@ export function CurrencyInput({ label, value, currencyCode = '', currencies = co
         const amount = raw === '' || raw === '.' ? null : Number(raw)
         if (amount !== null && !Number.isFinite(amount)) return
         setDraft(e.target.value); onChange(amount)
-      }} />
+      }} />)}
   </Group>
 }
 export default CurrencyInput
