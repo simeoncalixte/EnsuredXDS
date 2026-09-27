@@ -32,7 +32,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: npm-package
-          path: *.tgz
+          path: '*.tgz'
           if-no-files-found: error
   publish:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -52,6 +52,6 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: '@simeoncalixte'
       - name: Publish the verified artifact
-        run: npm publish package/*.tgz --ignore-scripts --registry=https://npm.pkg.github.com
+        run: npm publish ./package/*.tgz --ignore-scripts --registry=https://npm.pkg.github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
