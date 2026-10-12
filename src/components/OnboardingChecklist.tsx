@@ -1,12 +1,12 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors, withAlpha } from '../colors.js'
-import { radii, spacing, typography } from '../tokens.js'
-import ProgressBar from './ProgressBar.js'
-import Card from './Card.js'
-import Badge from './Badge.js'
-import Button from './Button.js'
-import Checkbox from './Checkbox.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors, withAlpha } from '../colors.js';
+import { radii, spacing, typography } from '../tokens.js';
+import ProgressBar from './ProgressBar.js';
+import Card from './Card.js';
+import Badge from './Badge.js';
+import Button from './Button.js';
+import Checkbox from './Checkbox.js';
 
 /**
  * A single step in an onboarding checklist.
@@ -14,44 +14,44 @@ import Checkbox from './Checkbox.js'
  * - `current`: the next actionable step (its action button is the primary CTA).
  * - `todo`: a future step (its action button is a quiet/secondary affordance).
  */
-export type OnboardingStepStatus = 'complete' | 'current' | 'todo'
+export type OnboardingStepStatus = 'complete' | 'current' | 'todo';
 
 export type OnboardingStep = {
-  id: string
-  title: string
-  description?: string
-  status: OnboardingStepStatus
-  actionLabel?: string
-  onAction?: () => void
-}
+  id: string;
+  title: string;
+  description?: string;
+  status: OnboardingStepStatus;
+  actionLabel?: string;
+  onAction?: () => void;
+};
 
 export type OnboardingChecklistProps = {
-  title?: string
-  subtitle?: string
-  steps: OnboardingStep[]
+  title?: string;
+  subtitle?: string;
+  steps: OnboardingStep[];
   /** Optional dismiss affordance; the header X only renders when provided. */
-  onDismiss?: () => void
-  className?: string
-}
+  onDismiss?: () => void;
+  className?: string;
+};
 
 const Root = styled(Card)`
   display: flex;
   flex-direction: column;
   gap: ${spacing.md}px;
-`
+`;
 
 const Header = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: ${spacing.md}px;
-`
+`;
 
 const HeaderText = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${spacing.xs}px;
-`
+`;
 
 const Title = styled.h3`
   margin: 0;
@@ -59,14 +59,14 @@ const Title = styled.h3`
   font-size: ${typography.sizes.lg}px;
   font-weight: ${typography.weights.semibold};
   color: ${colors.onSurfaceStrong};
-`
+`;
 
 const Subtitle = styled.p`
   margin: 0;
   font-family: ${typography.fontFamily};
   font-size: ${typography.sizes.sm}px;
   color: ${colors.onSurfaceVariant};
-`
+`;
 
 const DismissButton = styled.button`
   flex: 0 0 auto;
@@ -92,7 +92,7 @@ const DismissButton = styled.button`
     outline: none;
     box-shadow: 0 0 0 2px ${withAlpha(colors.primary, 0.4)};
   }
-`
+`;
 
 const StepList = styled.ul`
   list-style: none;
@@ -101,13 +101,13 @@ const StepList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: ${spacing.sm}px;
-`
+`;
 
 const StepRow = styled.li`
   display: flex;
   align-items: center;
   gap: ${spacing.md}px;
-`
+`;
 
 const StepCard = styled(Card)<{ $current: boolean }>`
   flex: 1 1 auto;
@@ -115,11 +115,8 @@ const StepCard = styled(Card)<{ $current: boolean }>`
   align-items: center;
   gap: ${spacing.md}px;
   padding: ${spacing.md}px;
-  ${({ $current }) =>
-    $current
-      ? `box-shadow: 0 0 0 1px ${withAlpha(colors.primary, 0.45)};`
-      : ''}
-`
+  ${({ $current }) => ($current ? `box-shadow: 0 0 0 1px ${withAlpha(colors.primary, 0.45)};` : '')}
+`;
 
 const StepBody = styled.div`
   flex: 1 1 auto;
@@ -127,36 +124,39 @@ const StepBody = styled.div`
   flex-direction: column;
   gap: ${spacing.xs}px;
   min-width: 0;
-`
+`;
 
 const StepTitleRow = styled.div`
   display: flex;
   align-items: center;
   gap: ${spacing.sm}px;
-`
+`;
 
 const StepTitle = styled.span`
   font-family: ${typography.fontFamily};
   font-size: ${typography.sizes.sm}px;
   font-weight: ${typography.weights.semibold};
   color: ${colors.onSurface};
-`
+`;
 
 const StepDescription = styled.span`
   font-family: ${typography.fontFamily};
   font-size: ${typography.sizes.xs}px;
   color: ${colors.onSurfaceVariant};
-`
+`;
 
 const ActionSlot = styled.div`
   flex: 0 0 auto;
-`
+`;
 
-const statusBadge: Record<OnboardingStepStatus, { variant: 'success' | 'info' | 'neutral'; label: string }> = {
+const statusBadge: Record<
+  OnboardingStepStatus,
+  { variant: 'success' | 'info' | 'neutral'; label: string }
+> = {
   complete: { variant: 'success', label: 'Done' },
   current: { variant: 'info', label: 'Next up' },
   todo: { variant: 'neutral', label: 'To do' },
-}
+};
 
 /**
  * Pure, props-only onboarding checklist surface.
@@ -173,8 +173,8 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
   onDismiss,
   className,
 }) => {
-  const total = steps.length
-  const completed = steps.filter((s) => s.status === 'complete').length
+  const total = steps.length;
+  const completed = steps.filter((s) => s.status === 'complete').length;
 
   return (
     <Root variant="high" className={className}>
@@ -184,7 +184,11 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
           {subtitle != null && <Subtitle>{subtitle}</Subtitle>}
         </HeaderText>
         {onDismiss && (
-          <DismissButton type="button" aria-label="Dismiss onboarding checklist" onClick={onDismiss}>
+          <DismissButton
+            type="button"
+            aria-label="Dismiss onboarding checklist"
+            onClick={onDismiss}
+          >
             ×
           </DismissButton>
         )}
@@ -199,9 +203,9 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
 
       <StepList>
         {steps.map((step) => {
-          const badge = statusBadge[step.status]
-          const isComplete = step.status === 'complete'
-          const isCurrent = step.status === 'current'
+          const badge = statusBadge[step.status];
+          const isComplete = step.status === 'complete';
+          const isCurrent = step.status === 'current';
           return (
             <StepRow key={step.id}>
               <Checkbox
@@ -217,7 +221,9 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                       {badge.label}
                     </Badge>
                   </StepTitleRow>
-                  {step.description != null && <StepDescription>{step.description}</StepDescription>}
+                  {step.description != null && (
+                    <StepDescription>{step.description}</StepDescription>
+                  )}
                 </StepBody>
                 {step.actionLabel && step.onAction && !isComplete && (
                   <ActionSlot>
@@ -233,11 +239,11 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                 )}
               </StepCard>
             </StepRow>
-          )
+          );
         })}
       </StepList>
     </Root>
-  )
-}
+  );
+};
 
-export default OnboardingChecklist
+export default OnboardingChecklist;

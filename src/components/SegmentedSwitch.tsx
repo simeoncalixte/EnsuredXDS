@@ -1,12 +1,12 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors } from '../colors.js'
-import { radii, spacing, typography } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors } from '../colors.js';
+import { radii, spacing, typography } from '../tokens.js';
 
 /**
  * An option for the SegmentedSwitch in object form.
  */
-export type SegmentedSwitchOption = { label: string; value: string }
+export type SegmentedSwitchOption = { label: string; value: string };
 
 /**
  * Legacy prop shape (kept for backward compatibility):
@@ -15,14 +15,14 @@ export type SegmentedSwitchOption = { label: string; value: string }
  *   - onChange: (index: number) => void
  */
 type LegacySegmentedSwitchProps = {
-  options: string[]
+  options: string[];
   /** Index of the active option. Defaults to 0. */
-  value?: number
+  value?: number;
   /** Called with the index of the clicked option. */
-  onChange?: (index: number) => void
+  onChange?: (index: number) => void;
   /** Accessible label for the group. */
-  'aria-label'?: string
-}
+  'aria-label'?: string;
+};
 
 /**
  * Enhanced prop shape:
@@ -31,28 +31,26 @@ type LegacySegmentedSwitchProps = {
  *   - onChange: (value: string) => void
  */
 type OptionSegmentedSwitchProps = {
-  options: SegmentedSwitchOption[]
+  options: SegmentedSwitchOption[];
   /** The `value` of the active option. */
-  value?: string
+  value?: string;
   /** Called with the `value` of the clicked option. */
-  onChange?: (value: string) => void
+  onChange?: (value: string) => void;
   /** Accessible label for the group. */
-  'aria-label'?: string
-}
+  'aria-label'?: string;
+};
 
-export type XdsSegmentedSwitchProps =
-  | LegacySegmentedSwitchProps
-  | OptionSegmentedSwitchProps
+export type XdsSegmentedSwitchProps = LegacySegmentedSwitchProps | OptionSegmentedSwitchProps;
 
 // Alias kept for convenience / discoverability.
-export type SegmentedSwitchProps = XdsSegmentedSwitchProps
+export type SegmentedSwitchProps = XdsSegmentedSwitchProps;
 
 const Root = styled.div`
   display: flex;
   background: ${colors.surfaceContainer};
   border-radius: 10px;
   padding: ${spacing.xs}px;
-`
+`;
 
 const Segment = styled.button<{ $active: boolean }>`
   flex: 1;
@@ -63,53 +61,46 @@ const Segment = styled.button<{ $active: boolean }>`
   border-radius: ${radii.md}px;
   border: none;
   cursor: pointer;
-  background: ${({ $active }) =>
-    $active ? colors.surfaceContainerHigh : 'transparent'};
-  color: ${({ $active }) =>
-    $active ? colors.primary : colors.onSurfaceVariant};
-`
+  background: ${({ $active }) => ($active ? colors.surfaceContainerHigh : 'transparent')};
+  color: ${({ $active }) => ($active ? colors.primary : colors.onSurfaceVariant)};
+`;
 
-type NormalizedOption = { key: string; label: string; active: boolean; index: number }
+type NormalizedOption = { key: string; label: string; active: boolean; index: number };
 
 function isOptionObjects(
-  options: string[] | SegmentedSwitchOption[]
+  options: string[] | SegmentedSwitchOption[],
 ): options is SegmentedSwitchOption[] {
-  return options.length > 0 && typeof options[0] === 'object' && options[0] !== null
+  return options.length > 0 && typeof options[0] === 'object' && options[0] !== null;
 }
 
 export const SegmentedSwitch: React.FC<XdsSegmentedSwitchProps> = (props) => {
-  const { options, value, onChange } = props
-  const ariaLabel = props['aria-label']
+  const { options, value, onChange } = props;
+  const ariaLabel = props['aria-label'];
 
-  const objectMode = isOptionObjects(options)
+  const objectMode = isOptionObjects(options);
 
   const normalized: NormalizedOption[] = objectMode
     ? (options as SegmentedSwitchOption[]).map((opt, index) => ({
         key: opt.value,
         label: opt.label,
         active: value === undefined ? index === 0 : opt.value === value,
-        index
+        index,
       }))
     : (options as string[]).map((label, index) => ({
         key: `${label}-${index}`,
         label,
-        active:
-          value === undefined
-            ? index === 0
-            : index === (value as number),
-        index
-      }))
+        active: value === undefined ? index === 0 : index === (value as number),
+        index,
+      }));
 
   const handleClick = (opt: NormalizedOption) => {
-    if (!onChange) return
+    if (!onChange) return;
     if (objectMode) {
-      ;(onChange as (value: string) => void)(
-        (options as SegmentedSwitchOption[])[opt.index].value
-      )
+      (onChange as (value: string) => void)((options as SegmentedSwitchOption[])[opt.index].value);
     } else {
-      ;(onChange as (index: number) => void)(opt.index)
+      (onChange as (index: number) => void)(opt.index);
     }
-  }
+  };
 
   return (
     <Root role="group" aria-label={ariaLabel}>
@@ -125,7 +116,7 @@ export const SegmentedSwitch: React.FC<XdsSegmentedSwitchProps> = (props) => {
         </Segment>
       ))}
     </Root>
-  )
-}
+  );
+};
 
-export default SegmentedSwitch
+export default SegmentedSwitch;

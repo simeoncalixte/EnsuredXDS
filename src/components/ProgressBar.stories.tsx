@@ -1,26 +1,26 @@
-import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, userEvent, expect } from '@storybook/test'
-import ProgressBar from './ProgressBar.js'
+import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, expect } from '@storybook/test';
+import ProgressBar from './ProgressBar.js';
 
 const meta: Meta<typeof ProgressBar> = {
   title: 'XDS/ProgressBar',
   component: ProgressBar,
   args: {
-    value: 82.4
-  }
-}
-export default meta
+    value: 82.4,
+  },
+};
+export default meta;
 
-type Story = StoryObj<typeof ProgressBar>
+type Story = StoryObj<typeof ProgressBar>;
 
 export const Default: Story = {
-  args: { value: 82.4 }
-}
+  args: { value: 82.4 },
+};
 
 export const WithLabel: Story = {
-  args: { value: 60, label: 'Allocation', tone: 'primary' }
-}
+  args: { value: 60, label: 'Allocation', tone: 'primary' },
+};
 
 export const Tones: Story = {
   render: () => (
@@ -31,21 +31,21 @@ export const Tones: Story = {
       <ProgressBar value={70} tone="neutral" label="neutral" />
       <ProgressBar value={70} tone="danger" label="danger" />
     </div>
-  )
-}
+  ),
+};
 
 export const Small: Story = {
-  args: { value: 45, size: 'sm', tone: 'tertiary' }
-}
+  args: { value: 45, size: 'sm', tone: 'tertiary' },
+};
 
 export const ValueAndMax: Story = {
-  args: { value: 30, max: 60, label: '30 / 60' }
-}
+  args: { value: 30, max: 60, label: '30 / 60' },
+};
 
 // Interaction test: drives progress with a button and asserts aria-valuenow updates.
 export const Interactive: Story = {
-  render: () => {
-    const [value, setValue] = useState(20)
+  render: function Render() {
+    const [value, setValue] = useState(20);
     return (
       <div style={{ width: 320 }}>
         <ProgressBar value={value} label="Loading" tone="primary" />
@@ -53,18 +53,18 @@ export const Interactive: Story = {
           advance
         </button>
       </div>
-    )
+    );
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const bar = canvas.getByRole('progressbar')
-    await expect(bar).toHaveAttribute('aria-valuenow', '20')
+    const canvas = within(canvasElement);
+    const bar = canvas.getByRole('progressbar');
+    await expect(bar).toHaveAttribute('aria-valuenow', '20');
 
-    const button = canvas.getByRole('button', { name: 'advance' })
-    await userEvent.click(button)
-    await expect(bar).toHaveAttribute('aria-valuenow', '50')
+    const button = canvas.getByRole('button', { name: 'advance' });
+    await userEvent.click(button);
+    await expect(bar).toHaveAttribute('aria-valuenow', '50');
 
-    await userEvent.click(button)
-    await expect(bar).toHaveAttribute('aria-valuenow', '80')
-  }
-}
+    await userEvent.click(button);
+    await expect(bar).toHaveAttribute('aria-valuenow', '80');
+  },
+};

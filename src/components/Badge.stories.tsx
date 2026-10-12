@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, userEvent, expect } from '@storybook/test'
-import Badge, { type XdsBadgeVariant } from './Badge.js'
+import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, expect } from '@storybook/test';
+import Badge, { type XdsBadgeVariant } from './Badge.js';
 
 const meta: Meta<typeof Badge> = {
   title: 'XDS/Badge',
@@ -9,17 +9,17 @@ const meta: Meta<typeof Badge> = {
   args: {
     variant: 'surface',
     dot: false,
-    children: 'Badge'
-  }
-}
+    children: 'Badge',
+  },
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof Badge>
+type Story = StoryObj<typeof Badge>;
 
 const Row: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>{children}</div>
-)
+);
 
 // Original (backward-compatible) variants.
 export const Variants: Story = {
@@ -30,8 +30,8 @@ export const Variants: Story = {
       <Badge variant="secondary">Claim</Badge>
       <Badge variant="tertiary">Historical</Badge>
     </Row>
-  )
-}
+  ),
+};
 
 // New additive semantic tones.
 export const Tones: Story = {
@@ -43,28 +43,34 @@ export const Tones: Story = {
       <Badge variant="info">Info</Badge>
       <Badge variant="neutral">Neutral</Badge>
     </Row>
-  )
-}
+  ),
+};
 
 // Leading dot variant.
 export const WithDot: Story = {
   render: () => (
     <Row>
-      <Badge variant="success" dot>Active</Badge>
-      <Badge variant="danger" dot>Failed</Badge>
-      <Badge variant="info" dot>Syncing</Badge>
+      <Badge variant="success" dot>
+        Active
+      </Badge>
+      <Badge variant="danger" dot>
+        Failed
+      </Badge>
+      <Badge variant="info" dot>
+        Syncing
+      </Badge>
     </Row>
-  )
-}
+  ),
+};
 
 // Interaction test: a controlled wrapper cycles tone + toggles the dot,
 // and we assert the resulting DOM reflects the change.
-const tones: XdsBadgeVariant[] = ['success', 'warning', 'danger', 'info', 'neutral']
+const tones: XdsBadgeVariant[] = ['success', 'warning', 'danger', 'info', 'neutral'];
 
 const InteractiveBadge: React.FC = () => {
-  const [index, setIndex] = useState(0)
-  const [dot, setDot] = useState(false)
-  const variant = tones[index]
+  const [index, setIndex] = useState(0);
+  const [dot, setDot] = useState(false);
+  const variant = tones[index];
   return (
     <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
       <span data-testid="badge-host">
@@ -79,24 +85,24 @@ const InteractiveBadge: React.FC = () => {
         Toggle dot
       </button>
     </div>
-  )
-}
+  );
+};
 
 export const Interactive: Story = {
   render: () => <InteractiveBadge />,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
-    const host = canvas.getByTestId('badge-host')
-    expect(host).toHaveTextContent(/success/i)
+    const host = canvas.getByTestId('badge-host');
+    expect(host).toHaveTextContent(/success/i);
 
     // Cycle the tone forward.
-    await userEvent.click(canvas.getByRole('button', { name: 'Next tone' }))
-    expect(host).toHaveTextContent(/warning/i)
+    await userEvent.click(canvas.getByRole('button', { name: 'Next tone' }));
+    expect(host).toHaveTextContent(/warning/i);
 
     // Toggle the leading dot on; an aria-hidden dot span should appear.
-    expect(host.querySelector('[aria-hidden="true"]')).toBeNull()
-    await userEvent.click(canvas.getByRole('button', { name: 'Toggle dot' }))
-    expect(host.querySelector('[aria-hidden="true"]')).not.toBeNull()
-  }
-}
+    expect(host.querySelector('[aria-hidden="true"]')).toBeNull();
+    await userEvent.click(canvas.getByRole('button', { name: 'Toggle dot' }));
+    expect(host.querySelector('[aria-hidden="true"]')).not.toBeNull();
+  },
+};

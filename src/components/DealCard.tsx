@@ -1,7 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors } from '../colors.js'
-import { radii } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors } from '../colors.js';
+import { radii } from '../tokens.js';
 
 const Card = styled.div`
   display: grid;
@@ -12,13 +12,13 @@ const Card = styled.div`
   background: ${colors.surfaceContainer};
   border-radius: ${radii.md}px;
   border: 1px solid ${colors.outlineVariant};
-`
+`;
 
 const TitleGroup = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
-`
+`;
 
 const IconBox = styled.div`
   width: 48px;
@@ -28,46 +28,46 @@ const IconBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 
 const IconGlyph = styled.span`
   color: ${colors.secondary};
-`
+`;
 
 const Title = styled.div`
   font-weight: 700;
   color: ${colors.text.primary};
-`
+`;
 
 const Subtitle = styled.div`
   font-size: 12px;
   color: ${colors.onSurfaceVariant};
-`
+`;
 
 const Yield = styled.div`
   color: ${colors.secondary};
   font-family: ui-monospace, Menlo, monospace;
-`
+`;
 
 const Capacity = styled.div`
   color: ${colors.text.primary};
-`
+`;
 
 const RiskBars = styled.div`
   display: flex;
   gap: 6px;
-`
+`;
 
 const RiskBar = styled.div<{ $active: boolean }>`
   height: 8px;
   width: 24px;
   border-radius: 6px;
   background: ${({ $active }) => ($active ? colors.primary : colors.outlineVariant)};
-`
+`;
 
 const Actions = styled.div`
   text-align: right;
-`
+`;
 
 const InvestButton = styled.button`
   padding: 6px 10px;
@@ -77,16 +77,16 @@ const InvestButton = styled.button`
   border-radius: 6px;
   font-weight: 700;
   cursor: pointer;
-`
+`;
 
 export type DealCardProps = {
-  title: string
-  subtitle?: string
-  yieldText?: string
-  capacity?: string
-  riskLevel?: number
-  onInvest?: () => void
-}
+  title: string;
+  subtitle?: string;
+  yieldText?: string;
+  capacity?: string;
+  riskLevel?: number;
+  onInvest?: () => void;
+};
 
 export const DealCard: React.FC<DealCardProps> = ({
   title,
@@ -94,9 +94,9 @@ export const DealCard: React.FC<DealCardProps> = ({
   yieldText,
   capacity,
   riskLevel = 2,
-  onInvest
+  onInvest,
 }) => {
-  const bars = Array.from({ length: 3 }).map((_, i) => ({ active: i < riskLevel }))
+  const bars = Array.from({ length: 3 }).map((_, i) => ({ active: i < riskLevel }));
 
   return (
     <Card>
@@ -126,7 +126,7 @@ export const DealCard: React.FC<DealCardProps> = ({
         </InvestButton>
       </Actions>
     </Card>
-  )
-}
+  );
+};
 
-export default DealCard
+export default DealCard;

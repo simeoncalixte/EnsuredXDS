@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, userEvent, expect } from '@storybook/test'
-import Card from './Card.js'
+import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, expect } from '@storybook/test';
+import Card from './Card.js';
 
 const meta: Meta<typeof Card> = {
   title: 'XDS/Card',
@@ -11,27 +11,27 @@ const meta: Meta<typeof Card> = {
     variant: 'surface',
     tone: 'none',
     interactive: false,
-    children: 'Card content'
+    children: 'Card content',
   },
   argTypes: {
     variant: {
       control: 'select',
-      options: ['surface', 'elevated', 'outline', 'low', 'high']
+      options: ['surface', 'elevated', 'outline', 'low', 'high'],
     },
     tone: {
       control: 'select',
-      options: ['none', 'success', 'warning', 'danger', 'info']
-    }
-  }
-}
+      options: ['none', 'success', 'warning', 'danger', 'info'],
+    },
+  },
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof Card>
+type Story = StoryObj<typeof Card>;
 
 const Row: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>{children}</div>
-)
+);
 
 // Default (backward-compatible) surface and the original `elevated` prop.
 export const Basic: Story = {
@@ -46,8 +46,8 @@ export const Basic: Story = {
         <p>Original `elevated` raised surface.</p>
       </Card>
     </Row>
-  )
-}
+  ),
+};
 
 // Additive surface variants.
 export const Variants: Story = {
@@ -59,8 +59,8 @@ export const Variants: Story = {
       <Card variant="low">Low</Card>
       <Card variant="high">High</Card>
     </Row>
-  )
-}
+  ),
+};
 
 // Additive semantic accent borders.
 export const Tones: Story = {
@@ -71,13 +71,13 @@ export const Tones: Story = {
       <Card tone="danger">Danger</Card>
       <Card tone="info">Info</Card>
     </Row>
-  )
-}
+  ),
+};
 
 // Interactive (clickable) card. A controlled counter wrapper lets the play test
 // observe that onClick fires for both pointer and keyboard activation.
 const ClickableCard: React.FC = () => {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
   return (
     <div>
       <Card interactive onClick={() => setCount((c) => c + 1)} aria-label="Clickable card">
@@ -88,28 +88,28 @@ const ClickableCard: React.FC = () => {
         Activations: <span data-testid="count">{count}</span>
       </p>
     </div>
-  )
-}
+  );
+};
 
 export const Interactive: Story = {
   render: () => <ClickableCard />,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
-    const card = canvas.getByRole('button', { name: 'Clickable card' })
-    const count = canvas.getByTestId('count')
+    const card = canvas.getByRole('button', { name: 'Clickable card' });
+    const count = canvas.getByTestId('count');
 
     // It is focusable and announced as a button.
-    expect(card).toHaveAttribute('tabindex', '0')
-    expect(count).toHaveTextContent('0')
+    expect(card).toHaveAttribute('tabindex', '0');
+    expect(count).toHaveTextContent('0');
 
     // Pointer activation fires onClick.
-    await userEvent.click(card)
-    expect(count).toHaveTextContent('1')
+    await userEvent.click(card);
+    expect(count).toHaveTextContent('1');
 
     // Keyboard activation (Enter) also fires onClick.
-    card.focus()
-    await userEvent.keyboard('{Enter}')
-    expect(count).toHaveTextContent('2')
-  }
-}
+    card.focus();
+    await userEvent.keyboard('{Enter}');
+    expect(count).toHaveTextContent('2');
+  },
+};

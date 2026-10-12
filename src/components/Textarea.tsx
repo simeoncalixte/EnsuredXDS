@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors } from '../colors.js'
-import { spacing, radii, typography } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors } from '../colors.js';
+import { spacing, radii, typography } from '../tokens.js';
 
-export type XdsTextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>
+export type XdsTextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const StyledTextarea = styled.textarea`
   width: 100%;
@@ -32,10 +32,10 @@ const StyledTextarea = styled.textarea`
     cursor: not-allowed;
     opacity: 0.6;
   }
-`
+`;
 
 export const Textarea: React.FC<XdsTextareaProps> = ({ rows = 4, ...rest }) => {
-  return <StyledTextarea rows={rows} {...rest} />
-}
+  return <StyledTextarea rows={rows} {...rest} />;
+};
 
-export default Textarea
+export default Textarea;

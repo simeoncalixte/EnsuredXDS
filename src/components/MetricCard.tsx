@@ -1,54 +1,54 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors } from '../colors.js'
-import { radii } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors } from '../colors.js';
+import { radii } from '../tokens.js';
 
-export type MetricCardTrend = 'up' | 'down' | 'flat'
+export type MetricCardTrend = 'up' | 'down' | 'flat';
 
-export type MetricCardTone = 'default' | 'success' | 'warning' | 'danger' | 'info'
+export type MetricCardTone = 'default' | 'success' | 'warning' | 'danger' | 'info';
 
 export type MetricCardProps = {
   /** Uppercase mono label shown at the top of the tile. */
-  label: string
+  label: string;
   /** Primary metric value. */
-  value: string
+  value: string;
   /** Secondary line. Existing callers pass arbitrary strings here. */
-  delta?: string
+  delta?: string;
   /** Overrides the value color. Preserved for backward compatibility (alias of accentColor). */
-  accent?: string
+  accent?: string;
   /** Preferred name for the value accent color. Falls back to `accent`. */
-  accentColor?: string
+  accentColor?: string;
   /** Optional projected/target value rendered alongside the main value. */
-  projectedValue?: string
+  projectedValue?: string;
   /** Trend direction; drives the trend indicator color and arrow icon. */
-  trend?: MetricCardTrend
+  trend?: MetricCardTrend;
   /** Optional leading icon. A string is rendered as a material-symbols-outlined glyph. */
-  icon?: React.ReactNode
+  icon?: React.ReactNode;
   /** Semantic tone affecting the trend/delta coloring. */
-  tone?: MetricCardTone
-  id?: string
-  className?: string
-}
+  tone?: MetricCardTone;
+  id?: string;
+  className?: string;
+};
 
 const toneColor: Record<MetricCardTone, string> = {
   default: colors.text.secondary,
   success: colors.success,
   warning: colors.warning,
   danger: colors.danger,
-  info: colors.info
-}
+  info: colors.info,
+};
 
 const trendColor: Record<MetricCardTrend, string> = {
   up: colors.success,
   down: colors.danger,
-  flat: colors.text.secondary
-}
+  flat: colors.text.secondary,
+};
 
 const trendGlyph: Record<MetricCardTrend, string> = {
   up: 'trending_up',
   down: 'trending_down',
-  flat: 'trending_flat'
-}
+  flat: 'trending_flat',
+};
 
 const Card = styled.div`
   background: ${colors.surfaceContainerLow};
@@ -56,13 +56,13 @@ const Card = styled.div`
   border-radius: ${radii.md}px;
   transition: background 150ms;
   border: 1px solid ${colors.outlineVariant};
-`
+`;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-`
+`;
 
 const Label = styled.div`
   font-size: 11px;
@@ -70,7 +70,7 @@ const Label = styled.div`
   text-transform: uppercase;
   letter-spacing: 1px;
   color: ${colors.onSurfaceVariant};
-`
+`;
 
 const IconWrap = styled.span`
   display: inline-flex;
@@ -84,28 +84,28 @@ const IconWrap = styled.span`
     font-size: 16px;
     line-height: 1;
   }
-`
+`;
 
 const ValueRow = styled.div`
   margin-top: 8px;
   display: flex;
   align-items: baseline;
   gap: 8px;
-`
+`;
 
 const Value = styled.div<{ $accent: string }>`
   font-size: 28px;
   font-family: ui-monospace, Menlo, monospace;
   font-weight: 700;
   color: ${(p) => p.$accent};
-`
+`;
 
 const Projected = styled.span`
   font-size: 14px;
   font-family: ui-monospace, Menlo, monospace;
   font-weight: 500;
   color: ${colors.onSurfaceVariant};
-`
+`;
 
 const DeltaRow = styled.div<{ $color: string }>`
   margin-top: 6px;
@@ -114,11 +114,11 @@ const DeltaRow = styled.div<{ $color: string }>`
   align-items: center;
   color: ${(p) => p.$color};
   font-size: 13px;
-`
+`;
 
 const DeltaText = styled.span`
   opacity: 0.9;
-`
+`;
 
 const TrendIcon = styled.span<{ $color: string }>`
   display: inline-flex;
@@ -129,14 +129,14 @@ const TrendIcon = styled.span<{ $color: string }>`
     font-size: 16px;
     line-height: 1;
   }
-`
+`;
 
 const renderIcon = (icon: React.ReactNode): React.ReactNode => {
   if (typeof icon === 'string') {
-    return <span className="material-symbols-outlined">{icon}</span>
+    return <span className="material-symbols-outlined">{icon}</span>;
   }
-  return icon
-}
+  return icon;
+};
 
 export const MetricCard: React.FC<MetricCardProps> = ({
   label,
@@ -149,14 +149,14 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   icon,
   tone,
   id,
-  className
+  className,
 }) => {
-  const resolvedAccent = accentColor ?? accent ?? colors.primary
+  const resolvedAccent = accentColor ?? accent ?? colors.primary;
 
   // Delta/trend coloring: explicit tone wins, otherwise derive from trend, else default secondary.
-  let deltaColor: string = colors.text.secondary
-  if (tone) deltaColor = toneColor[tone]
-  else if (trend) deltaColor = trendColor[trend]
+  let deltaColor: string = colors.text.secondary;
+  if (tone) deltaColor = toneColor[tone];
+  else if (trend) deltaColor = trendColor[trend];
 
   return (
     <Card id={id} className={className}>
@@ -179,7 +179,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         </DeltaRow>
       )}
     </Card>
-  )
-}
+  );
+};
 
-export default MetricCard
+export default MetricCard;

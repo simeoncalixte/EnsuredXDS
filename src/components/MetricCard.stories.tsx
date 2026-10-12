@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, userEvent, expect } from '@storybook/test'
-import MetricCard, { type MetricCardTrend } from './MetricCard.js'
+import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, expect } from '@storybook/test';
+import MetricCard, { type MetricCardTrend } from './MetricCard.js';
 
 const meta: Meta<typeof MetricCard> = {
   title: 'XDS/MetricCard',
@@ -9,13 +9,13 @@ const meta: Meta<typeof MetricCard> = {
   args: {
     label: 'Total Capital Locked',
     value: '$1.28B',
-    delta: '+14.2% YoY'
-  }
-}
+    delta: '+14.2% YoY',
+  },
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof MetricCard>
+type Story = StoryObj<typeof MetricCard>;
 
 const Grid: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div
@@ -23,12 +23,12 @@ const Grid: React.FC<{ children: React.ReactNode }> = ({ children }) => (
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
       gap: 16,
-      maxWidth: 760
+      maxWidth: 760,
     }}
   >
     {children}
   </div>
-)
+);
 
 // Backward-compatible usage matching existing LandingPage callers.
 export const Basic: Story = {
@@ -38,8 +38,8 @@ export const Basic: Story = {
       <MetricCard label="Active Deals" value="142" delta="Verified Tranches" />
       <MetricCard label="Avg. Returns" value="12.4%" delta="NET APY" />
     </Grid>
-  )
-}
+  ),
+};
 
 // Additive enhancements: trend, icon, accentColor, tone, projectedValue.
 export const WithTrendAndIcon: Story = {
@@ -61,13 +61,7 @@ export const WithTrendAndIcon: Story = {
         trend="up"
         icon="payments"
       />
-      <MetricCard
-        label="Open Submissions"
-        value="37"
-        delta="No change"
-        trend="flat"
-        icon="inbox"
-      />
+      <MetricCard label="Open Submissions" value="37" delta="No change" trend="flat" icon="inbox" />
       <MetricCard
         label="At-Risk Capital"
         value="$12.6M"
@@ -77,14 +71,14 @@ export const WithTrendAndIcon: Story = {
         icon="warning"
       />
     </Grid>
-  )
-}
+  ),
+};
 
-const trends: MetricCardTrend[] = ['up', 'down', 'flat']
+const trends: MetricCardTrend[] = ['up', 'down', 'flat'];
 
 const InteractiveMetric: React.FC = () => {
-  const [index, setIndex] = useState(0)
-  const trend = trends[index]
+  const [index, setIndex] = useState(0);
+  const trend = trends[index];
   return (
     <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
       <div data-testid="metric-host" style={{ width: 240 }}>
@@ -100,28 +94,28 @@ const InteractiveMetric: React.FC = () => {
         Next trend
       </button>
     </div>
-  )
-}
+  );
+};
 
 export const Interactive: Story = {
   render: () => <InteractiveMetric />,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
-    const host = canvas.getByTestId('metric-host')
+    const host = canvas.getByTestId('metric-host');
     // Starts on the "up" trend.
-    expect(host).toHaveTextContent(/trend: up/i)
-    expect(host.querySelector('.material-symbols-outlined')).not.toBeNull()
-    expect(host.textContent).toContain('trending_up')
+    expect(host).toHaveTextContent(/trend: up/i);
+    expect(host.querySelector('.material-symbols-outlined')).not.toBeNull();
+    expect(host.textContent).toContain('trending_up');
 
     // Cycle to the "down" trend.
-    await userEvent.click(canvas.getByRole('button', { name: 'Next trend' }))
-    expect(host).toHaveTextContent(/trend: down/i)
-    expect(host.textContent).toContain('trending_down')
+    await userEvent.click(canvas.getByRole('button', { name: 'Next trend' }));
+    expect(host).toHaveTextContent(/trend: down/i);
+    expect(host.textContent).toContain('trending_down');
 
     // Cycle to the "flat" trend.
-    await userEvent.click(canvas.getByRole('button', { name: 'Next trend' }))
-    expect(host).toHaveTextContent(/trend: flat/i)
-    expect(host.textContent).toContain('trending_flat')
-  }
-}
+    await userEvent.click(canvas.getByRole('button', { name: 'Next trend' }));
+    expect(host).toHaveTextContent(/trend: flat/i);
+    expect(host.textContent).toContain('trending_flat');
+  },
+};

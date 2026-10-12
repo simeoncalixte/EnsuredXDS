@@ -1,7 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors, withAlpha } from '../colors.js'
-import { useXdsTheme } from '../theme.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors, withAlpha } from '../colors.js';
+import { useXdsTheme } from '../theme.js';
 
 const ToggleButton = styled.button`
   display: inline-flex;
@@ -16,7 +16,10 @@ const ToggleButton = styled.button`
   background: ${withAlpha(colors.surfaceHigh, 0.92)};
   color: ${colors.onSurfaceStrong};
   cursor: pointer;
-  transition: background-color 180ms ease, border-color 180ms ease, transform 100ms ease;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 100ms ease;
 
   &:hover {
     background: ${colors.surfaceRaised};
@@ -31,12 +34,12 @@ const ToggleButton = styled.button`
   &:active {
     transform: scale(0.96);
   }
-`
+`;
 
 const Icon = styled.span`
   font-size: 1.2rem;
   line-height: 1;
-`
+`;
 
 const Label = styled.span`
   font-size: 0.78rem;
@@ -46,11 +49,11 @@ const Label = styled.span`
   @media (max-width: 520px) {
     display: none;
   }
-`
+`;
 
 export const ThemeToggle: React.FC = () => {
-  const { themeName, toggleTheme } = useXdsTheme()
-  const nextTheme = themeName === 'dark' ? 'light' : 'dark'
+  const { themeName, toggleTheme } = useXdsTheme();
+  const nextTheme = themeName === 'dark' ? 'light' : 'dark';
 
   return (
     <ToggleButton
@@ -64,7 +67,7 @@ export const ThemeToggle: React.FC = () => {
       </Icon>
       <Label>{nextTheme === 'light' ? 'Light' : 'Dark'}</Label>
     </ToggleButton>
-  )
-}
+  );
+};
 
-export default ThemeToggle
+export default ThemeToggle;

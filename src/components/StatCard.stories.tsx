@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, userEvent, expect } from '@storybook/test'
-import StatCard from './StatCard.js'
+import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, expect } from '@storybook/test';
+import StatCard from './StatCard.js';
 
 const meta: Meta<typeof StatCard> = {
   title: 'XDS/StatCard',
-  component: StatCard
-}
+  component: StatCard,
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof StatCard>
+type Story = StoryObj<typeof StatCard>;
 
 export const Default: Story = {
   render: () => (
@@ -18,8 +18,8 @@ export const Default: Story = {
       <StatCard label="Total Allocated" value="$42.8M" delta="+12.4%" />
       <StatCard label="Risk Coefficient" value="0.042" delta="-0.002" />
     </div>
-  )
-}
+  ),
+};
 
 export const WithAffixesAndNote: Story = {
   render: () => (
@@ -33,22 +33,11 @@ export const WithAffixesAndNote: Story = {
         note="Above target"
         tone="success"
       />
-      <StatCard
-        label="Loss Ratio"
-        value="68.2"
-        suffix="%"
-        note="Trending up"
-        tone="danger"
-      />
-      <StatCard
-        label="Open Claims"
-        value="312"
-        note="Custom color note"
-        noteColor="#a5b4fc"
-      />
+      <StatCard label="Loss Ratio" value="68.2" suffix="%" note="Trending up" tone="danger" />
+      <StatCard label="Open Claims" value="312" note="Custom color note" noteColor="#a5b4fc" />
     </div>
-  )
-}
+  ),
+};
 
 export const ToneVariants: Story = {
   render: () => (
@@ -60,17 +49,17 @@ export const ToneVariants: Story = {
       <StatCard label="Info" value="100" note="info tone" tone="info" />
       <StatCard label="Muted" value="100" note="muted tone" tone="muted" />
     </div>
-  )
-}
+  ),
+};
 
 /**
  * Interaction test: a story-local stateful wrapper updates the suffix and note
  * when a button is clicked, and we assert the StatCard re-renders the new values.
  */
 export const Interaction: Story = {
-  render: () => {
+  render: function Render() {
     const Wrapper = () => {
-      const [open, setOpen] = useState(false)
+      const [open, setOpen] = useState(false);
       return (
         <div>
           <button type="button" onClick={() => setOpen((v) => !v)}>
@@ -85,22 +74,22 @@ export const Interaction: Story = {
             tone={open ? 'success' : 'muted'}
           />
         </div>
-      )
-    }
-    return <Wrapper />
+      );
+    };
+    return <Wrapper />;
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
     // Initial state.
-    expect(canvas.getByText('Pending')).toBeInTheDocument()
-    expect(canvas.getByText('0.0')).toBeInTheDocument()
+    expect(canvas.getByText('Pending')).toBeInTheDocument();
+    expect(canvas.getByText('0.0')).toBeInTheDocument();
     // Toggle.
-    await userEvent.click(canvas.getByRole('button', { name: 'toggle' }))
+    await userEvent.click(canvas.getByRole('button', { name: 'toggle' }));
     // Updated state.
-    expect(canvas.getByText('Live')).toBeInTheDocument()
-    expect(canvas.getByText('12.5')).toBeInTheDocument()
+    expect(canvas.getByText('Live')).toBeInTheDocument();
+    expect(canvas.getByText('12.5')).toBeInTheDocument();
     // Affixes present.
-    expect(canvas.getByText('$')).toBeInTheDocument()
-    expect(canvas.getByText('M')).toBeInTheDocument()
-  }
-}
+    expect(canvas.getByText('$')).toBeInTheDocument();
+    expect(canvas.getByText('M')).toBeInTheDocument();
+  },
+};

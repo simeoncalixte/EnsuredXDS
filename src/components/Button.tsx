@@ -1,45 +1,45 @@
-import React from 'react'
-import styled, { css } from 'styled-components'
-import { colors } from '../colors.js'
-import { radii, typography } from '../tokens.js'
+import React from 'react';
+import styled, { css } from 'styled-components';
+import { colors } from '../colors.js';
+import { radii, typography } from '../tokens.js';
 
-export type XdsButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'text'
-export type XdsButtonTone = 'default' | 'success' | 'warning' | 'danger'
-export type XdsButtonSize = 'sm' | 'md'
+export type XdsButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'text';
+export type XdsButtonTone = 'default' | 'success' | 'warning' | 'danger';
+export type XdsButtonSize = 'sm' | 'md';
 
 export type XdsButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: XdsButtonVariant
-  tone?: XdsButtonTone
-  size?: XdsButtonSize
-}
+  variant?: XdsButtonVariant;
+  tone?: XdsButtonTone;
+  size?: XdsButtonSize;
+};
 
 type StyledButtonProps = {
-  $variant: XdsButtonVariant
-  $tone: XdsButtonTone
-  $size: XdsButtonSize
-}
+  $variant: XdsButtonVariant;
+  $tone: XdsButtonTone;
+  $size: XdsButtonSize;
+};
 
 // Map a tone to a solid accent color used for filled/outline/text emphasis.
 const toneColor = (tone: XdsButtonTone): string => {
   switch (tone) {
     case 'success':
-      return colors.success
+      return colors.success;
     case 'warning':
-      return colors.warning
+      return colors.warning;
     case 'danger':
-      return colors.danger
+      return colors.danger;
     case 'default':
     default:
-      return colors.primary
+      return colors.primary;
   }
-}
+};
 
 // Preserve the EXACT original computed styles for primary/secondary/ghost when
 // tone is left at its default. Tone (when set) and the additive variants layer
 // on top without disturbing the legacy defaults.
 const variantStyles = (variant: XdsButtonVariant, tone: XdsButtonTone) => {
-  const accent = toneColor(tone)
-  const tinted = tone !== 'default'
+  const accent = toneColor(tone);
+  const tinted = tone !== 'default';
 
   switch (variant) {
     case 'primary':
@@ -47,35 +47,35 @@ const variantStyles = (variant: XdsButtonVariant, tone: XdsButtonTone) => {
         background: ${tinted ? accent : colors.primary};
         color: ${colors.onPrimary};
         border: none;
-      `
+      `;
     case 'secondary':
       return css`
         background: ${tinted ? accent : colors.neutral[300]};
         color: ${tinted ? colors.onPrimary : colors.text.primary};
         border: none;
-      `
+      `;
     case 'ghost':
       return css`
         background: transparent;
         color: ${tinted ? accent : colors.text.primary};
         border: 1px solid transparent;
-      `
+      `;
     case 'outline':
       return css`
         background: transparent;
         color: ${tinted ? accent : colors.text.primary};
         border: 1px solid ${tinted ? accent : colors.neutral[300]};
-      `
+      `;
     case 'text':
       return css`
         background: transparent;
         color: ${tinted ? accent : colors.primary};
         border: none;
-      `
+      `;
     default:
-      return css``
+      return css``;
   }
-}
+};
 
 const sizeStyles = (size: XdsButtonSize) => {
   // 'md' preserves the original 8px 14px padding and default font size.
@@ -84,14 +84,14 @@ const sizeStyles = (size: XdsButtonSize) => {
       return css`
         padding: 4px 10px;
         font-size: ${typography.sizes.xs}px;
-      `
+      `;
     case 'md':
     default:
       return css`
         padding: 8px 14px;
-      `
+      `;
   }
-}
+};
 
 const StyledButton = styled.button<StyledButtonProps>`
   border-radius: ${radii.md}px;
@@ -110,7 +110,7 @@ const StyledButton = styled.button<StyledButtonProps>`
     cursor: not-allowed;
     opacity: 0.6;
   }
-`
+`;
 
 export const Button: React.FC<XdsButtonProps> = ({
   variant = 'primary',
@@ -123,7 +123,7 @@ export const Button: React.FC<XdsButtonProps> = ({
     <StyledButton $variant={variant} $tone={tone} $size={size} {...rest}>
       {children}
     </StyledButton>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;

@@ -1,63 +1,63 @@
-import React, { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react'
-import { ThemeProvider as StyledThemeProvider } from 'styled-components'
+import React, { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
-export type XdsThemeName = 'dark' | 'light'
+export type XdsThemeName = 'dark' | 'light';
 
 export type XdsThemeColors = {
-  background: string
-  surface: string
-  surfaceVariant: string
-  surfaceContainerLow: string
-  surfaceContainer: string
-  surfaceContainerHigh: string
-  surfaceContainerHighest: string
-  surfaceDeep: string
-  surfaceLow: string
-  surfacePanel: string
-  surfaceRaised: string
-  surfaceHigh: string
-  surfaceElevated: string
-  primary: string
-  primaryHover: string
-  primarySoft: string
-  primaryContainer: string
-  onPrimary: string
-  onPrimaryContainer: string
-  secondary: string
-  secondaryContainer: string
-  onSecondaryContainer: string
-  accent: string
-  accentStrong: string
-  success: string
-  info: string
-  warning: string
-  danger: string
-  dangerDeep: string
-  error: string
-  errorContainer: string
-  onErrorContainer: string
-  errorSoft: string
-  dangerBright: string
-  onSurface: string
-  onSurfaceVariant: string
-  onSurfaceStrong: string
-  onSurfaceMuted: string
-  outline: string
-  outlineVariant: string
-  border: string
-  scrim: string
-  tertiaryContainer: string
-  textPrimary: string
-  textSecondary: string
-  textInverse: string
-  textAccent: string
-  navItemBackground: string
-}
+  background: string;
+  surface: string;
+  surfaceVariant: string;
+  surfaceContainerLow: string;
+  surfaceContainer: string;
+  surfaceContainerHigh: string;
+  surfaceContainerHighest: string;
+  surfaceDeep: string;
+  surfaceLow: string;
+  surfacePanel: string;
+  surfaceRaised: string;
+  surfaceHigh: string;
+  surfaceElevated: string;
+  primary: string;
+  primaryHover: string;
+  primarySoft: string;
+  primaryContainer: string;
+  onPrimary: string;
+  onPrimaryContainer: string;
+  secondary: string;
+  secondaryContainer: string;
+  onSecondaryContainer: string;
+  accent: string;
+  accentStrong: string;
+  success: string;
+  info: string;
+  warning: string;
+  danger: string;
+  dangerDeep: string;
+  error: string;
+  errorContainer: string;
+  onErrorContainer: string;
+  errorSoft: string;
+  dangerBright: string;
+  onSurface: string;
+  onSurfaceVariant: string;
+  onSurfaceStrong: string;
+  onSurfaceMuted: string;
+  outline: string;
+  outlineVariant: string;
+  border: string;
+  scrim: string;
+  tertiaryContainer: string;
+  textPrimary: string;
+  textSecondary: string;
+  textInverse: string;
+  textAccent: string;
+  navItemBackground: string;
+};
 
 export type XdsTheme = {
-  name: XdsThemeName
-  colors: XdsThemeColors
-}
+  name: XdsThemeName;
+  colors: XdsThemeColors;
+};
 
 export const darkTheme: XdsTheme = {
   name: 'dark',
@@ -111,7 +111,7 @@ export const darkTheme: XdsTheme = {
     textAccent: '#e9c349',
     navItemBackground: '#1b2027',
   },
-}
+};
 
 export const lightTheme: XdsTheme = {
   name: 'light',
@@ -165,26 +165,26 @@ export const lightTheme: XdsTheme = {
     textAccent: '#9e7b34',
     navItemBackground: '#f3ede7',
   },
-}
+};
 
 export const xdsThemes: Record<XdsThemeName, XdsTheme> = {
   dark: darkTheme,
   light: lightTheme,
-}
+};
 
-export const XDS_THEME_STORAGE_KEY = 'ensured-xds-theme'
+export const XDS_THEME_STORAGE_KEY = 'ensured-xds-theme';
 
 type ThemeContextValue = {
-  theme: XdsTheme
-  themeName: XdsThemeName
-  setTheme: (theme: XdsThemeName) => void
-  toggleTheme: () => void
-}
+  theme: XdsTheme;
+  themeName: XdsThemeName;
+  setTheme: (theme: XdsThemeName) => void;
+  toggleTheme: () => void;
+};
 
-const ThemeContext = createContext<ThemeContextValue | null>(null)
+const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 const cssVariables = (theme: XdsTheme): Record<string, string> => {
-  const color = theme.colors
+  const color = theme.colors;
 
   return {
     '--xds-background': color.background,
@@ -269,43 +269,48 @@ const cssVariables = (theme: XdsTheme): Record<string, string> => {
     '--color-warning': color.warning,
     '--color-danger': color.danger,
     '--nav-item-bg': color.navItemBackground,
-  }
-}
+  };
+};
 
 const initialThemeName = (): XdsThemeName => {
-  if (typeof window === 'undefined') return 'dark'
-  const stored = window.localStorage.getItem(XDS_THEME_STORAGE_KEY)
-  return stored === 'light' || stored === 'dark' ? stored : 'dark'
-}
+  if (typeof window === 'undefined') return 'dark';
+  const stored = window.localStorage.getItem(XDS_THEME_STORAGE_KEY);
+  return stored === 'light' || stored === 'dark' ? stored : 'dark';
+};
 
 export function XdsThemeProvider({ children }: React.PropsWithChildren) {
-  const [themeName, setTheme] = useState<XdsThemeName>(initialThemeName)
-  const theme = xdsThemes[themeName]
+  const [themeName, setTheme] = useState<XdsThemeName>(initialThemeName);
+  const theme = xdsThemes[themeName];
 
   useLayoutEffect(() => {
-    const root = document.documentElement
-    root.dataset.theme = themeName
-    root.style.colorScheme = themeName
-    Object.entries(cssVariables(theme)).forEach(([name, value]) => root.style.setProperty(name, value))
-    window.localStorage.setItem(XDS_THEME_STORAGE_KEY, themeName)
-  }, [theme, themeName])
+    const root = document.documentElement;
+    root.dataset.theme = themeName;
+    root.style.colorScheme = themeName;
+    Object.entries(cssVariables(theme)).forEach(([name, value]) =>
+      root.style.setProperty(name, value),
+    );
+    window.localStorage.setItem(XDS_THEME_STORAGE_KEY, themeName);
+  }, [theme, themeName]);
 
-  const value = useMemo<ThemeContextValue>(() => ({
-    theme,
-    themeName,
-    setTheme,
-    toggleTheme: () => setTheme((current) => (current === 'dark' ? 'light' : 'dark')),
-  }), [theme, themeName])
+  const value = useMemo<ThemeContextValue>(
+    () => ({
+      theme,
+      themeName,
+      setTheme,
+      toggleTheme: () => setTheme((current) => (current === 'dark' ? 'light' : 'dark')),
+    }),
+    [theme, themeName],
+  );
 
   return (
     <ThemeContext.Provider value={value}>
       <StyledThemeProvider theme={theme}>{children}</StyledThemeProvider>
     </ThemeContext.Provider>
-  )
+  );
 }
 
 export function useXdsTheme(): ThemeContextValue {
-  const context = useContext(ThemeContext)
-  if (!context) throw new Error('useXdsTheme must be used inside XdsThemeProvider')
-  return context
+  const context = useContext(ThemeContext);
+  if (!context) throw new Error('useXdsTheme must be used inside XdsThemeProvider');
+  return context;
 }

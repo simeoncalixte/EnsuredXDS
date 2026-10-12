@@ -1,7 +1,7 @@
 // Design color palette tokens for EnsuredUI. Semantic aliases resolve through
 // XDS theme variables; raw brand, neutral, data-viz, and vendor palettes stay
 // fixed so they can also be used by canvas/map renderers that do not resolve CSS.
-const themed = (name: string, fallback: string): string => `var(--xds-${name}, ${fallback})`
+const themed = (name: string, fallback: string): string => `var(--xds-${name}, ${fallback})`;
 
 export const colors = {
   // Brand
@@ -15,7 +15,7 @@ export const colors = {
     600: '#4f46e5',
     700: '#4338ca',
     800: '#3730a3',
-    900: '#312e81'
+    900: '#312e81',
   },
 
   // UI neutrals
@@ -30,7 +30,7 @@ export const colors = {
     600: '#475569',
     700: '#334155',
     800: '#1f2937',
-    900: '#0f172a'
+    900: '#0f172a',
   },
 
   // Semantic
@@ -119,7 +119,7 @@ export const colors = {
     orange: '#f97316',
     amber: '#fbbf24',
     cyan: '#0891b2',
-    cyanDeep: '#0b7285'
+    cyanDeep: '#0b7285',
   },
 
   // --- Third-party vendor / provider brand identity colors ---
@@ -137,7 +137,7 @@ export const colors = {
     microsoftRed: '#f25022',
     facebookBlue: '#1877f2',
     awsOrange: '#ff9900',
-    awsOrangeDeep: '#e05a00'
+    awsOrangeDeep: '#e05a00',
   },
 
   // Text
@@ -145,15 +145,14 @@ export const colors = {
     primary: themed('text-primary', '#f0e6d8'),
     secondary: themed('text-secondary', '#bfc9c1'),
     inverse: themed('text-inverse', '#0f141b'),
-    accent: themed('text-accent', '#e9c349')
-  }
-  ,
+    accent: themed('text-accent', '#e9c349'),
+  },
   ui: {
-    navItemBg: 'var(--nav-item-bg)'
-  }
-} as const
+    navItemBg: 'var(--nav-item-bg)',
+  },
+} as const;
 
-export type Colors = typeof colors
+export type Colors = typeof colors;
 
 /**
  * Compose an rgba() string from a design-system hex token plus an alpha.
@@ -163,26 +162,26 @@ export type Colors = typeof colors
  * @example withAlpha(colors.primary, 0.12) // 'rgba(75, 142, 255, 0.12)'
  */
 export const withAlpha = (color: string, alpha: number): string => {
-  const normalizedAlpha = Math.min(1, Math.max(0, alpha))
+  const normalizedAlpha = Math.min(1, Math.max(0, alpha));
 
   // Theme tokens are CSS variables. color-mix preserves their runtime nature,
   // allowing one styled-component definition to respond to theme changes.
   if (!color.startsWith('#')) {
-    return `color-mix(in srgb, ${color} ${normalizedAlpha * 100}%, transparent)`
+    return `color-mix(in srgb, ${color} ${normalizedAlpha * 100}%, transparent)`;
   }
 
-  const normalized = color.replace('#', '')
+  const normalized = color.replace('#', '');
   const full =
     normalized.length === 3
       ? normalized
           .split('')
           .map((c) => c + c)
           .join('')
-      : normalized
-  const r = parseInt(full.slice(0, 2), 16)
-  const g = parseInt(full.slice(2, 4), 16)
-  const b = parseInt(full.slice(4, 6), 16)
-  return `rgba(${r}, ${g}, ${b}, ${normalizedAlpha})`
-}
+      : normalized;
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${normalizedAlpha})`;
+};
 
-export default colors
+export default colors;

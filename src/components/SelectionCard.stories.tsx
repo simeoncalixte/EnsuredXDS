@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, userEvent, expect } from '@storybook/test'
-import SelectionCard from './SelectionCard.js'
-import { colors } from '../colors.js'
+import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, expect } from '@storybook/test';
+import SelectionCard from './SelectionCard.js';
+import { colors } from '../colors.js';
 
 const meta: Meta<typeof SelectionCard> = {
   title: 'XDS/SelectionCard',
@@ -11,21 +11,23 @@ const meta: Meta<typeof SelectionCard> = {
     title: 'Institutional',
     subtitle: 'High Density Access',
     footerLabel: 'Requires LEI Verification',
-    ctaText: 'Configure Entity'
-  }
-}
+    ctaText: 'Configure Entity',
+  },
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof SelectionCard>
+type Story = StoryObj<typeof SelectionCard>;
 
 const Grid: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 760 }}>{children}</div>
-)
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 760 }}>
+    {children}
+  </div>
+);
 
 const Icon: React.FC<{ name: string }> = ({ name }) => (
   <span className="material-symbols-outlined">{name}</span>
-)
+);
 
 // Backward-compatible default look used by RoleSelection / InvestmentType callers.
 export const Default: Story = {
@@ -33,7 +35,8 @@ export const Default: Story = {
     <Grid>
       <SelectionCard {...args} icon={<Icon name="account_balance" />} accentColor={colors.primary}>
         <p style={{ color: colors.onSurfaceVariant }}>
-          For entities, sovereign wealth funds, and corporate treasuries requiring programmatic capital allocation.
+          For entities, sovereign wealth funds, and corporate treasuries requiring programmatic
+          capital allocation.
         </p>
       </SelectionCard>
       <SelectionCard
@@ -49,8 +52,8 @@ export const Default: Story = {
         </p>
       </SelectionCard>
     </Grid>
-  )
-}
+  ),
+};
 
 // Active + disabled states (active styling is additive; disabled is a new prop).
 export const States: Story = {
@@ -79,13 +82,13 @@ export const States: Story = {
         <p style={{ color: colors.onSurfaceVariant }}>This card cannot be selected.</p>
       </SelectionCard>
     </Grid>
-  )
-}
+  ),
+};
 
 // Interaction test: controlled selection via onSelect, plus disabled no-op.
 const InteractiveCards: React.FC = () => {
-  const [selected, setSelected] = useState<string>('')
-  const [clicks, setClicks] = useState(0)
+  const [selected, setSelected] = useState<string>('');
+  const [clicks, setClicks] = useState(0);
   return (
     <div>
       <Grid>
@@ -120,28 +123,28 @@ const InteractiveCards: React.FC = () => {
         selected: {selected || 'none'} / disabledClicks: {clicks}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const Interactive: Story = {
   render: () => <InteractiveCards />,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
-    const card = canvas.getByTestId('card-institutional')
-    const status = canvas.getByTestId('selected-value')
-    expect(status).toHaveTextContent('selected: none')
-    expect(card).toHaveAttribute('aria-pressed', 'false')
+    const card = canvas.getByTestId('card-institutional');
+    const status = canvas.getByTestId('selected-value');
+    expect(status).toHaveTextContent('selected: none');
+    expect(card).toHaveAttribute('aria-pressed', 'false');
 
     // Clicking selects the card.
-    await userEvent.click(card)
-    expect(status).toHaveTextContent('selected: institutional')
-    expect(card).toHaveAttribute('aria-pressed', 'true')
+    await userEvent.click(card);
+    expect(status).toHaveTextContent('selected: institutional');
+    expect(card).toHaveAttribute('aria-pressed', 'true');
 
     // Disabled card does not fire onClick.
-    const locked = canvas.getByTestId('card-locked')
-    expect(locked).toHaveAttribute('aria-disabled', 'true')
-    await userEvent.click(locked)
-    expect(status).toHaveTextContent('disabledClicks: 0')
-  }
-}
+    const locked = canvas.getByTestId('card-locked');
+    expect(locked).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(locked);
+    expect(status).toHaveTextContent('disabledClicks: 0');
+  },
+};

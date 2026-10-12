@@ -1,26 +1,26 @@
-import React from 'react'
-import styled, { css } from 'styled-components'
-import { colors, withAlpha } from '../colors.js'
-import { radii, spacing, typography } from '../tokens.js'
+import React from 'react';
+import styled, { css } from 'styled-components';
+import { colors, withAlpha } from '../colors.js';
+import { radii, spacing, typography } from '../tokens.js';
 
 export interface SelectionCardProps {
-  selectionId?: string
-  title: string
-  subtitle?: string
-  icon?: React.ReactNode
-  accentColor?: string
-  active?: boolean
-  onClick?: () => void
-  onSelect?: (selectionId: string) => void
-  children?: React.ReactNode
-  footerLabel?: string
-  ctaText?: string
+  selectionId?: string;
+  title: string;
+  subtitle?: string;
+  icon?: React.ReactNode;
+  accentColor?: string;
+  active?: boolean;
+  onClick?: () => void;
+  onSelect?: (selectionId: string) => void;
+  children?: React.ReactNode;
+  footerLabel?: string;
+  ctaText?: string;
   /** Additive: disable interaction. Renders non-interactive and dims the card. */
-  disabled?: boolean
+  disabled?: boolean;
   /** Additive: pass-through className for layout composition. */
-  className?: string
+  className?: string;
   /** Additive: forwarded test id for the root element. */
-  'data-testid'?: string
+  'data-testid'?: string;
 }
 
 /**
@@ -28,9 +28,9 @@ export interface SelectionCardProps {
  * does not forward them to the DOM.
  */
 interface RootProps {
-  $active?: boolean
-  $accentColor?: string
-  $disabled?: boolean
+  $active?: boolean;
+  $accentColor?: string;
+  $disabled?: boolean;
 }
 
 const Root = styled.div<RootProps>`
@@ -44,7 +44,10 @@ const Root = styled.div<RootProps>`
   min-height: 360px;
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   border: 1px solid transparent;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
   outline: none;
 
   ${({ $disabled }) =>
@@ -57,7 +60,9 @@ const Root = styled.div<RootProps>`
     $active &&
     css`
       border-color: ${$accentColor || colors.primary};
-      box-shadow: 0 8px 30px ${withAlpha(colors.scrim, 0.6)}, 0 0 0 1px ${$accentColor || colors.primary};
+      box-shadow:
+        0 8px 30px ${withAlpha(colors.scrim, 0.6)},
+        0 0 0 1px ${$accentColor || colors.primary};
     `}
 
   &:hover {
@@ -70,25 +75,27 @@ const Root = styled.div<RootProps>`
 
   &:focus-visible {
     border-color: ${({ $accentColor }) => $accentColor || colors.primary};
-    box-shadow: 0 8px 30px ${withAlpha(colors.scrim, 0.6)}, 0 0 0 2px ${({ $accentColor }) => $accentColor || colors.primary};
+    box-shadow:
+      0 8px 30px ${withAlpha(colors.scrim, 0.6)},
+      0 0 0 2px ${({ $accentColor }) => $accentColor || colors.primary};
   }
-`
+`;
 
 const Overlay = styled.div`
   border-radius: ${radii.lg}px;
-`
+`;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: ${spacing.lg / 2}px;
-`
+`;
 
 const HeaderLeft = styled.div`
   display: flex;
   gap: ${spacing.lg / 2}px;
   align-items: center;
-`
+`;
 
 const IconBox = styled.div`
   width: 56px;
@@ -98,32 +105,32 @@ const IconBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 
 const Subtitle = styled.div<{ $accentColor?: string }>`
   font-size: ${typography.sizes.xs}px;
   text-transform: uppercase;
   color: ${({ $accentColor }) => $accentColor || colors.primary};
   font-family: 'JetBrains Mono', monospace;
-`
+`;
 
 const Title = styled.h2`
   font-size: 26px;
   margin: ${spacing.sm}px 0;
   font-weight: 800;
-`
+`;
 
 const Body = styled.div`
   color: ${colors.onSurfaceVariant};
   margin-bottom: 18px;
-`
+`;
 
 const Slot = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: auto;
-`
+`;
 
 const Footer = styled.div`
   margin-top: 18px;
@@ -132,13 +139,13 @@ const Footer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+`;
 
 const FooterLabel = styled.div`
   font-size: ${typography.sizes.xs}px;
   color: ${colors.onSurfaceVariant};
   font-style: italic;
-`
+`;
 
 const Cta = styled.div<{ $accentColor?: string }>`
   display: flex;
@@ -146,17 +153,17 @@ const Cta = styled.div<{ $accentColor?: string }>`
   align-items: center;
   color: ${({ $accentColor }) => $accentColor || colors.primary};
   font-weight: 700;
-`
+`;
 
 const CtaText = styled.span`
   font-size: ${typography.sizes.sm}px;
-`
+`;
 
 const CtaArrow = styled.span<{ $accentColor?: string }>`
   color: ${({ $accentColor }) => $accentColor || colors.primary};
-`
+`;
 
-const AccentLine = styled.div``
+const AccentLine = styled.div``;
 
 const SelectionCard: React.FC<SelectionCardProps> = ({
   selectionId,
@@ -175,20 +182,20 @@ const SelectionCard: React.FC<SelectionCardProps> = ({
   'data-testid': dataTestId,
 }) => {
   const handleActivate = () => {
-    if (disabled) return
+    if (disabled) return;
     if (selectionId && onSelect) {
-      onSelect(selectionId)
+      onSelect(selectionId);
     }
-    onClick?.()
-  }
+    onClick?.();
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (disabled) return
+    if (disabled) return;
     if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      handleActivate()
+      e.preventDefault();
+      handleActivate();
     }
-  }
+  };
 
   return (
     <Root
@@ -230,8 +237,8 @@ const SelectionCard: React.FC<SelectionCardProps> = ({
 
       <AccentLine className="accent-line" />
     </Root>
-  )
-}
+  );
+};
 
-export { SelectionCard }
-export default React.memo(SelectionCard)
+export { SelectionCard };
+export default React.memo(SelectionCard);

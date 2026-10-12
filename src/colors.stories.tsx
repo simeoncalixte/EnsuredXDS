@@ -1,16 +1,16 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, expect } from '@storybook/test'
-import styled from 'styled-components'
-import { colors, withAlpha } from './colors.js'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, expect } from '@storybook/test';
+import styled from 'styled-components';
+import { colors, withAlpha } from './colors.js';
 
 const meta: Meta = {
-  title: 'XDS/Design Tokens/Colors'
-}
+  title: 'XDS/Design Tokens/Colors',
+};
 
-export default meta
+export default meta;
 
-type Entry = [label: string, value: string]
+type Entry = [label: string, value: string];
 
 const Page = styled.div`
   padding: 24px;
@@ -18,7 +18,7 @@ const Page = styled.div`
   min-height: 100vh;
   font-family: ${`Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif`};
   color: ${colors.onSurface};
-`
+`;
 
 const Intro = styled.p`
   margin: 0 0 24px;
@@ -26,26 +26,26 @@ const Intro = styled.p`
   font-size: 13px;
   line-height: 1.5;
   color: ${colors.onSurfaceVariant};
-`
+`;
 
 const SectionTitle = styled.h2`
   margin: 28px 0 4px;
   font-size: 15px;
   font-weight: 600;
   color: ${colors.onSurfaceStrong};
-`
+`;
 
 const SectionNote = styled.p`
   margin: 0 0 14px;
   font-size: 12px;
   color: ${colors.onSurfaceVariant};
-`
+`;
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 12px;
-`
+`;
 
 const SwatchCard = styled.div`
   display: flex;
@@ -55,7 +55,7 @@ const SwatchCard = styled.div`
   border-radius: ${8}px;
   background: ${colors.surfaceRaised};
   border: 1px solid ${withAlpha(colors.border, 0.4)};
-`
+`;
 
 const Chip = styled.div<{ $value: string }>`
   flex: 0 0 auto;
@@ -64,13 +64,14 @@ const Chip = styled.div<{ $value: string }>`
   border-radius: 8px;
   background: ${(p) => p.$value};
   /* Inset ring so very light and very dark swatches stay visible on the surface */
-  box-shadow: inset 0 0 0 1px ${withAlpha(colors.onSurface, 0.14)},
+  box-shadow:
+    inset 0 0 0 1px ${withAlpha(colors.onSurface, 0.14)},
     inset 0 0 0 2px ${withAlpha(colors.black, 0.25)};
-`
+`;
 
 const Labels = styled.div`
   min-width: 0;
-`
+`;
 
 const Name = styled.div`
   font-size: 13px;
@@ -79,13 +80,13 @@ const Name = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
+`;
 
 const Value = styled.code`
   font-size: 12px;
   color: ${colors.onSurfaceVariant};
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-`
+`;
 
 const Swatch: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <SwatchCard>
@@ -95,12 +96,12 @@ const Swatch: React.FC<{ label: string; value: string }> = ({ label, value }) =>
       <Value>{value}</Value>
     </Labels>
   </SwatchCard>
-)
+);
 
 const Section: React.FC<{ title: string; note?: string; entries: Entry[] }> = ({
   title,
   note,
-  entries
+  entries,
 }) => (
   <>
     <SectionTitle>{title}</SectionTitle>
@@ -111,20 +112,19 @@ const Section: React.FC<{ title: string; note?: string; entries: Entry[] }> = ({
       ))}
     </Grid>
   </>
-)
+);
 
 // Expand a nested token group (e.g. colors.brand) into prefixed entries.
 const group = (prefix: string, obj: Record<string | number, string>): Entry[] =>
-  Object.entries(obj).map(([k, v]) => [`${prefix}.${k}`, v])
+  Object.entries(obj).map(([k, v]) => [`${prefix}.${k}`, v]);
 
 export const Colors: StoryObj = {
   render: () => (
     <Page>
       <Intro>
-        Every color in EnsuredUI is sourced from these tokens in{' '}
-        <code>src/xds/colors.ts</code>. Use <code>colors.*</code> directly, and{' '}
-        <code>withAlpha(colors.x, alpha)</code> for translucent variants — never
-        hand-write hex or rgba literals in components or pages.
+        Every color in EnsuredUI is sourced from these tokens in <code>src/xds/colors.ts</code>. Use{' '}
+        <code>colors.*</code> directly, and <code>withAlpha(colors.x, alpha)</code> for translucent
+        variants — never hand-write hex or rgba literals in components or pages.
       </Intro>
 
       <Section
@@ -135,7 +135,7 @@ export const Colors: StoryObj = {
           ['primarySoft', colors.primarySoft],
           ['primaryContainer', colors.primaryContainer],
           ['onPrimary', colors.onPrimary],
-          ['onPrimaryContainer', colors.onPrimaryContainer]
+          ['onPrimaryContainer', colors.onPrimaryContainer],
         ]}
       />
 
@@ -147,7 +147,7 @@ export const Colors: StoryObj = {
           ['secondaryContainer', colors.secondaryContainer],
           ['onSecondaryContainer', colors.onSecondaryContainer],
           ['accent', colors.accent],
-          ['accentStrong', colors.accentStrong]
+          ['accentStrong', colors.accentStrong],
         ]}
       />
 
@@ -164,7 +164,7 @@ export const Colors: StoryObj = {
           ['errorSoft', colors.errorSoft],
           ['errorContainer', colors.errorContainer],
           ['onErrorContainer', colors.onErrorContainer],
-          ['tertiaryContainer', colors.tertiaryContainer]
+          ['tertiaryContainer', colors.tertiaryContainer],
         ]}
       />
 
@@ -184,7 +184,7 @@ export const Colors: StoryObj = {
           ['surfaceContainerLow', colors.surfaceContainerLow],
           ['surfaceContainer', colors.surfaceContainer],
           ['surfaceContainerHigh', colors.surfaceContainerHigh],
-          ['surfaceContainerHighest', colors.surfaceContainerHighest]
+          ['surfaceContainerHighest', colors.surfaceContainerHighest],
         ]}
       />
 
@@ -196,7 +196,7 @@ export const Colors: StoryObj = {
           ['onSurfaceStrong', colors.onSurfaceStrong],
           ['onSurfaceVariant', colors.onSurfaceVariant],
           ['onSurfaceMuted', colors.onSurfaceMuted],
-          ...group('text', colors.text)
+          ...group('text', colors.text),
         ]}
       />
 
@@ -207,7 +207,7 @@ export const Colors: StoryObj = {
           ['outlineVariant', colors.outlineVariant],
           ['border', colors.border],
           ['black', colors.black],
-          ['white', colors.white]
+          ['white', colors.white],
         ]}
       />
 
@@ -237,14 +237,14 @@ export const Colors: StoryObj = {
     </Page>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
     // Every token group renders.
-    await expect(canvas.getByText('Primary')).toBeInTheDocument()
-    await expect(canvas.getByText('Data Visualization')).toBeInTheDocument()
-    await expect(canvas.getByText('Vendor / Provider Brand')).toBeInTheDocument()
+    await expect(canvas.getByText('Primary')).toBeInTheDocument();
+    await expect(canvas.getByText('Data Visualization')).toBeInTheDocument();
+    await expect(canvas.getByText('Vendor / Provider Brand')).toBeInTheDocument();
     // Representative swatches across scalar, nested and vendor groups.
-    await expect(canvas.getByText('primarySoft')).toBeInTheDocument()
-    await expect(canvas.getByText('dataViz.blue')).toBeInTheDocument()
-    await expect(canvas.getByText('vendor.googleBlue')).toBeInTheDocument()
-  }
-}
+    await expect(canvas.getByText('primarySoft')).toBeInTheDocument();
+    await expect(canvas.getByText('dataViz.blue')).toBeInTheDocument();
+    await expect(canvas.getByText('vendor.googleBlue')).toBeInTheDocument();
+  },
+};

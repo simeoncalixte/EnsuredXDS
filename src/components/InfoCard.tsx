@@ -1,48 +1,48 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors, withAlpha } from '../colors.js'
-import { radii } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors, withAlpha } from '../colors.js';
+import { radii } from '../tokens.js';
 
 /**
  * Tone variants.
  * - `primary` / `secondary` are the original metric-card tones (backward compatible).
  * - `info` / `success` / `warning` / `danger` are tinted note/callout tones.
  */
-export type InfoCardTone = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'danger'
+export type InfoCardTone = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'danger';
 
 export interface InfoCardProps {
   /** Eyebrow / label text rendered above the value. Optional when using free-form children. */
-  title?: string
+  title?: string;
   /** Primary value/headline. Optional when using free-form children. */
-  value?: string
+  value?: string;
   /** Visual tone. */
-  tone?: InfoCardTone
+  tone?: InfoCardTone;
   /** Free-form content. When provided it renders below the title/value (if any). */
-  children?: React.ReactNode
+  children?: React.ReactNode;
   /** Optional leading icon name (material-symbols-outlined). */
-  icon?: string
-  className?: string
-  id?: string
+  icon?: string;
+  className?: string;
+  id?: string;
 }
 
 /** The two original "metric" tones keep the exact prior look. */
 const isMetricTone = (tone: InfoCardTone): tone is 'primary' | 'secondary' =>
-  tone === 'primary' || tone === 'secondary'
+  tone === 'primary' || tone === 'secondary';
 
-type TintTone = 'info' | 'success' | 'warning' | 'danger'
+type TintTone = 'info' | 'success' | 'warning' | 'danger';
 
 const tintColor: Record<TintTone, string> = {
   info: colors.info,
   success: colors.success,
   warning: colors.warning,
-  danger: colors.danger
-}
+  danger: colors.danger,
+};
 
 const accentFor = (tone: InfoCardTone): string => {
-  if (tone === 'primary') return colors.primary
-  if (tone === 'secondary') return colors.secondary
-  return tintColor[tone]
-}
+  if (tone === 'primary') return colors.primary;
+  if (tone === 'secondary') return colors.secondary;
+  return tintColor[tone];
+};
 
 const Card = styled.div<{ $tone: InfoCardTone }>`
   border-radius: ${radii.lg - 2}px; /* 10px, matches original */
@@ -55,39 +55,35 @@ const Card = styled.div<{ $tone: InfoCardTone }>`
       : withAlpha(accentFor($tone), 0.12)};
   padding: ${({ $tone }) => ($tone === 'primary' || $tone === 'secondary' ? '18px' : '16px')};
   border-bottom: ${({ $tone }) =>
-    $tone === 'primary' || $tone === 'secondary'
-      ? `1px solid ${colors.outlineVariant}`
-      : 'none'};
+    $tone === 'primary' || $tone === 'secondary' ? `1px solid ${colors.outlineVariant}` : 'none'};
   border-left: ${({ $tone }) =>
-    $tone === 'primary' || $tone === 'secondary'
-      ? 'none'
-      : `3px solid ${accentFor($tone)}`};
-`
+    $tone === 'primary' || $tone === 'secondary' ? 'none' : `3px solid ${accentFor($tone)}`};
+`;
 
 const Title = styled.div`
   font-size: 10px;
   text-transform: uppercase;
   color: ${colors.onSurfaceVariant};
   letter-spacing: 1px;
-`
+`;
 
 const ValueRow = styled.div`
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   margin-top: 8px;
-`
+`;
 
 const Value = styled.div`
   font-size: 22px;
   font-weight: 800;
   color: ${colors.onSurface};
-`
+`;
 
 const Indicator = styled.div<{ $accent: string }>`
   font-size: 12px;
   color: ${({ $accent }) => $accent};
-`
+`;
 
 /* --- Tinted callout sub-elements --- */
 
@@ -96,31 +92,31 @@ const CalloutHeader = styled.div<{ $accent: string }>`
   align-items: center;
   gap: 8px;
   color: ${({ $accent }) => $accent};
-`
+`;
 
 const CalloutIcon = styled.span`
   font-size: 18px;
   line-height: 1;
-`
+`;
 
 const CalloutTitle = styled.div`
   font-size: 13px;
   font-weight: 600;
-`
+`;
 
 const CalloutValue = styled.div`
   font-size: 16px;
   font-weight: 700;
   color: ${colors.onSurface};
   margin-top: 4px;
-`
+`;
 
 const CalloutBody = styled.div`
   font-size: 13px;
   color: ${colors.onSurfaceVariant};
   margin-top: 6px;
   line-height: 1.5;
-`
+`;
 
 const InfoCard: React.FC<InfoCardProps> = ({
   title,
@@ -129,9 +125,9 @@ const InfoCard: React.FC<InfoCardProps> = ({
   children,
   icon,
   className,
-  id
+  id,
 }) => {
-  const accent = accentFor(tone)
+  const accent = accentFor(tone);
 
   if (isMetricTone(tone)) {
     // Backward-compatible metric layout (unchanged visuals).
@@ -144,7 +140,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
         </ValueRow>
         {children}
       </Card>
-    )
+    );
   }
 
   // Tinted note/callout layout for info/success/warning/danger.
@@ -163,8 +159,8 @@ const InfoCard: React.FC<InfoCardProps> = ({
       {value !== undefined && <CalloutValue>{value}</CalloutValue>}
       {children !== undefined && children !== null && <CalloutBody>{children}</CalloutBody>}
     </Card>
-  )
-}
+  );
+};
 
-export default React.memo(InfoCard)
-export { InfoCard }
+export default React.memo(InfoCard);
+export { InfoCard };

@@ -1,24 +1,24 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { colors } from '../colors.js'
+import React, { useEffect, useMemo, useState } from 'react';
+import { colors } from '../colors.js';
 
 export type ConnectedGridSettings = {
-  columns: number
-  rows: number
-}
+  columns: number;
+  rows: number;
+};
 
 export type ConnectedGridProps = {
-  settings: ConnectedGridSettings
-  onSettingsChange?: (nextSettings: ConnectedGridSettings) => void
-  minColumns?: number
-  maxColumns?: number
-  minRows?: number
-  maxRows?: number
-  renderCell?: (cell: { row: number; column: number; cellKey: string }) => React.ReactNode
-  title?: string
-  className?: string
-}
+  settings: ConnectedGridSettings;
+  onSettingsChange?: (nextSettings: ConnectedGridSettings) => void;
+  minColumns?: number;
+  maxColumns?: number;
+  minRows?: number;
+  maxRows?: number;
+  renderCell?: (cell: { row: number; column: number; cellKey: string }) => React.ReactNode;
+  title?: string;
+  className?: string;
+};
 
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
   settings,
@@ -29,60 +29,60 @@ export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
   maxRows = 24,
   renderCell,
   title = 'ConnectedGrid',
-  className
+  className,
 }) => {
   const initialSettings = useMemo(
     () => ({
       columns: clamp(settings.columns || 1, minColumns, maxColumns),
-      rows: clamp(settings.rows || 1, minRows, maxRows)
+      rows: clamp(settings.rows || 1, minRows, maxRows),
     }),
-    [maxColumns, maxRows, minColumns, minRows, settings.columns, settings.rows]
-  )
+    [maxColumns, maxRows, minColumns, minRows, settings.columns, settings.rows],
+  );
 
-  const [currentSettings, setCurrentSettings] = useState<ConnectedGridSettings>(initialSettings)
+  const [currentSettings, setCurrentSettings] = useState<ConnectedGridSettings>(initialSettings);
 
   useEffect(() => {
-    setCurrentSettings(initialSettings)
-  }, [initialSettings])
+    setCurrentSettings(initialSettings);
+  }, [initialSettings]);
 
   const emitChange = (nextSettings: ConnectedGridSettings) => {
-    setCurrentSettings(nextSettings)
-    onSettingsChange?.(nextSettings)
-  }
+    setCurrentSettings(nextSettings);
+    onSettingsChange?.(nextSettings);
+  };
 
   const addColumn = () => {
     emitChange({
       ...currentSettings,
-      columns: clamp(currentSettings.columns + 1, minColumns, maxColumns)
-    })
-  }
+      columns: clamp(currentSettings.columns + 1, minColumns, maxColumns),
+    });
+  };
 
   const removeColumn = () => {
     emitChange({
       ...currentSettings,
-      columns: clamp(currentSettings.columns - 1, minColumns, maxColumns)
-    })
-  }
+      columns: clamp(currentSettings.columns - 1, minColumns, maxColumns),
+    });
+  };
 
   const addRow = () => {
     emitChange({
       ...currentSettings,
-      rows: clamp(currentSettings.rows + 1, minRows, maxRows)
-    })
-  }
+      rows: clamp(currentSettings.rows + 1, minRows, maxRows),
+    });
+  };
 
   const removeRow = () => {
     emitChange({
       ...currentSettings,
-      rows: clamp(currentSettings.rows - 1, minRows, maxRows)
-    })
-  }
+      rows: clamp(currentSettings.rows - 1, minRows, maxRows),
+    });
+  };
 
-  const totalCells = currentSettings.columns * currentSettings.rows
-  const isAtMinColumns = currentSettings.columns <= minColumns
-  const isAtMaxColumns = currentSettings.columns >= maxColumns
-  const isAtMinRows = currentSettings.rows <= minRows
-  const isAtMaxRows = currentSettings.rows >= maxRows
+  const totalCells = currentSettings.columns * currentSettings.rows;
+  const isAtMinColumns = currentSettings.columns <= minColumns;
+  const isAtMaxColumns = currentSettings.columns >= maxColumns;
+  const isAtMinRows = currentSettings.rows <= minRows;
+  const isAtMaxRows = currentSettings.rows >= maxRows;
 
   return (
     <section
@@ -95,10 +95,18 @@ export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
         display: 'grid',
         gap: 12,
         color: colors.text.primary,
-        fontFamily: 'ui-monospace, Menlo, monospace'
+        fontFamily: 'ui-monospace, Menlo, monospace',
       }}
     >
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+      <header
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+          flexWrap: 'wrap',
+        }}
+      >
         <div>
           <h3 style={{ margin: 0, fontSize: 14, letterSpacing: 0.2 }}>{title}</h3>
           <p style={{ margin: '6px 0 0', color: colors.onSurfaceVariant, fontSize: 12 }}>
@@ -124,7 +132,7 @@ export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
                 color: isAtMinColumns ? colors.onSurfaceVariant : colors.onErrorContainer,
                 fontWeight: 700,
                 fontSize: 18,
-                lineHeight: 1
+                lineHeight: 1,
               }}
             >
               -
@@ -144,7 +152,7 @@ export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
                 color: colors.neutral[0],
                 fontWeight: 700,
                 fontSize: 18,
-                lineHeight: 1
+                lineHeight: 1,
               }}
             >
               +
@@ -168,7 +176,7 @@ export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
                 color: isAtMinRows ? colors.onSurfaceVariant : colors.onErrorContainer,
                 fontWeight: 700,
                 fontSize: 18,
-                lineHeight: 1
+                lineHeight: 1,
               }}
             >
               -
@@ -188,7 +196,7 @@ export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
                 color: colors.neutral[0],
                 fontWeight: 700,
                 fontSize: 18,
-                lineHeight: 1
+                lineHeight: 1,
               }}
             >
               +
@@ -201,14 +209,14 @@ export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
         style={{
           display: 'grid',
           gap: 8,
-          gridTemplateColumns: `repeat(${currentSettings.columns}, minmax(72px, 1fr))`
+          gridTemplateColumns: `repeat(${currentSettings.columns}, minmax(72px, 1fr))`,
         }}
       >
         {Array.from({ length: totalCells }).map((_, index) => {
-          const row = Math.floor(index / currentSettings.columns) + 1
-          const column = (index % currentSettings.columns) + 1
-          const cellKey = `${row}:${column}`
-          const customCellContent = renderCell?.({ row, column, cellKey })
+          const row = Math.floor(index / currentSettings.columns) + 1;
+          const column = (index % currentSettings.columns) + 1;
+          const cellKey = `${row}:${column}`;
+          const customCellContent = renderCell?.({ row, column, cellKey });
 
           return (
             <div
@@ -224,7 +232,7 @@ export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
                 color: colors.onSurfaceVariant,
                 fontSize: 11,
                 textTransform: 'uppercase',
-                letterSpacing: 0.5
+                letterSpacing: 0.5,
               }}
             >
               {customCellContent ?? (
@@ -233,11 +241,11 @@ export const ConnectedGrid: React.FC<ConnectedGridProps> = ({
                 </>
               )}
             </div>
-          )
+          );
         })}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default ConnectedGrid
+export default ConnectedGrid;

@@ -46,23 +46,37 @@ export default function StackedBarChart({
 }: Props) {
   if (!data || data.length === 0) {
     return (
-      <div style={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.neutral[400] }}>
+      <div
+        style={{
+          height,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: colors.neutral[400],
+        }}
+      >
         No data
       </div>
     );
   }
 
-  const yFmt = yFormatter ?? ((v: number) => {
-    const abs = Math.abs(v);
-    if (abs >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
-    if (abs >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
-    return `$${v.toFixed(0)}`;
-  });
+  const yFmt =
+    yFormatter ??
+    ((v: number) => {
+      const abs = Math.abs(v);
+      if (abs >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
+      if (abs >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
+      return `$${v.toFixed(0)}`;
+    });
 
   return (
     <div style={{ width: '100%', height }}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 12 }} barCategoryGap="30%">
+        <BarChart
+          data={data}
+          margin={{ top: 8, right: 16, left: 0, bottom: 12 }}
+          barCategoryGap="30%"
+        >
           <CartesianGrid stroke={colors.surfaceLow} strokeDasharray="3 3" vertical={false} />
           <XAxis
             dataKey={xKey}
@@ -86,7 +100,10 @@ export default function StackedBarChart({
               return [yFmt(Number(value)), b?.label ?? key];
             }}
           />
-          <Legend iconType="square" wrapperStyle={{ fontSize: 11, color: colors.neutral[400], paddingTop: 4 }} />
+          <Legend
+            iconType="square"
+            wrapperStyle={{ fontSize: 11, color: colors.neutral[400], paddingTop: 4 }}
+          />
           {bars.map((b) => (
             <Bar
               key={b.key}

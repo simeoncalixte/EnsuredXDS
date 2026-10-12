@@ -1,17 +1,17 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors, withAlpha } from '../colors.js'
-import { radii, spacing } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors, withAlpha } from '../colors.js';
+import { radii, spacing } from '../tokens.js';
 
 export type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  label?: React.ReactNode
-}
+  label?: React.ReactNode;
+};
 
 const Label = styled.label`
   display: inline-flex;
   align-items: center;
   gap: ${spacing.sm}px;
-`
+`;
 
 const Input = styled.input`
   width: 18px;
@@ -27,12 +27,12 @@ const Input = styled.input`
     background: ${colors.primary};
     border-color: ${colors.primary};
   }
-`
+`;
 
 const LabelText = styled.span`
   color: ${colors.onSurfaceVariant};
   font-size: 13px;
-`
+`;
 
 const Checkbox: React.FC<CheckboxProps> = ({ label, className, ...rest }) => {
   if (label) {
@@ -41,10 +41,10 @@ const Checkbox: React.FC<CheckboxProps> = ({ label, className, ...rest }) => {
         <Input type="checkbox" {...rest} />
         <LabelText>{label}</LabelText>
       </Label>
-    )
+    );
   }
 
-  return <Input type="checkbox" {...rest} />
-}
+  return <Input type="checkbox" {...rest} />;
+};
 
-export default Checkbox
+export default Checkbox;

@@ -1,19 +1,26 @@
-import React from 'react'
-import type { Meta } from '@storybook/react'
-import tokens, { spacing, radii, typography, zIndices } from './tokens.js'
+import React from 'react';
+import type { Meta } from '@storybook/react';
+import { spacing, radii, typography, zIndices } from './tokens.js';
 
 const meta: Meta = {
-  title: 'XDS/Design Tokens/Tokens'
-}
+  title: 'XDS/Design Tokens/Tokens',
+};
 
-export default meta
+export default meta;
 
 const Row: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => (
-  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px dashed rgba(255,255,255,0.03)' }}>
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '6px 0',
+      borderBottom: '1px dashed rgba(255,255,255,0.03)',
+    }}
+  >
     <div style={{ color: 'var(--text-secondary)' }}>{label}</div>
     <div style={{ color: 'var(--text-primary)' }}>{value}</div>
   </div>
-)
+);
 
 export const Tokens = () => (
   <div style={{ padding: 20, background: 'var(--bg)', minHeight: '100vh' }}>
@@ -46,4 +53,4 @@ export const Tokens = () => (
       ))}
     </div>
   </div>
-)
+);

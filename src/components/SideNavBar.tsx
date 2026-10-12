@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import Navigation from './Navigation.js'
-import type { NavItem } from './Navigation.js'
-import { colors, withAlpha } from '../colors.js'
+import React from 'react';
+import styled from 'styled-components';
+import Navigation from './Navigation.js';
+import type { NavItem } from './Navigation.js';
+import { colors, withAlpha } from '../colors.js';
 
 const Aside = styled.aside<{ $isOpen?: boolean; $layoutMode: 'overlay' | 'grid' }>`
   position: ${({ $layoutMode }) => ($layoutMode === 'grid' ? 'sticky' : 'fixed')};
@@ -18,21 +18,23 @@ const Aside = styled.aside<{ $isOpen?: boolean; $layoutMode: 'overlay' | 'grid' 
   overflow: hidden;
   box-shadow: 0 24px 60px ${withAlpha(colors.scrim, 0.28)};
   transform: ${({ $layoutMode, $isOpen }) => ($layoutMode === 'grid' ? 'none' : `translateX(${$isOpen ? '0' : '-100%'})`)};
-  opacity: ${({ $layoutMode, $isOpen }) => ($layoutMode === 'grid' ? 1 : ($isOpen ? 1 : 0))};
-  visibility: ${({ $layoutMode, $isOpen }) => ($layoutMode === 'grid' ? 'visible' : ($isOpen ? 'visible' : 'hidden'))};
-  pointer-events: ${({ $layoutMode, $isOpen }) => ($layoutMode === 'grid' ? 'auto' : ($isOpen ? 'auto' : 'none'))};
-  transition: transform 220ms ease, opacity 180ms ease;
+  opacity: ${({ $layoutMode, $isOpen }) => ($layoutMode === 'grid' ? 1 : $isOpen ? 1 : 0)};
+  visibility: ${({ $layoutMode, $isOpen }) => ($layoutMode === 'grid' ? 'visible' : $isOpen ? 'visible' : 'hidden')};
+  pointer-events: ${({ $layoutMode, $isOpen }) => ($layoutMode === 'grid' ? 'auto' : $isOpen ? 'auto' : 'none')};
+  transition:
+    transform 220ms ease,
+    opacity 180ms ease;
 
   @media (min-width: 1024px) {
     border-right: ${({ $layoutMode }) => ($layoutMode === 'grid' ? `1px solid ${withAlpha(colors.primarySoft, 0.1)}` : '0')};
     box-shadow: ${({ $layoutMode }) => ($layoutMode === 'grid' ? 'none' : `0 24px 60px ${withAlpha(colors.scrim, 0.28)}`)};
   }
-`
+`;
 
 const HeaderBlock = styled.div`
   padding: 0 2rem;
   margin-bottom: 1.5rem;
-`
+`;
 
 const Title = styled.div`
   margin-bottom: 0.25rem;
@@ -40,31 +42,38 @@ const Title = styled.div`
   font-size: 1.125rem;
   font-weight: 900;
   cursor: text;
-`
+`;
 
 const Subtitle = styled.div`
   color: ${colors.onSurfaceVariant};
   font-size: 0.75rem;
   font-weight: 500;
   cursor: text;
-`
+`;
 
 const Nav = styled.nav`
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-`
+`;
 
 const NavItem = styled.div<{ $active?: boolean }>`
   display: flex;
   align-items: center;
   padding: 1rem 1.5rem;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: text;
-  transition: background-color 180ms ease, color 180ms ease;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
   background: ${({ $active }) => ($active ? colors.surfaceHigh : 'transparent')};
   color: ${({ $active }) => ($active ? colors.primarySoft : colors.onSurfaceMuted)};
   border-left: ${({ $active }) => ($active ? `4px solid ${colors.primary}` : '4px solid transparent')};
@@ -73,11 +82,11 @@ const NavItem = styled.div<{ $active?: boolean }>`
     background: ${({ $active }) => ($active ? colors.surfaceHigh : colors.surfaceRaised)};
     color: ${colors.primarySoft};
   }
-`
+`;
 
 const Icon = styled.span`
   margin-right: 1rem;
-`
+`;
 
 const FooterActions = styled.div`
   margin-top: auto;
@@ -85,7 +94,7 @@ const FooterActions = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-`
+`;
 
 const SaveButton = styled.button`
   width: 100%;
@@ -100,7 +109,9 @@ const SaveButton = styled.button`
   color: ${colors.primarySoft};
   font-size: 0.875rem;
   font-weight: 700;
-  transition: background-color 200ms ease, transform 200ms ease;
+  transition:
+    background-color 200ms ease,
+    transform 200ms ease;
   cursor: text;
 
   &:hover {
@@ -110,7 +121,7 @@ const SaveButton = styled.button`
   &:active {
     transform: translateX(1px);
   }
-`
+`;
 
 const LogoutButton = styled.button`
   width: 100%;
@@ -125,7 +136,10 @@ const LogoutButton = styled.button`
   color: ${colors.errorSoft};
   font-size: 0.875rem;
   font-weight: 700;
-  transition: background-color 200ms ease, transform 200ms ease, border-color 200ms ease;
+  transition:
+    background-color 200ms ease,
+    transform 200ms ease,
+    border-color 200ms ease;
   cursor: pointer;
 
   &:hover {
@@ -136,11 +150,11 @@ const LogoutButton = styled.button`
   &:active {
     transform: translateX(1px);
   }
-`
+`;
 
 const SaveIcon = styled.span`
   font-size: 0.875rem;
-`
+`;
 
 type SideNavBarProps = {
   items?: NavItem[];
@@ -150,65 +164,137 @@ type SideNavBarProps = {
   layoutMode?: 'overlay' | 'grid';
   onRequestClose?: () => void;
   onLogout?: () => void;
-}
+};
 
-export const SideNavBar: React.FC<SideNavBarProps> = ({ items, title, subtitle, isOpen = false, layoutMode = 'overlay', onRequestClose, onLogout }) => {
-  const hasCustom = Array.isArray(items) && items.length > 0
+export const SideNavBar: React.FC<SideNavBarProps> = ({
+  items,
+  title,
+  subtitle,
+  isOpen = false,
+  layoutMode = 'overlay',
+  onRequestClose,
+  onLogout,
+}) => {
+  const hasCustom = Array.isArray(items) && items.length > 0;
 
   return (
     <Aside data-stitch-vh="h-[1024px]===h-screen" $isOpen={isOpen} $layoutMode={layoutMode}>
       <HeaderBlock>
-        <Title contentEditable={false} spellCheck={false} data-stitch-editable-idx="6" data-stitch-added-classes="cursor-text">
+        <Title
+          contentEditable={false}
+          spellCheck={false}
+          data-stitch-editable-idx="6"
+          data-stitch-added-classes="cursor-text"
+        >
           {title ?? 'Registration'}
         </Title>
-        <Subtitle contentEditable={false} spellCheck={false} data-stitch-editable-idx="7" data-stitch-added-classes="cursor-text">
+        <Subtitle
+          contentEditable={false}
+          spellCheck={false}
+          data-stitch-editable-idx="7"
+          data-stitch-added-classes="cursor-text"
+        >
           {subtitle ?? 'Step 1 of 5: Account Selection'}
         </Subtitle>
       </HeaderBlock>
 
       {hasCustom ? (
-        <div style={{ padding: '0 1.5rem', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+        <div
+          style={{
+            padding: '0 1.5rem',
+            flex: 1,
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            overflowY: 'auto',
+          }}
+        >
           <Navigation items={items!} onItemClick={onRequestClose} />
         </div>
       ) : (
         <Nav>
-          <NavItem $active={true} contentEditable={true} spellCheck={false} data-stitch-editable-idx="8" data-stitch-added-classes="cursor-text">
-            <Icon className="material-symbols-outlined" aria-hidden data-icon="account_balance">account_balance</Icon>
+          <NavItem
+            $active={true}
+            contentEditable={true}
+            spellCheck={false}
+            data-stitch-editable-idx="8"
+            data-stitch-added-classes="cursor-text"
+          >
+            <Icon className="material-symbols-outlined" aria-hidden data-icon="account_balance">
+              account_balance
+            </Icon>
             Account Type
           </NavItem>
-          <NavItem contentEditable={true} spellCheck={false} data-stitch-editable-idx="9" data-stitch-added-classes="cursor-text">
-            <Icon className="material-symbols-outlined" aria-hidden data-icon="domain">domain</Icon>
+          <NavItem
+            contentEditable={true}
+            spellCheck={false}
+            data-stitch-editable-idx="9"
+            data-stitch-added-classes="cursor-text"
+          >
+            <Icon className="material-symbols-outlined" aria-hidden data-icon="domain">
+              domain
+            </Icon>
             Business Details
           </NavItem>
-          <NavItem contentEditable={true} spellCheck={false} data-stitch-editable-idx="10" data-stitch-added-classes="cursor-text">
-            <Icon className="material-symbols-outlined" aria-hidden data-icon="verified_user">verified_user</Icon>
+          <NavItem
+            contentEditable={true}
+            spellCheck={false}
+            data-stitch-editable-idx="10"
+            data-stitch-added-classes="cursor-text"
+          >
+            <Icon className="material-symbols-outlined" aria-hidden data-icon="verified_user">
+              verified_user
+            </Icon>
             KYC Verification
           </NavItem>
-          <NavItem contentEditable={true} spellCheck={false} data-stitch-editable-idx="11" data-stitch-added-classes="cursor-text">
-            <Icon className="material-symbols-outlined" aria-hidden data-icon="monitoring">monitoring</Icon>
+          <NavItem
+            contentEditable={true}
+            spellCheck={false}
+            data-stitch-editable-idx="11"
+            data-stitch-added-classes="cursor-text"
+          >
+            <Icon className="material-symbols-outlined" aria-hidden data-icon="monitoring">
+              monitoring
+            </Icon>
             Capital Profile
           </NavItem>
-          <NavItem contentEditable={true} spellCheck={false} data-stitch-editable-idx="12" data-stitch-added-classes="cursor-text">
-            <Icon className="material-symbols-outlined" aria-hidden data-icon="fact_check">fact_check</Icon>
+          <NavItem
+            contentEditable={true}
+            spellCheck={false}
+            data-stitch-editable-idx="12"
+            data-stitch-added-classes="cursor-text"
+          >
+            <Icon className="material-symbols-outlined" aria-hidden data-icon="fact_check">
+              fact_check
+            </Icon>
             Final Review
           </NavItem>
         </Nav>
       )}
 
       <FooterActions>
-        <SaveButton contentEditable={false} spellCheck={false} data-stitch-editable-idx="13" data-stitch-added-classes="cursor-text">
-          <SaveIcon className="material-symbols-outlined" aria-hidden data-icon="save">save</SaveIcon>
+        <SaveButton
+          contentEditable={false}
+          spellCheck={false}
+          data-stitch-editable-idx="13"
+          data-stitch-added-classes="cursor-text"
+        >
+          <SaveIcon className="material-symbols-outlined" aria-hidden data-icon="save">
+            save
+          </SaveIcon>
           Save Progress
         </SaveButton>
         {onLogout && (
           <LogoutButton type="button" onClick={onLogout} aria-label="Log out of the application">
-            <SaveIcon className="material-symbols-outlined" aria-hidden data-icon="logout">logout</SaveIcon>
+            <SaveIcon className="material-symbols-outlined" aria-hidden data-icon="logout">
+              logout
+            </SaveIcon>
             Log out
           </LogoutButton>
         )}
       </FooterActions>
     </Aside>
-  )
-}
+  );
+};
 
-export default SideNavBar
+export default SideNavBar;

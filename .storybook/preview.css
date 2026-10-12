@@ -1,1 +1,6 @@
-body { margin: 0; font-family: Inter, system-ui, sans-serif; background: var(--xds-background); color: var(--xds-text-primary); }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--xds-background);
+  color: var(--xds-text-primary);
+}

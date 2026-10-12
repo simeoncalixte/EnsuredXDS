@@ -1,7 +1,7 @@
-import React from 'react'
-import styled, { css } from 'styled-components'
-import { colors, withAlpha } from '../colors.js'
-import { radii, spacing } from '../tokens.js'
+import React from 'react';
+import styled, { css } from 'styled-components';
+import { colors, withAlpha } from '../colors.js';
+import { radii, spacing } from '../tokens.js';
 
 /**
  * Card surface container.
@@ -18,52 +18,52 @@ import { radii, spacing } from '../tokens.js'
  * - `interactive`: when true the card becomes a button-like surface (role/tabindex/hover/focus).
  *   Combine with the native `onClick`/`onKeyDown` handlers that already forward through.
  */
-export type XdsCardVariant = 'surface' | 'elevated' | 'outline' | 'low' | 'high'
+export type XdsCardVariant = 'surface' | 'elevated' | 'outline' | 'low' | 'high';
 
-export type XdsCardTone = 'none' | 'success' | 'warning' | 'danger' | 'info'
+export type XdsCardTone = 'none' | 'success' | 'warning' | 'danger' | 'info';
 
 export type CardProps = {
   /** Original prop: renders the raised surface fill. Kept for backwards compatibility. */
-  elevated?: boolean
+  elevated?: boolean;
   /** Additive surface treatment. Ignored visually when `elevated` is true. */
-  variant?: XdsCardVariant
+  variant?: XdsCardVariant;
   /** Additive semantic accent applied to the border. */
-  tone?: XdsCardTone
+  tone?: XdsCardTone;
   /** When true, the card is keyboard/pointer interactive (role=button, focusable, hover/focus affordances). */
-  interactive?: boolean
-  children?: React.ReactNode
-  style?: React.CSSProperties
-} & React.HTMLAttributes<HTMLDivElement>
+  interactive?: boolean;
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+} & React.HTMLAttributes<HTMLDivElement>;
 
 // Backwards-compatible alias.
-export type XdsCardProps = CardProps
+export type XdsCardProps = CardProps;
 
 // Original literal surface colors preserved exactly so existing pages render pixel-identical.
-const ORIGINAL_SURFACE = colors.surfaceRaised
-const ORIGINAL_ELEVATED = colors.surfaceElevated
-const ORIGINAL_BORDER = withAlpha(colors.onSurface, 0.05)
+const ORIGINAL_SURFACE = colors.surfaceRaised;
+const ORIGINAL_ELEVATED = colors.surfaceElevated;
+const ORIGINAL_BORDER = withAlpha(colors.onSurface, 0.05);
 
 const variantBackground: Record<XdsCardVariant, string> = {
   surface: ORIGINAL_SURFACE,
   elevated: ORIGINAL_ELEVATED,
   outline: 'transparent',
   low: colors.surfaceContainerLow,
-  high: colors.surfaceContainerHigh
-}
+  high: colors.surfaceContainerHigh,
+};
 
 const toneBorder: Record<XdsCardTone, string> = {
   none: ORIGINAL_BORDER,
   success: withAlpha(colors.success, 0.4),
   warning: withAlpha(colors.warning, 0.4),
   danger: withAlpha(colors.danger, 0.4),
-  info: withAlpha(colors.info, 0.4)
-}
+  info: withAlpha(colors.info, 0.4),
+};
 
 type StyledCardProps = {
-  $variant: XdsCardVariant
-  $tone: XdsCardTone
-  $interactive: boolean
-}
+  $variant: XdsCardVariant;
+  $tone: XdsCardTone;
+  $interactive: boolean;
+};
 
 const StyledCard = styled.div<StyledCardProps>`
   background: ${(p: StyledCardProps) => variantBackground[p.$variant]};
@@ -87,7 +87,7 @@ const StyledCard = styled.div<StyledCardProps>`
         box-shadow: 0 0 0 2px ${withAlpha(colors.primary, 0.4)};
       }
     `}
-`
+`;
 
 export const Card: React.FC<CardProps> = ({
   elevated = false,
@@ -99,22 +99,22 @@ export const Card: React.FC<CardProps> = ({
   ...rest
 }) => {
   // `elevated` wins for backwards compatibility; otherwise fall back to variant/surface.
-  const resolvedVariant: XdsCardVariant = elevated ? 'elevated' : variant ?? 'surface'
+  const resolvedVariant: XdsCardVariant = elevated ? 'elevated' : (variant ?? 'surface');
 
   // Interactive cards behave like a button for keyboard users (Enter/Space) while
   // still honoring any forwarded onKeyDown handler first.
   const handleKeyDown = interactive
     ? (event: React.KeyboardEvent<HTMLDivElement>) => {
-        onKeyDown?.(event)
-        if (event.defaultPrevented) return
+        onKeyDown?.(event);
+        if (event.defaultPrevented) return;
         if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault()
-          event.currentTarget.click()
+          event.preventDefault();
+          event.currentTarget.click();
         }
       }
-    : onKeyDown
+    : onKeyDown;
 
-  const interactiveProps = interactive ? { role: 'button' as const, tabIndex: 0 } : {}
+  const interactiveProps = interactive ? { role: 'button' as const, tabIndex: 0 } : {};
 
   return (
     <StyledCard
@@ -127,7 +127,7 @@ export const Card: React.FC<CardProps> = ({
     >
       {children}
     </StyledCard>
-  )
-}
+  );
+};
 
-export default Card
+export default Card;

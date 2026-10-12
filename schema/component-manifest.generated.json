@@ -18590,6 +18590,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "aria-label": {
+            "type": "string",
+            "description": "Accessible name when the visible label is omitted or contains non-text content."
+          },
           "className": {
             "type": "string"
           },
@@ -19749,6 +19753,11 @@
         {
           "name": "series",
           "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "tooltipContent",
+          "required": false,
           "reason": "Function or constructor supplied by the UI"
         },
         {
@@ -33143,6 +33152,2190 @@
         },
         {
           "name": "onClose",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.results-panel",
+      "version": 1,
+      "export": "@ensured/xds/components/ResultsPanel",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Result container with loading, empty, unavailable and error states.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string",
+            "description": "Explain missing evidence or a failed request in user-facing language."
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "error"
+              },
+              {
+                "type": "string",
+                "const": "ready"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "empty"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              }
+            ]
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "action",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "children",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "onRetry",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.result-metric-card",
+      "version": 1,
+      "export": "@ensured/xds/components/ResultMetricCard",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Metric result with explicit comparison tone, evidence coverage and target progress.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "type": "string",
+            "description": "Period, valuation basis, or revision information relevant to interpreting the result."
+          },
+          "className": {
+            "type": "string"
+          },
+          "comparison": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "direction": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "up"
+                  },
+                  {
+                    "type": "string",
+                    "const": "down"
+                  },
+                  {
+                    "type": "string",
+                    "const": "flat"
+                  }
+                ]
+              },
+              "tone": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "success"
+                  },
+                  {
+                    "type": "string",
+                    "const": "warning"
+                  },
+                  {
+                    "type": "string",
+                    "const": "danger"
+                  },
+                  {
+                    "type": "string",
+                    "const": "neutral"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label"
+            ]
+          },
+          "coverage": {
+            "type": "object",
+            "properties": {
+              "populated": {
+                "type": "number"
+              },
+              "total": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "populated",
+              "total"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "error"
+              },
+              {
+                "type": "string",
+                "const": "ready"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "empty"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              }
+            ]
+          },
+          "status": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "tone": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "success"
+                  },
+                  {
+                    "type": "string",
+                    "const": "warning"
+                  },
+                  {
+                    "type": "string",
+                    "const": "danger"
+                  },
+                  {
+                    "type": "string",
+                    "const": "primary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "secondary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "info"
+                  },
+                  {
+                    "type": "string",
+                    "const": "surface"
+                  },
+                  {
+                    "type": "string",
+                    "const": "tertiary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "neutral"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label",
+              "value",
+              "max"
+            ]
+          }
+        },
+        "required": [
+          "label"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onRetry",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "value",
+          "required": true,
+          "reason": "Owned by the UI renderer/data binding"
+        }
+      ]
+    },
+    {
+      "id": "xds.allocation-list",
+      "version": 1,
+      "export": "@ensured/xds/components/AllocationList",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Labelled allocation shares with explicit denominator and unknown states.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "type": "string",
+            "description": "Name the denominator and explain overlapping categories where applicable."
+          },
+          "emptyMessage": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "share": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "description": "Explicit share of the stated denominator, in percent. Null means unknown."
+                },
+                "formattedValue": {
+                  "type": "string"
+                },
+                "tone": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "danger"
+                    },
+                    {
+                      "type": "string",
+                      "const": "primary"
+                    },
+                    {
+                      "type": "string",
+                      "const": "tertiary"
+                    },
+                    {
+                      "type": "string",
+                      "const": "neutral"
+                    },
+                    {
+                      "type": "string",
+                      "const": "gain"
+                    }
+                  ]
+                },
+                "annotation": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "tone": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "const": "success"
+                        },
+                        {
+                          "type": "string",
+                          "const": "warning"
+                        },
+                        {
+                          "type": "string",
+                          "const": "danger"
+                        },
+                        {
+                          "type": "string",
+                          "const": "primary"
+                        },
+                        {
+                          "type": "string",
+                          "const": "secondary"
+                        },
+                        {
+                          "type": "string",
+                          "const": "info"
+                        },
+                        {
+                          "type": "string",
+                          "const": "surface"
+                        },
+                        {
+                          "type": "string",
+                          "const": "tertiary"
+                        },
+                        {
+                          "type": "string",
+                          "const": "neutral"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "label"
+                  ]
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "label",
+                "share",
+                "formattedValue"
+              ]
+            }
+          }
+        },
+        "required": [
+          "basis",
+          "items"
+        ]
+      },
+      "excludedProps": []
+    },
+    {
+      "id": "xds.results-toolbar",
+      "version": 1,
+      "export": "@ensured/xds/components/ResultsToolbar",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Results heading, reporting period, match count and controlled filter actions.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "activeFilterCount": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          },
+          "loading": {
+            "type": "boolean"
+          },
+          "matchedCount": {
+            "type": "number"
+          },
+          "periodLabel": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "periodLabel",
+          "title"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "actions",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "onClearFilters",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onOpenFilters",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.nat-cat-risk-banner",
+      "version": 1,
+      "export": "@ensured/xds/components/NatCatRiskBanner",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Catastrophe accumulation summary with controlled GIS, stress test and disclosure actions.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "type": "string",
+            "description": "Name valuation time, currency and scenario assumptions when available."
+          },
+          "bufferLabel": {
+            "type": "string"
+          },
+          "defaultExpanded": {
+            "type": "boolean"
+          },
+          "expanded": {
+            "type": "boolean"
+          },
+          "grossExposure": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "netRetained": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "error"
+              },
+              {
+                "type": "string",
+                "const": "ready"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "empty"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              }
+            ]
+          },
+          "status": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "tone": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "success"
+                  },
+                  {
+                    "type": "string",
+                    "const": "warning"
+                  },
+                  {
+                    "type": "string",
+                    "const": "danger"
+                  },
+                  {
+                    "type": "string",
+                    "const": "primary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "secondary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "info"
+                  },
+                  {
+                    "type": "string",
+                    "const": "surface"
+                  },
+                  {
+                    "type": "string",
+                    "const": "tertiary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "neutral"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label"
+            ]
+          },
+          "stressTestError": {
+            "type": "string"
+          },
+          "stressTestRunning": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string"
+          },
+          "treatyCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "grossExposure",
+          "netRetained",
+          "title"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "details",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "onExpandedChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onRetry",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onRunStressTest",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onViewHazard",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.treaty-renewal-card",
+      "version": 1,
+      "export": "@ensured/xds/components/TreatyRenewalCard",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Treaty renewal terms, broker, dates, status and participation.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "broker": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "expiryDate": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "expiryLabel": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "indicativeRate": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "participation": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "rateChange": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "tone": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "success"
+                  },
+                  {
+                    "type": "string",
+                    "const": "warning"
+                  },
+                  {
+                    "type": "string",
+                    "const": "danger"
+                  },
+                  {
+                    "type": "string",
+                    "const": "neutral"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label"
+            ]
+          },
+          "status": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "tone": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "success"
+                  },
+                  {
+                    "type": "string",
+                    "const": "warning"
+                  },
+                  {
+                    "type": "string",
+                    "const": "danger"
+                  },
+                  {
+                    "type": "string",
+                    "const": "primary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "secondary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "info"
+                  },
+                  {
+                    "type": "string",
+                    "const": "surface"
+                  },
+                  {
+                    "type": "string",
+                    "const": "tertiary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "neutral"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label"
+            ]
+          },
+          "targetLimit": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "terms": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "tone": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "success"
+                  },
+                  {
+                    "type": "string",
+                    "const": "warning"
+                  },
+                  {
+                    "type": "string",
+                    "const": "danger"
+                  },
+                  {
+                    "type": "string",
+                    "const": "neutral"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "treatyReference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "expiryLabel",
+          "indicativeRate",
+          "participation",
+          "status",
+          "targetLimit",
+          "title",
+          "treatyReference"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onOpen",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.treaty-renewal-watchlist",
+      "version": 1,
+      "export": "@ensured/xds/components/TreatyRenewalWatchlist",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Responsive treaty renewal watchlist with explicit total and result states.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "type": "string",
+            "description": "Explain the population/valuation underlying the supplied total."
+          },
+          "description": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "critical": {
+                  "type": "boolean"
+                },
+                "status": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "tone": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "const": "success"
+                        },
+                        {
+                          "type": "string",
+                          "const": "warning"
+                        },
+                        {
+                          "type": "string",
+                          "const": "danger"
+                        },
+                        {
+                          "type": "string",
+                          "const": "primary"
+                        },
+                        {
+                          "type": "string",
+                          "const": "secondary"
+                        },
+                        {
+                          "type": "string",
+                          "const": "info"
+                        },
+                        {
+                          "type": "string",
+                          "const": "surface"
+                        },
+                        {
+                          "type": "string",
+                          "const": "tertiary"
+                        },
+                        {
+                          "type": "string",
+                          "const": "neutral"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "label"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "broker": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "expiryDate": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "expiryLabel": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "indicativeRate": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "participation": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "rateChange": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "tone": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "const": "success"
+                        },
+                        {
+                          "type": "string",
+                          "const": "warning"
+                        },
+                        {
+                          "type": "string",
+                          "const": "danger"
+                        },
+                        {
+                          "type": "string",
+                          "const": "neutral"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "label"
+                  ]
+                },
+                "targetLimit": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "terms": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "tone": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "const": "success"
+                        },
+                        {
+                          "type": "string",
+                          "const": "warning"
+                        },
+                        {
+                          "type": "string",
+                          "const": "danger"
+                        },
+                        {
+                          "type": "string",
+                          "const": "neutral"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "label"
+                  ]
+                },
+                "treatyReference": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "status",
+                "title",
+                "expiryLabel",
+                "indicativeRate",
+                "participation",
+                "targetLimit",
+                "treatyReference"
+              ]
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "error"
+              },
+              {
+                "type": "string",
+                "const": "ready"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "empty"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              }
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "totalRenewingLimit": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "title"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onOpenTreaty",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onRetry",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.pipeline-stage-card",
+      "version": 1,
+      "export": "@ensured/xds/components/PipelineStageCard",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Pipeline stage with count, exposure, progress basis and controlled navigation.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "exposure": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "exposureLabel": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label",
+              "value"
+            ]
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "progress": {
+            "type": "object",
+            "properties": {
+              "percent": {
+                "type": "number"
+              },
+              "label": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "percent",
+              "label"
+            ],
+            "description": "Explicit stage share or completion percentage, paired with its basis."
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "error"
+              },
+              {
+                "type": "string",
+                "const": "ready"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "empty"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              }
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "tone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "success"
+              },
+              {
+                "type": "string",
+                "const": "warning"
+              },
+              {
+                "type": "string",
+                "const": "danger"
+              },
+              {
+                "type": "string",
+                "const": "primary"
+              },
+              {
+                "type": "string",
+                "const": "secondary"
+              },
+              {
+                "type": "string",
+                "const": "info"
+              },
+              {
+                "type": "string",
+                "const": "surface"
+              },
+              {
+                "type": "string",
+                "const": "tertiary"
+              },
+              {
+                "type": "string",
+                "const": "neutral"
+              }
+            ]
+          }
+        },
+        "required": [
+          "count",
+          "exposure",
+          "title"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onOpen",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.appetite-distribution",
+      "version": 1,
+      "export": "@ensured/xds/components/AppetiteDistribution",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Explicit appetite percentages with labelled distribution and missing-data handling.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "percent": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ]
+                },
+                "tone": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "success"
+                    },
+                    {
+                      "type": "string",
+                      "const": "warning"
+                    },
+                    {
+                      "type": "string",
+                      "const": "danger"
+                    },
+                    {
+                      "type": "string",
+                      "const": "info"
+                    },
+                    {
+                      "type": "string",
+                      "const": "neutral"
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "label",
+                "percent"
+              ]
+            }
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "error"
+              },
+              {
+                "type": "string",
+                "const": "ready"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "empty"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              }
+            ]
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "basis",
+          "segments",
+          "title"
+        ]
+      },
+      "excludedProps": []
+    },
+    {
+      "id": "xds.sla-velocity-panel",
+      "version": 1,
+      "export": "@ensured/xds/components/SlaVelocityPanel",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Cycle time and clearance metrics with explicit performance context.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "type": "string"
+          },
+          "clearanceEfficiency": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "comparison": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "direction": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "up"
+                  },
+                  {
+                    "type": "string",
+                    "const": "down"
+                  },
+                  {
+                    "type": "string",
+                    "const": "flat"
+                  }
+                ]
+              },
+              "tone": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "success"
+                  },
+                  {
+                    "type": "string",
+                    "const": "warning"
+                  },
+                  {
+                    "type": "string",
+                    "const": "danger"
+                  },
+                  {
+                    "type": "string",
+                    "const": "neutral"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label"
+            ]
+          },
+          "cycleTime": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "onTime": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "tone": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "success"
+                  },
+                  {
+                    "type": "string",
+                    "const": "warning"
+                  },
+                  {
+                    "type": "string",
+                    "const": "danger"
+                  },
+                  {
+                    "type": "string",
+                    "const": "primary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "secondary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "info"
+                  },
+                  {
+                    "type": "string",
+                    "const": "surface"
+                  },
+                  {
+                    "type": "string",
+                    "const": "tertiary"
+                  },
+                  {
+                    "type": "string",
+                    "const": "neutral"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label"
+            ]
+          },
+          "queueNote": {
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "error"
+              },
+              {
+                "type": "string",
+                "const": "ready"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "empty"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              }
+            ]
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "basis",
+          "clearanceEfficiency",
+          "cycleTime",
+          "title"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onRetry",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.priority-underwriter-queue",
+      "version": 1,
+      "export": "@ensured/xds/components/PriorityUnderwriterQueue",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Prioritized underwriting actions and application-provided urgency.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "escalationNote": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "tone": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "const": "success"
+                        },
+                        {
+                          "type": "string",
+                          "const": "warning"
+                        },
+                        {
+                          "type": "string",
+                          "const": "danger"
+                        },
+                        {
+                          "type": "string",
+                          "const": "primary"
+                        },
+                        {
+                          "type": "string",
+                          "const": "secondary"
+                        },
+                        {
+                          "type": "string",
+                          "const": "info"
+                        },
+                        {
+                          "type": "string",
+                          "const": "surface"
+                        },
+                        {
+                          "type": "string",
+                          "const": "tertiary"
+                        },
+                        {
+                          "type": "string",
+                          "const": "neutral"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "label"
+                  ]
+                },
+                "critical": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "title",
+                "status"
+              ]
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "error"
+              },
+              {
+                "type": "string",
+                "const": "ready"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "empty"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              }
+            ]
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "title"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onOpenSubmission",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onRetry",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.submission-pipeline-overview",
+      "version": 1,
+      "export": "@ensured/xds/components/SubmissionPipelineOverview",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Responsive pipeline stage and triage composition with explicit totals.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "activeCount": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "basis": {
+            "type": "string"
+          },
+          "capacity": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "stages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "progress": {
+                  "type": "object",
+                  "properties": {
+                    "percent": {
+                      "type": "number"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "percent",
+                    "label"
+                  ],
+                  "description": "Explicit stage share or completion percentage, paired with its basis."
+                },
+                "title": {
+                  "type": "string"
+                },
+                "count": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ]
+                },
+                "exposure": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "exposureLabel": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "metric": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "label",
+                    "value"
+                  ]
+                },
+                "notes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "state": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "error"
+                    },
+                    {
+                      "type": "string",
+                      "const": "ready"
+                    },
+                    {
+                      "type": "string",
+                      "const": "loading"
+                    },
+                    {
+                      "type": "string",
+                      "const": "empty"
+                    },
+                    {
+                      "type": "string",
+                      "const": "unavailable"
+                    }
+                  ]
+                },
+                "tone": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "success"
+                    },
+                    {
+                      "type": "string",
+                      "const": "warning"
+                    },
+                    {
+                      "type": "string",
+                      "const": "danger"
+                    },
+                    {
+                      "type": "string",
+                      "const": "primary"
+                    },
+                    {
+                      "type": "string",
+                      "const": "secondary"
+                    },
+                    {
+                      "type": "string",
+                      "const": "info"
+                    },
+                    {
+                      "type": "string",
+                      "const": "surface"
+                    },
+                    {
+                      "type": "string",
+                      "const": "tertiary"
+                    },
+                    {
+                      "type": "string",
+                      "const": "neutral"
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "title",
+                "count",
+                "exposure"
+              ]
+            }
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "error"
+              },
+              {
+                "type": "string",
+                "const": "ready"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "empty"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              }
+            ]
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "stages",
+          "title"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "children",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "onOpenStage",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onRetry",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.loss-ratio-trajectory",
+      "version": 1,
+      "export": "@ensured/xds/components/LossRatioTrajectory",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Incoming and bound expected loss ratios compared with aggregated ultimate claims, including actuarial evidence.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "month": {
+                      "type": "string"
+                    },
+                    "incomingCount": {
+                      "type": "number"
+                    },
+                    "boundCount": {
+                      "type": "number"
+                    },
+                    "proposedPremium": {
+                      "type": "number"
+                    },
+                    "boundPremium": {
+                      "type": "number"
+                    },
+                    "earnedPremium": {
+                      "type": "number"
+                    },
+                    "incomingLoss": {
+                      "type": "number"
+                    },
+                    "boundLoss": {
+                      "type": "number"
+                    },
+                    "paid": {
+                      "type": "number"
+                    },
+                    "caseReserves": {
+                      "type": "number"
+                    },
+                    "ibnr": {
+                      "type": "number"
+                    },
+                    "incomingRatio": {
+                      "anyOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    },
+                    "boundRatio": {
+                      "anyOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    },
+                    "claimsRatio": {
+                      "anyOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "month",
+                    "incomingCount",
+                    "boundCount",
+                    "proposedPremium",
+                    "boundPremium",
+                    "earnedPremium",
+                    "incomingLoss",
+                    "boundLoss",
+                    "paid",
+                    "caseReserves",
+                    "ibnr",
+                    "incomingRatio",
+                    "boundRatio",
+                    "claimsRatio"
+                  ]
+                }
+              },
+              "currency": {
+                "type": "string"
+              },
+              "reinsuranceBasis": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "gross"
+                  },
+                  {
+                    "type": "string",
+                    "const": "net"
+                  }
+                ]
+              },
+              "valuationDate": {
+                "type": "string",
+                "description": "ISO calendar date of the latest snapshot."
+              },
+              "actuarialMethod": {
+                "type": "string",
+                "const": "bornhuetter-ferguson"
+              },
+              "targetLossRatio": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "description": "Fraction, not percent; null means no selected target."
+              },
+              "state": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "error"
+                  },
+                  {
+                    "type": "string",
+                    "const": "ready"
+                  },
+                  {
+                    "type": "string",
+                    "const": "loading"
+                  },
+                  {
+                    "type": "string",
+                    "const": "empty"
+                  },
+                  {
+                    "type": "string",
+                    "const": "unavailable"
+                  }
+                ]
+              },
+              "illustrative": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "points",
+              "currency",
+              "reinsuranceBasis",
+              "valuationDate",
+              "actuarialMethod",
+              "targetLossRatio",
+              "state",
+              "illustrative"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "selectionLabel": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "data",
+          "selectionLabel"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onRetry",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
         }
