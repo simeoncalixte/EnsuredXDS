@@ -307,4 +307,3 @@ export const cssVariables = (theme: XdsTheme): Record<string, string> => {
     '--nav-item-bg': color.navItemBackground,
   };
 };
-
