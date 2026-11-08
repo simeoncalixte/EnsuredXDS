@@ -63,10 +63,14 @@ test('a packed artifact builds in a separate consumer with exported components, 
       join(temp, 'package.json'),
       JSON.stringify({ private: true, type: 'module', dependencies: deps }),
     );
-    execFileSync('npm', ['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund'], {
-      cwd: temp,
-      stdio: 'pipe',
-    });
+    execFileSync(
+      'npm',
+      ['install', '--prefer-offline', '--ignore-scripts', '--no-audit', '--no-fund'],
+      {
+        cwd: temp,
+        stdio: 'pipe',
+      },
+    );
     writeFileSync(
       join(temp, 'index.html'),
       '<div id="root"></div><script type="module" src="/main.jsx"></script>',

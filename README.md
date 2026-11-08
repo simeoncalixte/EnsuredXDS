@@ -14,7 +14,7 @@ npm run storybook
 
 ## Consume
 
-The parent repository pins this project as a sibling submodule. EnsuredUI declares `"@ensured/xds": "file:../EnsuredXDS"`, resolving the compiled package through its public exports. It has no source alias back into this project.
+The parent repository pins this project as a sibling submodule. Consumers declare `"@ensured/xds": "npm:@simeoncalixte/ensured-xds@0.1.0"` and install the registry artifact from their lockfile. Sibling source/build aliases, package mounts and npm links are not supported.
 
 ```tsx
 import { XdsThemeProvider, Button } from '@ensured/xds';

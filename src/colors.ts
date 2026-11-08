@@ -1,10 +1,20 @@
-import { darkTheme, xdsThemes, type XdsThemeName, palette, brand, neutral, dataViz } from './palette.js';
+import {
+  darkTheme,
+  xdsThemes,
+  type XdsThemeName,
+  palette,
+  brand,
+  neutral,
+  dataViz,
+} from './palette.js';
 export { palette } from './palette.js';
 // Design color palette tokens for EnsuredUI. Semantic aliases resolve through
 // XDS theme variables; raw brand, neutral, data-viz, and vendor palettes stay
 // fixed so they can also be used by canvas/map renderers that do not resolve CSS.
 const themed = (name: string): string => {
-  const key = name.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase()) as keyof typeof darkTheme.colors;
+  const key = name.replace(/-([a-z])/g, (_, c: string) =>
+    c.toUpperCase(),
+  ) as keyof typeof darkTheme.colors;
   return `var(--xds-${name}, ${darkTheme.colors[key]})`;
 };
 
@@ -162,6 +172,6 @@ export function categoryColor(key: string, theme: XdsThemeName = 'dark'): string
   const c = xdsThemes[theme].colors;
   const series = [c.primary, c.success, c.secondary, c.info, c.danger, c.primarySoft];
   let hash = 0;
-  for (const character of key) hash = ((hash * 31) + character.charCodeAt(0)) >>> 0;
+  for (const character of key) hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
   return series[hash % series.length];
 }

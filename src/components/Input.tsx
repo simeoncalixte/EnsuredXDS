@@ -92,9 +92,21 @@ const StyledInput = styled.input`
   padding: 8px 0;
   color: ${colors.text.primary};
   outline: none;
-  &[type="checkbox"], &[type="radio"] { width: auto; appearance: auto; accent-color: ${colors.primary}; padding: 0; }
-  &::placeholder { color: ${colors.text.secondary}; opacity: 1; }
-  &:focus-visible { outline: 2px solid ${colors.primary}; outline-offset: 3px; }
+  &[type='checkbox'],
+  &[type='radio'] {
+    width: auto;
+    appearance: auto;
+    accent-color: ${colors.primary};
+    padding: 0;
+  }
+  &::placeholder {
+    color: ${colors.text.secondary};
+    opacity: 1;
+  }
+  &:focus-visible {
+    outline: 2px solid ${colors.primary};
+    outline-offset: 3px;
+  }
 `;
 
 export const Input: React.FC<InputProps> = ({

@@ -36,7 +36,6 @@ type VariantTheme = {
   border: string;
 };
 
-
 const variantThemes: Record<XdsBadgeVariant, VariantTheme> = {
   // --- Original variants: preserve exact computed styles ---
   primary: {
