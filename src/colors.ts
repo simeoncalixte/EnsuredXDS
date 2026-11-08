@@ -1,74 +1,57 @@
+import { darkTheme, xdsThemes, type XdsThemeName, palette, brand, neutral, dataViz } from './palette.js';
+export { palette } from './palette.js';
 // Design color palette tokens for EnsuredUI. Semantic aliases resolve through
 // XDS theme variables; raw brand, neutral, data-viz, and vendor palettes stay
 // fixed so they can also be used by canvas/map renderers that do not resolve CSS.
-const themed = (name: string, fallback: string): string => `var(--xds-${name}, ${fallback})`;
+const themed = (name: string): string => {
+  const key = name.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase()) as keyof typeof darkTheme.colors;
+  return `var(--xds-${name}, ${darkTheme.colors[key]})`;
+};
 
 export const colors = {
+  palette,
   // Brand
-  brand: {
-    50: '#eef2ff',
-    100: '#e0e7ff',
-    200: '#c7d2fe',
-    300: '#a5b4fc',
-    400: '#818cf8',
-    500: '#6366f1',
-    600: '#4f46e5',
-    700: '#4338ca',
-    800: '#3730a3',
-    900: '#312e81',
-  },
+  brand,
 
   // UI neutrals
-  neutral: {
-    0: '#ffffff',
-    50: '#f8fafc',
-    100: '#f1f5f9',
-    200: '#e2e8f0',
-    300: '#cbd5e1',
-    400: '#94a3b8',
-    500: '#64748b',
-    600: '#475569',
-    700: '#334155',
-    800: '#1f2937',
-    900: '#0f172a',
-  },
+  neutral,
 
   // Semantic
-  success: themed('success', '#95d4b3'),
-  info: themed('info', '#bfc9c1'),
-  warning: themed('warning', '#e9c349'),
-  danger: themed('danger', '#ffb3ae'),
+  success: themed('success'),
+  info: themed('info'),
+  warning: themed('warning'),
+  danger: themed('danger'),
 
   // Surfaces
-  background: themed('background', '#0f141b'),
-  surface: themed('surface', '#0f141b'),
+  background: themed('background'),
+  surface: themed('surface'),
 
   // Semantic aliases
-  primary: themed('primary', '#95d4b3'),
-  primaryHover: themed('primary-hover', '#235a43'),
-  primaryContainer: themed('primary-container', '#2d6a4f'),
-  onPrimaryContainer: themed('on-primary-container', '#a8e7c5'),
+  primary: themed('primary'),
+  primaryHover: themed('primary-hover'),
+  primaryContainer: themed('primary-container'),
+  onPrimaryContainer: themed('on-primary-container'),
   // Dark-navy text/icon shown on a solid `primary` fill (e.g. primary buttons).
-  onPrimary: themed('on-primary', '#003824'),
+  onPrimary: themed('on-primary'),
 
-  secondary: themed('secondary', '#e9c349'),
-  secondaryContainer: themed('secondary-container', '#af8d11'),
-  onSecondaryContainer: themed('on-secondary-container', '#342800'),
+  secondary: themed('secondary'),
+  secondaryContainer: themed('secondary-container'),
+  onSecondaryContainer: themed('on-secondary-container'),
 
-  error: themed('error', '#ffb4ab'),
-  errorContainer: themed('error-container', '#93000a'),
-  onErrorContainer: themed('on-error-container', '#ffdad6'),
+  error: themed('error'),
+  errorContainer: themed('error-container'),
+  onErrorContainer: themed('on-error-container'),
 
   // Surface containers
-  surfaceContainerLow: themed('surface-container-low', '#171c23'),
-  surfaceContainer: themed('surface-container', '#1b2027'),
-  surfaceContainerHigh: themed('surface-container-high', '#252a32'),
-  surfaceContainerHighest: themed('surface-container-highest', '#30353d'),
+  surfaceContainerLow: themed('surface-container-low'),
+  surfaceContainer: themed('surface-container'),
+  surfaceContainerHigh: themed('surface-container-high'),
+  surfaceContainerHighest: themed('surface-container-highest'),
 
-  outlineVariant: themed('outline-variant', '#404943'),
-  onSurface: themed('on-surface', '#dee2ec'),
-  onSurfaceVariant: themed('on-surface-variant', '#bfc9c1'),
-  tertiaryContainer: themed('tertiary-container', '#ae3032'),
+  outlineVariant: themed('outline-variant'),
+  onSurface: themed('on-surface'),
+  onSurfaceVariant: themed('on-surface-variant'),
+  tertiaryContainer: themed('tertiary-container'),
 
   // Pure black/white anchors (for alpha overlays, scrims, shadows)
   black: '#000000',
@@ -76,51 +59,35 @@ export const colors = {
 
   // --- Extended brand / accent (promoted from recurring app usage) ---
   // Lighter primary used for text/icon accents on dark surfaces.
-  primarySoft: themed('primary-soft', '#b1f0ce'),
+  primarySoft: themed('primary-soft'),
   // Teal-green accent ramp, distinct from `secondary`/`success`.
-  accent: themed('accent', '#95d4b3'),
-  accentStrong: themed('accent-strong', '#2d6a4f'),
+  accent: themed('accent'),
+  accentStrong: themed('accent-strong'),
   // Brighter danger used on dark dashboard surfaces (distinct from `danger`/`error`).
-  dangerBright: themed('danger-bright', '#ffb3ae'),
-  dangerDeep: themed('danger-deep', '#721121'),
+  dangerBright: themed('danger-bright'),
+  dangerDeep: themed('danger-deep'),
   // Soft salmon error text shown on dark error containers.
-  errorSoft: themed('error-soft', '#ffb4ab'),
+  errorSoft: themed('error-soft'),
 
   // --- Extended on-surface text ramp (dark theme) ---
-  onSurfaceStrong: themed('on-surface-strong', '#f0e6d8'), // brightest body text
-  onSurfaceMuted: themed('on-surface-muted', '#e2d9cc'), // muted body text
+  onSurfaceStrong: themed('on-surface-strong'), // brightest body text
+  onSurfaceMuted: themed('on-surface-muted'), // muted body text
 
   // --- Surface ramp (dark dashboard blues, darkest -> lightest) ---
-  scrim: themed('scrim', '#090f15'), // overlay/scrim base
-  surfaceDeep: themed('surface-deep', '#090f15'),
-  surfaceLow: themed('surface-low', '#171c23'),
-  surfacePanel: themed('surface-panel', '#1b2027'),
-  surfaceRaised: themed('surface-raised', '#252a32'),
-  surfaceHigh: themed('surface-high', '#30353d'),
-  surfaceElevated: themed('surface-elevated', '#343941'),
+  scrim: themed('scrim'), // overlay/scrim base
+  surfaceDeep: themed('surface-deep'),
+  surfaceLow: themed('surface-low'),
+  surfacePanel: themed('surface-panel'),
+  surfaceRaised: themed('surface-raised'),
+  surfaceHigh: themed('surface-high'),
+  surfaceElevated: themed('surface-elevated'),
 
   // --- Outlines / borders ---
-  outline: themed('outline', '#8a938c'),
-  border: themed('border', '#30363d'),
+  outline: themed('outline'),
+  border: themed('border'),
 
   // --- Categorical data-visualization palette (chart series) ---
-  dataViz: {
-    blue: '#4b8eff',
-    blueLight: '#60a5fa',
-    blueSky: '#7dd3fc',
-    indigo: '#6366f1',
-    purple: '#a78bfa',
-    violet: '#c084fc',
-    green: '#22c55e',
-    emerald: '#10b981',
-    teal: '#2dd4bf',
-    mint: '#34d399',
-    red: '#ef4444',
-    orange: '#f97316',
-    amber: '#fbbf24',
-    cyan: '#0891b2',
-    cyanDeep: '#0b7285',
-  },
+  dataViz,
 
   // --- Third-party vendor / provider brand identity colors ---
   // These are external brand colors (e.g. "Sign in with Google" affordances)
@@ -128,6 +95,10 @@ export const colors = {
   // are still sourced from the design system rather than scattered as literals.
   vendor: {
     googleBlue: '#4285f4',
+    googleRedDeep: '#c5221f',
+    outlookBlue: '#168bd0',
+    outlookLight: '#55b7ed',
+    outlookDeep: '#0867b5',
     googleGreen: '#34a853',
     googleYellow: '#fbbc05',
     googleRed: '#ea4335',
@@ -142,10 +113,10 @@ export const colors = {
 
   // Text
   text: {
-    primary: themed('text-primary', '#f0e6d8'),
-    secondary: themed('text-secondary', '#bfc9c1'),
-    inverse: themed('text-inverse', '#0f141b'),
-    accent: themed('text-accent', '#e9c349'),
+    primary: themed('text-primary'),
+    secondary: themed('text-secondary'),
+    inverse: themed('text-inverse'),
+    accent: themed('text-accent'),
   },
   ui: {
     navItemBg: 'var(--nav-item-bg)',
@@ -185,3 +156,12 @@ export const withAlpha = (color: string, alpha: number): string => {
 };
 
 export default colors;
+
+/** Stable renderer color for categories; business services do not own UI colors. */
+export function categoryColor(key: string, theme: XdsThemeName = 'dark'): string {
+  const c = xdsThemes[theme].colors;
+  const series = [c.primary, c.success, c.secondary, c.info, c.danger, c.primarySoft];
+  let hash = 0;
+  for (const character of key) hash = ((hash * 31) + character.charCodeAt(0)) >>> 0;
+  return series[hash % series.length];
+}

@@ -97,7 +97,7 @@ const UploadBtn = styled.button`
 
   &:hover {
     background: ${colors.primary};
-    color: ${colors.white};
+    color: ${colors.onPrimary};
   }
 `;
 

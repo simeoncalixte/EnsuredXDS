@@ -138,6 +138,8 @@ spacing:
   column-margin: 2rem
 ---
 
+> Historical visual brief: the color values below are superseded by the Digital Vermilion palette in `palette.ts`. Use the semantic tokens and generated `colors.css` described in the package README. Typography and layout guidance remain applicable.
+
 ## Brand & Style
 
 This design system embodies the stately gravitas of an archival financial publication transposed into an uncompromising, high-precision dark institutional terminal. Tailored for quantitative risk analysts, central bank reserve managers, protocol auditors, and sovereign capital allocators, the environment commands absolute composure, analytical certitude, and architectural discipline.

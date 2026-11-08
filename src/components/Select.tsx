@@ -14,6 +14,7 @@ const StyledSelect = styled.select`
   background: ${colors.surfaceContainer};
   border: none;
   color: ${colors.text.primary};
+  &:focus-visible { outline: 2px solid ${colors.primary}; outline-offset: 3px; }
 `;
 
 const Chevron = styled.span`
@@ -25,11 +26,13 @@ const Chevron = styled.span`
   pointer-events: none;
 `;
 
-export const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement>> = ({
+export const Select: React.FC<React.ComponentPropsWithRef<'select'> & { bare?: boolean }> = ({
   children,
+  bare = false,
   style,
   ...rest
 }) => {
+  if (bare) return <StyledSelect {...rest} style={style}>{children}</StyledSelect>;
   return (
     <Wrapper>
       <StyledSelect {...rest} style={style}>

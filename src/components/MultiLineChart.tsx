@@ -42,7 +42,7 @@ export default function MultiLineChart({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: colors.neutral[400],
+          color: colors.text.secondary,
         }}
       >
         No data
@@ -61,20 +61,20 @@ export default function MultiLineChart({
           <XAxis
             dataKey={xKey}
             tickFormatter={xFormatter ?? ((v) => String(v))}
-            tick={{ fill: colors.neutral[400], fontSize: 11 }}
+            tick={{ fill: colors.text.secondary, fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
             tickFormatter={yFmt}
-            tick={{ fill: colors.neutral[400], fontSize: 11 }}
+            tick={{ fill: colors.text.secondary, fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
           <Tooltip
             content={tooltipContent}
             contentStyle={TOOLTIP_STYLE}
-            labelStyle={{ color: colors.neutral[400] }}
+            labelStyle={{ color: colors.text.secondary }}
             labelFormatter={xFormatter ? (v) => xFormatter(v) : undefined}
             formatter={(value: ValueType | undefined, name: NameType | undefined) => {
               const key = String(name ?? '');
@@ -85,7 +85,7 @@ export default function MultiLineChart({
           />
           <Legend
             iconType="circle"
-            wrapperStyle={{ fontSize: 11, color: colors.neutral[400], paddingTop: 4 }}
+            wrapperStyle={{ fontSize: 11, color: colors.text.secondary, paddingTop: 4 }}
           />
           {refLine !== undefined && (
             <ReferenceLine

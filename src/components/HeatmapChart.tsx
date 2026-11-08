@@ -21,15 +21,8 @@ interface Props {
   height?: number;
 }
 
-function hexToRgb(hex: string): [number, number, number] {
-  const h = hex.replace('#', '');
-  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
-}
-
 function lerpColor(low: string, high: string, t: number): string {
-  const [r1, g1, b1] = hexToRgb(low);
-  const [r2, g2, b2] = hexToRgb(high);
-  return `rgb(${Math.round(r1 + (r2 - r1) * t)},${Math.round(g1 + (g2 - g1) * t)},${Math.round(b1 + (b2 - b1) * t)})`;
+  return `color-mix(in srgb, ${high} ${Math.max(0, Math.min(1, t)) * 100}%, ${low})`;
 }
 
 function defaultFmt(v: number): string {
@@ -73,7 +66,7 @@ export default function HeatmapChart({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: colors.neutral[400],
+          color: colors.text.secondary,
         }}
       >
         No data
@@ -94,7 +87,7 @@ export default function HeatmapChart({
             x={8}
             y={HEADER_H + (ys.length * ROW_H) / 2}
             textAnchor="middle"
-            fill={colors.neutral[500]}
+            fill={colors.text.secondary}
             fontSize={10}
             transform={`rotate(-90, 8, ${HEADER_H + (ys.length * ROW_H) / 2})`}
           >
@@ -109,7 +102,7 @@ export default function HeatmapChart({
             x={LABEL_W + xi * COL_W + COL_W / 2}
             y={HEADER_H - 10}
             textAnchor="middle"
-            fill={colors.neutral[400]}
+            fill={colors.text.secondary}
             fontSize={10}
           >
             {x.length > 11 ? `${x.slice(0, 10)}…` : x}
@@ -122,7 +115,7 @@ export default function HeatmapChart({
             x={LABEL_W + (xs.length * COL_W) / 2}
             y={svgH - 4}
             textAnchor="middle"
-            fill={colors.neutral[500]}
+            fill={colors.text.secondary}
             fontSize={10}
           >
             {xAxisLabel}
@@ -136,7 +129,7 @@ export default function HeatmapChart({
               x={LABEL_W - 8}
               y={HEADER_H + yi * ROW_H + ROW_H / 2 + 4}
               textAnchor="end"
-              fill={colors.neutral[400]}
+              fill={colors.text.secondary}
               fontSize={10}
             >
               {y.length > 15 ? `${y.slice(0, 14)}…` : y}
@@ -163,7 +156,7 @@ export default function HeatmapChart({
                       x={LABEL_W + xi * COL_W + COL_W / 2}
                       y={HEADER_H + yi * ROW_H + ROW_H / 2 + 4}
                       textAnchor="middle"
-                      fill={textDark ? colors.neutral[400] : colors.onSurfaceStrong}
+                      fill={textDark ? colors.text.primary : colors.palette.offWhite}
                       fontSize={9}
                     >
                       {fmt(val)}

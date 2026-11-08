@@ -122,14 +122,14 @@ export const Colors: StoryObj = {
   render: () => (
     <Page>
       <Intro>
-        Every color in EnsuredUI is sourced from these tokens in <code>src/xds/colors.ts</code>. Use{' '}
+        Every color in EnsuredUI is sourced from these tokens in <code>EnsuredXDS/src/palette.ts</code>. Use{' '}
         <code>colors.*</code> directly, and <code>withAlpha(colors.x, alpha)</code> for translucent
         variants — never hand-write hex or rgba literals in components or pages.
       </Intro>
 
       <Section
         title="Primary"
-        note="Brand-blue family. `onPrimary` sits on a solid `primary` fill; container tones use `onPrimaryContainer`."
+        note="Vermilion family. `onPrimary` sits on a solid `primary` fill; container tones use `onPrimaryContainer`."
         entries={[
           ['primary', colors.primary],
           ['primarySoft', colors.primarySoft],
@@ -141,7 +141,7 @@ export const Colors: StoryObj = {
 
       <Section
         title="Secondary & Accent"
-        note="Green / teal-green ramps, distinct from each other and from semantic `success`."
+        note="Powder Blue secondary and Vermilion accents; semantic tones preserve readable states."
         entries={[
           ['secondary', colors.secondary],
           ['secondaryContainer', colors.secondaryContainer],
@@ -170,7 +170,7 @@ export const Colors: StoryObj = {
 
       <Section
         title="Surfaces"
-        note="Background, scrim, the dark-blue surface ramp (deep → elevated), and the surfaceContainer scale."
+        note="Background, scrim, the Digital Vermilion surface ramp (deep → elevated), and the surfaceContainer scale."
         entries={[
           ['background', colors.background],
           ['surface', colors.surface],
@@ -213,13 +213,13 @@ export const Colors: StoryObj = {
 
       <Section
         title="Brand (ramp)"
-        note="Indigo scale 50 → 900."
+        note="Vermilion scale 50 → 900."
         entries={group('brand', colors.brand)}
       />
 
       <Section
         title="Neutral (ramp)"
-        note="Slate scale 0 → 900."
+        note="Warm neutral scale 0 → 900."
         entries={group('neutral', colors.neutral)}
       />
 

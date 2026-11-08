@@ -7,7 +7,7 @@ export type XdsButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | '
 export type XdsButtonTone = 'default' | 'success' | 'warning' | 'danger';
 export type XdsButtonSize = 'sm' | 'md';
 
-export type XdsButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type XdsButtonProps = React.ComponentPropsWithRef<'button'> & {
   variant?: XdsButtonVariant;
   tone?: XdsButtonTone;
   size?: XdsButtonSize;
@@ -50,8 +50,8 @@ const variantStyles = (variant: XdsButtonVariant, tone: XdsButtonTone) => {
       `;
     case 'secondary':
       return css`
-        background: ${tinted ? accent : colors.neutral[300]};
-        color: ${tinted ? colors.onPrimary : colors.text.primary};
+        background: ${tinted ? accent : colors.secondaryContainer};
+        color: ${tinted ? colors.onPrimary : colors.onSecondaryContainer};
         border: none;
       `;
     case 'ghost':
@@ -64,7 +64,7 @@ const variantStyles = (variant: XdsButtonVariant, tone: XdsButtonTone) => {
       return css`
         background: transparent;
         color: ${tinted ? accent : colors.text.primary};
-        border: 1px solid ${tinted ? accent : colors.neutral[300]};
+        border: 1px solid ${tinted ? accent : colors.secondaryContainer};
       `;
     case 'text':
       return css`
@@ -104,6 +104,11 @@ const StyledButton = styled.button<StyledButtonProps>`
   &:hover:not(:disabled) {
     background: ${({ $variant, $tone }) =>
       $variant === 'primary' && $tone === 'default' ? colors.primaryHover : undefined};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${colors.primary};
+    outline-offset: 3px;
   }
 
   &:disabled {

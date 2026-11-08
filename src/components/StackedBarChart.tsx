@@ -52,7 +52,7 @@ export default function StackedBarChart({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: colors.neutral[400],
+          color: colors.text.secondary,
         }}
       >
         No data
@@ -81,19 +81,19 @@ export default function StackedBarChart({
           <XAxis
             dataKey={xKey}
             tickFormatter={xFormatter ?? ((v) => String(v))}
-            tick={{ fill: colors.neutral[400], fontSize: 11 }}
+            tick={{ fill: colors.text.secondary, fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
             tickFormatter={yFmt}
-            tick={{ fill: colors.neutral[400], fontSize: 11 }}
+            tick={{ fill: colors.text.secondary, fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
-            labelStyle={{ color: colors.neutral[400] }}
+            labelStyle={{ color: colors.text.secondary }}
             formatter={(value: ValueType | undefined, name: NameType | undefined) => {
               const key = String(name ?? '');
               const b = bars.find((b) => b.key === key);
@@ -102,7 +102,7 @@ export default function StackedBarChart({
           />
           <Legend
             iconType="square"
-            wrapperStyle={{ fontSize: 11, color: colors.neutral[400], paddingTop: 4 }}
+            wrapperStyle={{ fontSize: 11, color: colors.text.secondary, paddingTop: 4 }}
           />
           {bars.map((b) => (
             <Bar

@@ -126,7 +126,7 @@ export const Modal: React.FC<ModalProps> = ({
                   padding: '12px 16px',
                   background: colors.primary,
                   border: 'none',
-                  color: colors.white,
+                  color: colors.onPrimary,
                   borderRadius: radii.sm,
                   fontWeight: 700,
                   cursor: 'pointer',
