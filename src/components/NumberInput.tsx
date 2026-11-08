@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors } from '../colors.js'
-import { spacing } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors } from '../colors.js';
+import { spacing } from '../tokens.js';
 
-export type NumberInputProps = React.InputHTMLAttributes<HTMLInputElement>
+export type NumberInputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 const StyledNumber = styled.input`
   width: 120px;
@@ -15,10 +15,10 @@ const StyledNumber = styled.input`
   font-family: 'JetBrains Mono', monospace;
   outline: none;
   box-sizing: border-box;
-`
+`;
 
 const NumberInput: React.FC<NumberInputProps> = ({ ...rest }) => {
-  return <StyledNumber type="number" {...rest} />
-}
+  return <StyledNumber type="number" {...rest} />;
+};
 
-export default NumberInput
+export default NumberInput;

@@ -1,58 +1,58 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors, withAlpha } from '../colors.js'
-import { radii } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors, withAlpha } from '../colors.js';
+import { radii } from '../tokens.js';
 
 /**
  * Legacy fixed-shape row used by the original DataTable API.
  * Preserved verbatim so existing callers keep compiling.
  */
 export type Row = {
-  id: string
-  tranche: string
-  value: string
-  status: string
-  statusVariant?: 'secondary' | 'primary' | 'error'
-}
+  id: string;
+  tranche: string;
+  value: string;
+  status: string;
+  statusVariant?: 'secondary' | 'primary' | 'error';
+};
 
-type Align = 'left' | 'right' | 'center'
+type Align = 'left' | 'right' | 'center';
 
 /**
  * Generic column descriptor for the additive DataTable API.
  */
 export type DataTableColumn<T = any> = {
-  key: string
-  header: React.ReactNode
-  align?: Align
-  render?: (row: T) => React.ReactNode
-}
+  key: string;
+  header: React.ReactNode;
+  align?: Align;
+  render?: (row: T) => React.ReactNode;
+};
 
 /** Props for the legacy fixed-Row API (backward compatible). */
 export type DataTableLegacyProps = {
-  rows: Row[]
-}
+  rows: Row[];
+};
 
 /** Props for the generic columns/data API. */
 export type DataTableGenericProps<T = any> = {
-  columns: DataTableColumn<T>[]
-  data: T[]
-  loading?: boolean
-  error?: string
-  emptyText?: string
-  rowActions?: (row: T) => React.ReactNode
-}
+  columns: DataTableColumn<T>[];
+  data: T[];
+  loading?: boolean;
+  error?: string;
+  emptyText?: string;
+  rowActions?: (row: T) => React.ReactNode;
+};
 
-export type DataTableProps<T = any> = DataTableLegacyProps | DataTableGenericProps<T>
+export type DataTableProps<T = any> = DataTableLegacyProps | DataTableGenericProps<T>;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   font-family: ui-monospace, Menlo, monospace;
-`
+`;
 
 const HeaderRow = styled.tr`
   background: ${withAlpha(colors.onSurface, 0.02)};
-`
+`;
 
 const HeaderCell = styled.th<{ $align?: Align }>`
   padding: 12px;
@@ -60,18 +60,18 @@ const HeaderCell = styled.th<{ $align?: Align }>`
   text-transform: uppercase;
   color: ${colors.onSurfaceVariant};
   text-align: ${(p) => p.$align ?? 'left'};
-`
+`;
 
 const BodyRow = styled.tr`
   border-top: 1px solid ${withAlpha(colors.neutral[400], 0.06)};
   cursor: pointer;
-`
+`;
 
 const BodyCell = styled.td<{ $align?: Align; $variant?: 'primary' | 'muted' }>`
   padding: 12px;
   text-align: ${(p) => p.$align ?? 'left'};
   color: ${(p) => (p.$variant === 'muted' ? colors.onSurfaceVariant : colors.text.primary)};
-`
+`;
 
 const StatusBadge = styled.span<{ $statusVariant?: 'secondary' | 'primary' | 'error' }>`
   padding: 6px 8px;
@@ -90,19 +90,19 @@ const StatusBadge = styled.span<{ $statusVariant?: 'secondary' | 'primary' | 'er
       : p.$statusVariant === 'secondary'
         ? colors.primary
         : colors.onSurfaceVariant};
-`
+`;
 
 const StateCell = styled.td<{ $tone?: 'error' | 'muted' }>`
   padding: 12px;
   text-align: center;
   font-size: 12px;
   color: ${(p) => (p.$tone === 'error' ? colors.error : colors.onSurfaceVariant)};
-`
+`;
 
 const ActionsCell = styled.td`
   padding: 12px;
   text-align: right;
-`
+`;
 
 const ActionsHeader = styled.th`
   padding: 12px;
@@ -110,10 +110,10 @@ const ActionsHeader = styled.th`
   text-transform: uppercase;
   color: ${colors.onSurfaceVariant};
   text-align: right;
-`
+`;
 
 function isGeneric<T>(props: DataTableProps<T>): props is DataTableGenericProps<T> {
-  return Array.isArray((props as DataTableGenericProps<T>).columns)
+  return Array.isArray((props as DataTableGenericProps<T>).columns);
 }
 
 /**
@@ -144,8 +144,8 @@ const LegacyDataTable: React.FC<DataTableLegacyProps> = ({ rows }) => {
         ))}
       </tbody>
     </Table>
-  )
-}
+  );
+};
 
 /**
  * Generic columns/data rendering with loading, error, empty and rowActions
@@ -159,9 +159,9 @@ function GenericDataTable<T>({
   emptyText = 'No data',
   rowActions,
 }: DataTableGenericProps<T>) {
-  const columnCount = columns.length + (rowActions ? 1 : 0)
+  const columnCount = columns.length + (rowActions ? 1 : 0);
 
-  let body: React.ReactNode
+  let body: React.ReactNode;
   if (loading) {
     body = (
       <tr>
@@ -169,7 +169,7 @@ function GenericDataTable<T>({
           Loading...
         </StateCell>
       </tr>
-    )
+    );
   } else if (error) {
     body = (
       <tr>
@@ -177,13 +177,13 @@ function GenericDataTable<T>({
           {error}
         </StateCell>
       </tr>
-    )
+    );
   } else if (data.length === 0) {
     body = (
       <tr>
         <StateCell colSpan={columnCount}>{emptyText}</StateCell>
       </tr>
-    )
+    );
   } else {
     body = data.map((row, rowIndex) => (
       <BodyRow key={rowIndex}>
@@ -194,7 +194,7 @@ function GenericDataTable<T>({
         ))}
         {rowActions ? <ActionsCell>{rowActions(row)}</ActionsCell> : null}
       </BodyRow>
-    ))
+    ));
   }
 
   return (
@@ -211,7 +211,7 @@ function GenericDataTable<T>({
       </thead>
       <tbody>{body}</tbody>
     </Table>
-  )
+  );
 }
 
 /**
@@ -223,9 +223,9 @@ function GenericDataTable<T>({
  */
 export function DataTable<T = any>(props: DataTableProps<T>) {
   if (isGeneric(props)) {
-    return <GenericDataTable<T> {...props} />
+    return <GenericDataTable<T> {...props} />;
   }
-  return <LegacyDataTable {...props} />
+  return <LegacyDataTable {...props} />;
 }
 
-export default DataTable
+export default DataTable;

@@ -1,7 +1,7 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, userEvent, expect, fn } from '@storybook/test'
-import OnboardingChecklist, { type OnboardingStep } from './OnboardingChecklist.js'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, expect, fn } from '@storybook/test';
+import OnboardingChecklist, { type OnboardingStep } from './OnboardingChecklist.js';
 
 const meta: Meta<typeof OnboardingChecklist> = {
   title: 'XDS/OnboardingChecklist',
@@ -14,11 +14,11 @@ const meta: Meta<typeof OnboardingChecklist> = {
       </div>
     ),
   ],
-}
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof OnboardingChecklist>
+type Story = StoryObj<typeof OnboardingChecklist>;
 
 const freshSteps: OnboardingStep[] = [
   {
@@ -42,27 +42,30 @@ const freshSteps: OnboardingStep[] = [
     status: 'todo',
     actionLabel: 'Open pipeline',
   },
-]
+];
 
 const partialSteps: OnboardingStep[] = [
   { ...freshSteps[0], status: 'complete' },
   { ...freshSteps[1], status: 'current' },
   { ...freshSteps[2], status: 'todo' },
-]
+];
 
-const completeSteps: OnboardingStep[] = freshSteps.map((s) => ({ ...s, status: 'complete' as const }))
+const completeSteps: OnboardingStep[] = freshSteps.map((s) => ({
+  ...s,
+  status: 'complete' as const,
+}));
 
 export const Fresh: Story = {
   args: { steps: freshSteps, subtitle: 'Three quick steps to start underwriting.' },
-}
+};
 
 export const Partial: Story = {
   args: { steps: partialSteps, subtitle: 'You are partway there.' },
-}
+};
 
 export const Complete: Story = {
   args: { steps: completeSteps, subtitle: 'All set!' },
-}
+};
 
 export const Interactive: Story = {
   args: {
@@ -73,20 +76,20 @@ export const Interactive: Story = {
     onDismiss: fn(),
   },
   play: async ({ args, canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
     // Progress reflects completed steps: 1 of 3 complete.
-    const bar = canvas.getByRole('progressbar')
-    expect(bar).toHaveAttribute('aria-valuenow', String(Math.round((1 / 3) * 100)))
-    expect(canvas.getByText('1 of 3 complete')).toBeInTheDocument()
+    const bar = canvas.getByRole('progressbar');
+    expect(bar).toHaveAttribute('aria-valuenow', String(Math.round((1 / 3) * 100)));
+    expect(canvas.getByText('1 of 3 complete')).toBeInTheDocument();
 
     // Clicking the current step's action fires its onAction spy.
-    const actionSpy = (args.steps[1] as OnboardingStep).onAction as ReturnType<typeof fn>
-    await userEvent.click(canvas.getByRole('button', { name: /connect channel/i }))
-    expect(actionSpy).toHaveBeenCalled()
+    const actionSpy = (args.steps[1] as OnboardingStep).onAction as ReturnType<typeof fn>;
+    await userEvent.click(canvas.getByRole('button', { name: /connect channel/i }));
+    expect(actionSpy).toHaveBeenCalled();
 
     // Clicking dismiss fires onDismiss.
-    await userEvent.click(canvas.getByRole('button', { name: /dismiss onboarding checklist/i }))
-    expect(args.onDismiss).toHaveBeenCalled()
+    await userEvent.click(canvas.getByRole('button', { name: /dismiss onboarding checklist/i }));
+    expect(args.onDismiss).toHaveBeenCalled();
   },
-}
+};

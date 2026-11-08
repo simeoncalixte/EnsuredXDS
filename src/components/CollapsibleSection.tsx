@@ -1,26 +1,26 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors } from '../colors.js'
-import { spacing, radii, typography } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors } from '../colors.js';
+import { spacing, radii, typography } from '../tokens.js';
 
-export type CollapsibleSectionTone = 'default' | 'primary'
+export type CollapsibleSectionTone = 'default' | 'primary';
 
 export type CollapsibleSectionProps = {
-  title: React.ReactNode
-  description?: React.ReactNode
-  count?: number
-  collapsed: boolean
-  onToggle: () => void
-  tone?: CollapsibleSectionTone
-  children?: React.ReactNode
-}
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  count?: number;
+  collapsed: boolean;
+  onToggle: () => void;
+  tone?: CollapsibleSectionTone;
+  children?: React.ReactNode;
+};
 
 const Container = styled.div`
   border: 1px solid ${colors.outlineVariant};
   border-radius: ${radii.md}px;
   background: ${colors.surfaceContainer};
   overflow: hidden;
-`
+`;
 
 const Header = styled.button<{ $tone: CollapsibleSectionTone }>`
   display: flex;
@@ -32,10 +32,8 @@ const Header = styled.button<{ $tone: CollapsibleSectionTone }>`
   cursor: pointer;
   text-align: left;
   font-family: ${typography.fontFamily};
-  background: ${({ $tone }) =>
-    $tone === 'primary' ? colors.primaryContainer : 'transparent'};
-  color: ${({ $tone }) =>
-    $tone === 'primary' ? colors.onPrimaryContainer : colors.text.primary};
+  background: ${({ $tone }) => ($tone === 'primary' ? colors.primaryContainer : 'transparent')};
+  color: ${({ $tone }) => ($tone === 'primary' ? colors.onPrimaryContainer : colors.text.primary)};
 
   &:hover {
     background: ${({ $tone }) =>
@@ -46,7 +44,7 @@ const Header = styled.button<{ $tone: CollapsibleSectionTone }>`
     outline: 2px solid ${colors.primary};
     outline-offset: -2px;
   }
-`
+`;
 
 const TitleBlock = styled.div`
   display: flex;
@@ -54,24 +52,24 @@ const TitleBlock = styled.div`
   gap: ${spacing.xs}px;
   flex: 1;
   min-width: 0;
-`
+`;
 
 const TitleRow = styled.div`
   display: flex;
   align-items: center;
   gap: ${spacing.sm}px;
-`
+`;
 
 const Title = styled.span`
   font-size: ${typography.sizes.md}px;
   font-weight: ${typography.weights.semibold};
-`
+`;
 
 const Description = styled.span`
   font-size: ${typography.sizes.xs}px;
   font-weight: ${typography.weights.regular};
   color: ${colors.text.secondary};
-`
+`;
 
 const Count = styled.span<{ $tone: CollapsibleSectionTone }>`
   display: inline-flex;
@@ -85,16 +83,15 @@ const Count = styled.span<{ $tone: CollapsibleSectionTone }>`
   font-weight: ${typography.weights.medium};
   background: ${({ $tone }) =>
     $tone === 'primary' ? colors.primary : colors.surfaceContainerHighest};
-  color: ${({ $tone }) =>
-    $tone === 'primary' ? colors.text.inverse : colors.text.primary};
-`
+  color: ${({ $tone }) => ($tone === 'primary' ? colors.text.inverse : colors.text.primary)};
+`;
 
 const Chevron = styled.span<{ $collapsed: boolean }>`
   flex-shrink: 0;
   transition: transform 0.2s ease;
   transform: rotate(${({ $collapsed }) => ($collapsed ? '0deg' : '180deg')});
   color: ${colors.text.secondary};
-`
+`;
 
 const Body = styled.div`
   padding: ${spacing.md}px;
@@ -102,7 +99,7 @@ const Body = styled.div`
   font-family: ${typography.fontFamily};
   font-size: ${typography.sizes.sm}px;
   color: ${colors.text.primary};
-`
+`;
 
 export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   title,
@@ -111,7 +108,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   collapsed,
   onToggle,
   tone = 'default',
-  children
+  children,
 }) => {
   return (
     <Container>
@@ -129,7 +126,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
       </Header>
       {!collapsed && <Body>{children}</Body>}
     </Container>
-  )
-}
+  );
+};
 
-export default CollapsibleSection
+export default CollapsibleSection;

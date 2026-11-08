@@ -23,11 +23,7 @@ interface Props {
 
 function hexToRgb(hex: string): [number, number, number] {
   const h = hex.replace('#', '');
-  return [
-    parseInt(h.slice(0, 2), 16),
-    parseInt(h.slice(2, 4), 16),
-    parseInt(h.slice(4, 6), 16),
-  ];
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
 }
 
 function lerpColor(low: string, high: string, t: number): string {
@@ -57,6 +53,18 @@ export default function HeatmapChart({
   colorHigh = colors.dataViz.blue,
   height,
 }: Props) {
+  const xs = useMemo(() => [...new Set(cells.map((c) => c.x))].sort(), [cells]);
+  const ys = useMemo(() => [...new Set(cells.map((c) => c.y))].sort(), [cells]);
+  const maxVal = useMemo(() => Math.max(...cells.map((c) => c.value)), [cells]);
+
+  const cellMap = useMemo(() => {
+    const m: Record<string, number> = {};
+    cells.forEach((c) => {
+      m[`${c.x}|${c.y}`] = c.value;
+    });
+    return m;
+  }, [cells]);
+
   if (!cells || cells.length === 0) {
     return (
       <div
@@ -72,18 +80,6 @@ export default function HeatmapChart({
       </div>
     );
   }
-
-  const xs = useMemo(() => [...new Set(cells.map((c) => c.x))].sort(), [cells]);
-  const ys = useMemo(() => [...new Set(cells.map((c) => c.y))].sort(), [cells]);
-  const maxVal = useMemo(() => Math.max(...cells.map((c) => c.value)), [cells]);
-
-  const cellMap = useMemo(() => {
-    const m: Record<string, number> = {};
-    cells.forEach((c) => {
-      m[`${c.x}|${c.y}`] = c.value;
-    });
-    return m;
-  }, [cells]);
 
   const fmt = formatValue ?? defaultFmt;
   const svgW = LABEL_W + xs.length * COL_W;

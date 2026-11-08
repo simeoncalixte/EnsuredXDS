@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, userEvent, expect } from '@storybook/test'
-import DealCard from './DealCard.js'
+import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, expect } from '@storybook/test';
+import DealCard from './DealCard.js';
 
 const meta: Meta<typeof DealCard> = {
   title: 'XDS/DealCard',
@@ -11,16 +11,16 @@ const meta: Meta<typeof DealCard> = {
     subtitle: 'TX-FL | CAT 4+ THRESHOLD',
     yieldText: '14.2% APY',
     capacity: '$45.0M / $50M',
-    riskLevel: 2
-  }
-}
+    riskLevel: 2,
+  },
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof DealCard>
+type Story = StoryObj<typeof DealCard>;
 
 // Default single card mirroring LandingPage usage.
-export const Default: Story = {}
+export const Default: Story = {};
 
 // A list of cards at varying risk levels.
 export const RiskLevels: Story = {
@@ -48,25 +48,25 @@ export const RiskLevels: Story = {
         riskLevel={3}
       />
     </div>
-  )
-}
+  ),
+};
 
 // Renders core fields and asserts they appear in the DOM.
 export const FieldsRender: Story = {
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    expect(canvas.getByText('Gulf Coast Windstorm 24-B')).toBeInTheDocument()
-    expect(canvas.getByText('TX-FL | CAT 4+ THRESHOLD')).toBeInTheDocument()
-    expect(canvas.getByText('14.2% APY')).toBeInTheDocument()
-    expect(canvas.getByText('$45.0M / $50M')).toBeInTheDocument()
-    expect(canvas.getByRole('button', { name: 'INVEST NOW' })).toBeInTheDocument()
-  }
-}
+    const canvas = within(canvasElement);
+    expect(canvas.getByText('Gulf Coast Windstorm 24-B')).toBeInTheDocument();
+    expect(canvas.getByText('TX-FL | CAT 4+ THRESHOLD')).toBeInTheDocument();
+    expect(canvas.getByText('14.2% APY')).toBeInTheDocument();
+    expect(canvas.getByText('$45.0M / $50M')).toBeInTheDocument();
+    expect(canvas.getByRole('button', { name: 'INVEST NOW' })).toBeInTheDocument();
+  },
+};
 
 // Interaction test: clicking INVEST NOW fires onInvest; a controlled
 // wrapper records the click count so the effect is observable in the DOM.
 const InteractiveDealCard: React.FC = () => {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
   return (
     <div>
       <span data-testid="invest-count">{count}</span>
@@ -79,20 +79,20 @@ const InteractiveDealCard: React.FC = () => {
         onInvest={() => setCount((c) => c + 1)}
       />
     </div>
-  )
-}
+  );
+};
 
 export const Invests: Story = {
   render: () => <InteractiveDealCard />,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const count = canvas.getByTestId('invest-count')
-    expect(count).toHaveTextContent('0')
+    const canvas = within(canvasElement);
+    const count = canvas.getByTestId('invest-count');
+    expect(count).toHaveTextContent('0');
 
-    await userEvent.click(canvas.getByRole('button', { name: 'INVEST NOW' }))
-    expect(count).toHaveTextContent('1')
+    await userEvent.click(canvas.getByRole('button', { name: 'INVEST NOW' }));
+    expect(count).toHaveTextContent('1');
 
-    await userEvent.click(canvas.getByRole('button', { name: 'INVEST NOW' }))
-    expect(count).toHaveTextContent('2')
-  }
-}
+    await userEvent.click(canvas.getByRole('button', { name: 'INVEST NOW' }));
+    expect(count).toHaveTextContent('2');
+  },
+};

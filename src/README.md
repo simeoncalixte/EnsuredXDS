@@ -14,8 +14,8 @@ Usage examples:
 JS/TS components:
 
 ```ts
-import { colors, spacing } from '@ensured/xds'
-console.log(colors.brand[500], spacing.md)
+import { colors, spacing } from '@ensured/xds';
+console.log(colors.brand[500], spacing.md);
 ```
 
 CSS usage (import `colors.css` in your global stylesheet or Storybook preview):
@@ -23,5 +23,8 @@ CSS usage (import `colors.css` in your global stylesheet or Storybook preview):
 ```css
 @import '@ensured/xds/colors.css';
 
-body { background: var(--bg); color: var(--text-primary); }
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+}
 ```

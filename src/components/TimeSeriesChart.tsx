@@ -1,5 +1,13 @@
 import React from 'react';
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from 'recharts';
 import { colors } from '../colors.js';
 
 type Point = { calculatedAt: string; value: number };
@@ -11,10 +19,25 @@ interface Props {
 
 export default function TimeSeriesChart({ points, height = 160 }: Props) {
   if (!points || points.length === 0) {
-    return <div style={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.neutral[400] }}>No data</div>;
+    return (
+      <div
+        style={{
+          height,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: colors.neutral[400],
+        }}
+      >
+        No data
+      </div>
+    );
   }
 
-  const data = points.map((p) => ({ ts: new Date(p.calculatedAt).getTime(), value: Number(p.value) }));
+  const data = points.map((p) => ({
+    ts: new Date(p.calculatedAt).getTime(),
+    value: Number(p.value),
+  }));
 
   return (
     <div style={{ width: '100%', height }}>
@@ -24,8 +47,10 @@ export default function TimeSeriesChart({ points, height = 160 }: Props) {
           <XAxis
             dataKey="ts"
             type="number"
-            domain={["dataMin", "dataMax"]}
-            tickFormatter={(t) => new Date(Number(t)).toLocaleDateString(undefined, { month: 'short', year: '2-digit' })}
+            domain={['dataMin', 'dataMax']}
+            tickFormatter={(t) =>
+              new Date(Number(t)).toLocaleDateString(undefined, { month: 'short', year: '2-digit' })
+            }
             tick={{ fill: colors.neutral[400], fontSize: 11 }}
             axisLine={false}
           />
@@ -35,8 +60,17 @@ export default function TimeSeriesChart({ points, height = 160 }: Props) {
             tick={{ fill: colors.neutral[400], fontSize: 11 }}
             axisLine={false}
           />
-          <Tooltip labelFormatter={(label) => new Date(Number(label)).toLocaleString()} formatter={(value: any) => [Number(value).toLocaleString(), 'Exposure']} />
-          <Line type="monotone" dataKey="value" stroke={colors.dataViz.blue} strokeWidth={2} dot={{ r: 2 }} />
+          <Tooltip
+            labelFormatter={(label) => new Date(Number(label)).toLocaleString()}
+            formatter={(value) => [Number(value).toLocaleString(), 'Exposure']}
+          />
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke={colors.dataViz.blue}
+            strokeWidth={2}
+            dot={{ r: 2 }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>

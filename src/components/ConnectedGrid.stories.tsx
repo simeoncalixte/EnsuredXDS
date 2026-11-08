@@ -1,136 +1,136 @@
-import React, { useState } from 'react'
-import type { Meta } from '@storybook/react'
-import ConnectedGrid, { type ConnectedGridSettings } from './ConnectedGrid.js'
-import Badge from './Badge.js'
-import Button from './Button.js'
-import InfoCard from './InfoCard.js'
-import MetricCard from './MetricCard.js'
+import React, { useState } from 'react';
+import type { Meta } from '@storybook/react';
+import ConnectedGrid, { type ConnectedGridSettings } from './ConnectedGrid.js';
+import Badge from './Badge.js';
+import Button from './Button.js';
+import InfoCard from './InfoCard.js';
+import MetricCard from './MetricCard.js';
 
 const meta: Meta<typeof ConnectedGrid> = {
   title: 'XDS/ConnectedGrid',
-  component: ConnectedGrid
-}
+  component: ConnectedGrid,
+};
 
-export default meta
+export default meta;
 
 export const Default = () => {
-  const [settings, setSettings] = useState<ConnectedGridSettings>({ columns: 3, rows: 3 })
+  const [settings, setSettings] = useState<ConnectedGridSettings>({ columns: 3, rows: 3 });
 
   return (
     <div style={{ maxWidth: 760 }}>
       <ConnectedGrid settings={settings} onSettingsChange={setSettings} />
     </div>
-  )
-}
+  );
+};
 
 type WidgetDefinition = {
-  id: string
-  title: string
-  render: () => React.ReactNode
-}
+  id: string;
+  title: string;
+  render: () => React.ReactNode;
+};
 
 type DragPayload = {
-  widgetId: string
-}
+  widgetId: string;
+};
 
-const DND_STORAGE_KEY = 'connected-grid-story-layout-v1'
+const DND_STORAGE_KEY = 'connected-grid-story-layout-v1';
 
 const WIDGETS: WidgetDefinition[] = [
   {
     id: 'risk-badge',
     title: 'Risk Badge',
-    render: () => <Badge variant="primary">Risk Watch</Badge>
+    render: () => <Badge variant="primary">Risk Watch</Badge>,
   },
   {
     id: 'orders-card',
     title: 'Metric Card',
-    render: () => <MetricCard label="Pending Orders" value="17" delta="+3 this hour" />
+    render: () => <MetricCard label="Pending Orders" value="17" delta="+3 this hour" />,
   },
   {
     id: 'capital-card',
     title: 'Info Card',
-    render: () => <InfoCard title="Capital Buffer" value="$2.4M" tone="secondary" />
+    render: () => <InfoCard title="Capital Buffer" value="$2.4M" tone="secondary" />,
   },
   {
     id: 'action-button',
     title: 'Action Button',
-    render: () => <Button variant="primary">Run Rebalance</Button>
-  }
-]
+    render: () => <Button variant="primary">Run Rebalance</Button>,
+  },
+];
 
 const getSavedPositions = (): Record<string, string> => {
   if (typeof window === 'undefined') {
-    return {}
+    return {};
   }
 
   try {
-    const raw = window.localStorage.getItem(DND_STORAGE_KEY)
+    const raw = window.localStorage.getItem(DND_STORAGE_KEY);
 
     if (!raw) {
-      return {}
+      return {};
     }
 
-    const parsed = JSON.parse(raw) as unknown
+    const parsed = JSON.parse(raw) as unknown;
 
     if (!parsed || typeof parsed !== 'object') {
-      return {}
+      return {};
     }
 
-    return parsed as Record<string, string>
+    return parsed as Record<string, string>;
   } catch {
-    return {}
+    return {};
   }
-}
+};
 
 export const DragDropWithLocalPersistence = () => {
-  const [settings, setSettings] = useState<ConnectedGridSettings>({ columns: 4, rows: 3 })
-  const [positions, setPositions] = useState<Record<string, string>>(() => getSavedPositions())
+  const [settings, setSettings] = useState<ConnectedGridSettings>({ columns: 4, rows: 3 });
+  const [positions, setPositions] = useState<Record<string, string>>(() => getSavedPositions());
 
   const persistPositions = (nextPositions: Record<string, string>) => {
-    setPositions(nextPositions)
+    setPositions(nextPositions);
 
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem(DND_STORAGE_KEY, JSON.stringify(nextPositions))
+      window.localStorage.setItem(DND_STORAGE_KEY, JSON.stringify(nextPositions));
     }
-  }
+  };
 
   const onDragStart = (event: React.DragEvent<HTMLElement>, payload: DragPayload) => {
-    event.dataTransfer.setData('application/json', JSON.stringify(payload))
-    event.dataTransfer.effectAllowed = 'move'
-  }
+    event.dataTransfer.setData('application/json', JSON.stringify(payload));
+    event.dataTransfer.effectAllowed = 'move';
+  };
 
   const onDropOnCell = (event: React.DragEvent<HTMLDivElement>, cellKey: string) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const raw = event.dataTransfer.getData('application/json')
+    const raw = event.dataTransfer.getData('application/json');
     if (!raw) {
-      return
+      return;
     }
 
     try {
-      const payload = JSON.parse(raw) as DragPayload
+      const payload = JSON.parse(raw) as DragPayload;
       if (!payload.widgetId) {
-        return
+        return;
       }
 
       persistPositions({
         ...positions,
-        [payload.widgetId]: cellKey
-      })
+        [payload.widgetId]: cellKey,
+      });
     } catch {
-      return
+      return;
     }
-  }
+  };
 
   const clearLayout = () => {
-    persistPositions({})
-  }
+    persistPositions({});
+  };
 
   return (
     <div style={{ maxWidth: 960, display: 'grid', gap: 16 }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
         {WIDGETS.map((widget) => {
-          const assignedCell = positions[widget.id]
+          const assignedCell = positions[widget.id];
 
           return (
             <div
@@ -143,7 +143,7 @@ export const DragDropWithLocalPersistence = () => {
                 borderRadius: 10,
                 padding: 10,
                 minWidth: 180,
-                background: 'rgba(15, 23, 38, 0.45)'
+                background: 'rgba(15, 23, 38, 0.45)',
               }}
             >
               <div style={{ fontSize: 11, marginBottom: 8, opacity: 0.78 }}>
@@ -152,7 +152,7 @@ export const DragDropWithLocalPersistence = () => {
               </div>
               {widget.render()}
             </div>
-          )
+          );
         })}
 
         <Button variant="ghost" onClick={clearLayout}>
@@ -165,7 +165,7 @@ export const DragDropWithLocalPersistence = () => {
         settings={settings}
         onSettingsChange={setSettings}
         renderCell={({ cellKey }) => {
-          const widgetInCell = WIDGETS.find((widget) => positions[widget.id] === cellKey)
+          const widgetInCell = WIDGETS.find((widget) => positions[widget.id] === cellKey);
 
           return (
             <div
@@ -179,14 +179,19 @@ export const DragDropWithLocalPersistence = () => {
                 justifyContent: 'center',
                 padding: 8,
                 borderRadius: 8,
-                background: widgetInCell ? 'rgba(11, 18, 32, 0.65)' : 'rgba(148,163,184,0.08)'
+                background: widgetInCell ? 'rgba(11, 18, 32, 0.65)' : 'rgba(148,163,184,0.08)',
               }}
             >
               {widgetInCell ? (
                 <div
                   draggable
                   onDragStart={(event) => onDragStart(event, { widgetId: widgetInCell.id })}
-                  style={{ width: '100%', cursor: 'grab', display: 'flex', justifyContent: 'center' }}
+                  style={{
+                    width: '100%',
+                    cursor: 'grab',
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
                 >
                   {widgetInCell.render()}
                 </div>
@@ -194,9 +199,9 @@ export const DragDropWithLocalPersistence = () => {
                 <span style={{ fontSize: 10, opacity: 0.75 }}>Drop Here ({cellKey})</span>
               )}
             </div>
-          )
+          );
         }}
       />
     </div>
-  )
-}
+  );
+};

@@ -13,25 +13,8 @@ import {
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import { colors } from '../colors.js';
 
-export interface LineSeries {
-  key: string;
-  label: string;
-  color: string;
-  format?: (v: number) => string;
-  dashed?: boolean;
-}
-
-interface Props {
-  data: Record<string, unknown>[];
-  xKey: string;
-  series: LineSeries[];
-  xFormatter?: (v: unknown) => string;
-  yFormatter?: (v: number) => string;
-  /** Draw a horizontal reference line at this Y value (e.g. 1.0 = 100% combined ratio) */
-  refLine?: number;
-  refLineLabel?: string;
-  height?: number;
-}
+import type { MultiLineChartProps } from './UnderwritingDashboard.types.js';
+export type { LineSeries, MultiLineChartProps } from './UnderwritingDashboard.types.js';
 
 const TOOLTIP_STYLE = {
   background: colors.surfacePanel,
@@ -49,16 +32,26 @@ export default function MultiLineChart({
   refLine,
   refLineLabel,
   height = 200,
-}: Props) {
+  tooltipContent,
+}: MultiLineChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div style={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.neutral[400] }}>
+      <div
+        style={{
+          height,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: colors.neutral[400],
+        }}
+      >
         No data
       </div>
     );
   }
 
-  const yFmt = yFormatter ?? ((v: number) => v.toLocaleString(undefined, { maximumFractionDigits: 2 }));
+  const yFmt =
+    yFormatter ?? ((v: number) => v.toLocaleString(undefined, { maximumFractionDigits: 2 }));
 
   return (
     <div style={{ width: '100%', height }}>
@@ -79,6 +72,7 @@ export default function MultiLineChart({
             tickLine={false}
           />
           <Tooltip
+            content={tooltipContent}
             contentStyle={TOOLTIP_STYLE}
             labelStyle={{ color: colors.neutral[400] }}
             labelFormatter={xFormatter ? (v) => xFormatter(v) : undefined}
@@ -89,13 +83,20 @@ export default function MultiLineChart({
               return [fmt(Number(value)), s?.label ?? key];
             }}
           />
-          <Legend iconType="circle" wrapperStyle={{ fontSize: 11, color: colors.neutral[400], paddingTop: 4 }} />
+          <Legend
+            iconType="circle"
+            wrapperStyle={{ fontSize: 11, color: colors.neutral[400], paddingTop: 4 }}
+          />
           {refLine !== undefined && (
             <ReferenceLine
               y={refLine}
               stroke={colors.dataViz.red}
               strokeDasharray="5 3"
-              label={{ value: refLineLabel ?? String(refLine), fill: colors.dataViz.red, fontSize: 10 }}
+              label={{
+                value: refLineLabel ?? String(refLine),
+                fill: colors.dataViz.red,
+                fontSize: 10,
+              }}
             />
           )}
           {series.map((s) => (

@@ -143,6 +143,7 @@ spacing:
 This design system embodies the stately gravitas of an archival financial publication transposed into an uncompromising, high-precision dark institutional terminal. Tailored for quantitative risk analysts, central bank reserve managers, protocol auditors, and sovereign capital allocators, the environment commands absolute composure, analytical certitude, and architectural discipline.
 
 The aesthetic philosophy fuses **Heritage Financial Editorial** with **Nocturnal Ledger Architecture**:
+
 - **Editorial Orthodoxy:** Classical broadsheet composition, fine double-rule dividers, balanced typographic columns, and formal typographic hierarchy evoking a modern-day digital gazette.
 - **Institutional Sovereignty:** Inky obsidian foundations, antique parchment text, and subdued British racing green counterbalanced by deep oxblood alert accents.
 - **Analytical Precision:** Zero frivolous ornamentation. Depth is generated through hairline ledger boundaries, discrete tonal strata, and typographic density rather than soft diffusion or decorative blurs.
@@ -152,22 +153,26 @@ The aesthetic philosophy fuses **Heritage Financial Editorial** with **Nocturnal
 The palette transforms classical broadsheet financial journalism into a deep nocturnal register, engineered for sustained, high-focus exposure across multiple displays.
 
 ### Foundation & Surfaces
+
 - **Canvas / Void (`#0A0D12`):** Primary application backdrop; the deepest layer.
 - **Surface Ledger Base (`#0D1117`):** Core structural canvas for viewports and gazette mastheads.
 - **Surface Ledger Raised (`#161B22`):** First-tier editorial modules, risk briefs, and tabular cards.
 - **Surface Ledger Elevated (`#21262D`):** Interactive menus, hover surfaces, inspector flyouts, and modal dialogs.
 
 ### Hairline Ledger Borders
+
 - **Border Default (`#30363D`):** 1px structural hairline rules dividing editorial sections and tabular data.
 - **Border Accent / Active (`#3D444D`):** Elevated hairline for focused inputs and active analytical cards.
 
 ### Ink & Parchment Typography
+
 - **Primary Antique Parchment (`#F0E6D8`):** Uncompromising high-contrast readability for display titles, headline serifs, and primary quantitative metrics.
 - **Muted Cream (`#E2D9CC`):** Secondary prose, tabular cell copy, and article excerpts.
 - **Subdued Ink / Columnist Gray (`#8B949E`):** Micro-labels, datelines, timestamps, and column headers.
 - **Faint Microcopy (`#484F58`):** Disabled elements, structural footers, and rule adornments.
 
 ### Accents & Semantic Stratification
+
 - **British Racing Green (`#2D6A4F` default, `#235A43` deep hover):** Solvency indicators, positive variance, validated reserves, and primary editorial CTAs.
 - **Muted Champagne Gold (`#D4AF37`):** Institutional tier markers, masthead monograms, verified cryptographic seals, and key statistical callouts.
 - **Rich Oxblood / Burgundy (`#9B2226` primary, `#721121` deep):** Sovereign systemic risk warnings, drawdown flags, negative protocol variance, and critical overrides.
@@ -214,11 +219,13 @@ The design system is strictly **Sharp (`roundedness: 0`)**.
 ## Components
 
 ### Buttons & Action Bars
+
 - **Primary Institutional Action:** Background `#2D6A4F`, label in Antique Parchment (`#F0E6D8`), uppercase `JetBrains Mono` at `label-md` weight. 1px border `#2D6A4F`. Hover transitions to `#235A43` with a gold accent underline (`#D4AF37`, 1px). Sharp corners (`0px`).
 - **Secondary Ledger Action:** Background `#161B22`, border 1px solid `#30363D`, label `#E2D9CC`. Hover state illuminates background to `#21262D` and border to `#3D444D`.
 - **Critical / Risk Override Action:** Background `#9B2226`, text `#F0E6D8`, border 1px solid `#721121`. On hover, shifts to `#721121`.
 
 ### Data Chips & Protocol Badges
+
 - Sharp, rectangular containers with 1px hairline border.
 - **Solvent / Verified:** Background `rgba(45, 106, 79, 0.15)`, text `#2D6A4F`, border `rgba(45, 106, 79, 0.4)`.
 - **Systemic Risk / Liquidation:** Background `rgba(155, 34, 38, 0.18)`, text `#9B2226`, border `rgba(155, 34, 38, 0.5)`.
@@ -226,23 +233,27 @@ The design system is strictly **Sharp (`roundedness: 0`)**.
 - Typography: strictly monospaced (`label-sm`).
 
 ### Editorial Cards & Analysis Dossiers
+
 - Background `#161B22` with a 1px `#30363D` perimeter hairline.
 - Header adorned with an institutional category eyebrow in monospaced gold (`#D4AF37`) followed by a primary headline in `Libre Caslon Text`.
 - Bottom edge features an archival footer containing auditor signatures, timestamp hashes, and confidence metrics separated by a top border of 1px `#30363D`.
 
 ### Tabular Ledgers & Metric Lists
+
 - Table headers set in `JetBrains Mono` (`label-sm`), uppercase, colored `#8B949E`, with a bottom border of 2px (1px solid `#30363D`, 1px gap, 1px solid `#30363D`).
 - Alternating row striping using `#0D1117` and `#161B22`.
 - Hover row state triggers a subtle background highlight `#21262D` with an amber/gold indicator dot on the left boundary.
 - Numbers right-aligned using tabular figures.
 
 ### Form Inputs & Terminal Fields
+
 - Background `#0D1117`, inset 1px solid `#30363D`.
 - Text typed in `#F0E6D8` (`jetbrainsMono`).
 - Focus state: Border transitions to `#D4AF37` (champagne gold) with no soft glow; visual feedback relies solely on the crisp 1px high-contrast rule.
 - Helper labels situated outside the input field using `label-sm` in `#8B949E`.
 
 ### Checkboxes & Binary Selectors
+
 - Sharp square check indicators (`14px x 14px`), border 1px solid `#3D444D`, background `#0D1117`.
 - Checked state fills with `#2D6A4F` bearing a crisp parchment geometric checkmark.
 - Radio buttons employ a square-in-square nested structure, preserving the architectural angularity without curved elements.

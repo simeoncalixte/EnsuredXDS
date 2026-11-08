@@ -1,6 +1,6 @@
-import styled from 'styled-components'
-import { typography } from '../tokens.js'
-import { colors } from '../colors.js'
+import styled from 'styled-components';
+import { typography } from '../tokens.js';
+import { colors } from '../colors.js';
 
 /**
  * XDS Typography primitives.
@@ -20,7 +20,7 @@ export const PageTitle = styled.h1`
   font-size: ${typography.sizes['2xl'] - 4}px;
   color: ${colors.onSurfaceStrong};
   margin: 0 0 ${8}px 0;
-`
+`;
 
 // Supporting copy that sits beneath a PageTitle (renders <p>).
 export const PageSubtitle = styled.p`
@@ -28,14 +28,14 @@ export const PageSubtitle = styled.p`
   max-width: 720px;
   margin: 0 0 24px 0;
   font-size: ${typography.sizes.sm}px;
-`
+`;
 
 // De-emphasised helper / caption text (renders <p>).
 export const SmallText = styled.p`
   color: ${colors.onSurfaceMuted};
   font-size: ${typography.sizes.xs}px;
   margin: 0;
-`
+`;
 
 // Uppercase mono eyebrow used to label sub-sections (renders <h4>).
 export const SectionSmallTitle = styled.h4`
@@ -45,7 +45,7 @@ export const SectionSmallTitle = styled.h4`
   text-transform: uppercase;
   color: ${colors.outline};
   font-family: 'JetBrains Mono', monospace;
-`
+`;
 
 // Bulleted list container (renders <ul>).
 export const BulletList = styled.ul`
@@ -53,17 +53,17 @@ export const BulletList = styled.ul`
   gap: 8px;
   margin: 0;
   padding-left: 18px;
-`
+`;
 
 // Single bullet entry, intended as a child of BulletList (renders <li>).
 export const ListItem = styled.li`
   color: ${colors.onSurfaceStrong};
   font-size: ${typography.sizes.sm}px;
-`
+`;
 
 // Inline error message (renders <div>).
 export const ErrorText = styled.div`
   margin-top: 12px;
   color: ${colors.dangerBright};
   font-size: ${typography.sizes.xs}px;
-`
+`;

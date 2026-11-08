@@ -1,21 +1,21 @@
-import React from 'react'
-import styled, { keyframes } from 'styled-components'
-import { colors, withAlpha } from '../colors.js'
-import { spacing, radii, typography } from '../tokens.js'
+import React from 'react';
+import styled, { keyframes } from 'styled-components';
+import { colors, withAlpha } from '../colors.js';
+import { spacing, radii, typography } from '../tokens.js';
 
 export type ActivityFeedItem = {
-  time: string
-  tag?: string
-  tagColor?: string
-  source?: string
-  message: React.ReactNode
-}
+  time: string;
+  tag?: string;
+  tagColor?: string;
+  source?: string;
+  message: React.ReactNode;
+};
 
 export type ActivityFeedProps = {
-  title?: React.ReactNode
-  live?: boolean
-  items: ActivityFeedItem[]
-}
+  title?: React.ReactNode;
+  live?: boolean;
+  items: ActivityFeedItem[];
+};
 
 const Container = styled.section`
   display: flex;
@@ -26,7 +26,7 @@ const Container = styled.section`
   font-family: ${typography.fontFamily};
   color: ${colors.text.primary};
   overflow: hidden;
-`
+`;
 
 const Header = styled.header`
   display: flex;
@@ -34,7 +34,7 @@ const Header = styled.header`
   gap: ${spacing.sm}px;
   padding: ${spacing.sm}px ${spacing.md}px;
   border-bottom: 1px solid ${colors.outlineVariant};
-`
+`;
 
 const Title = styled.h3`
   margin: 0;
@@ -42,7 +42,7 @@ const Title = styled.h3`
   font-weight: ${typography.weights.semibold};
   color: ${colors.text.primary};
   flex: 1;
-`
+`;
 
 const pulse = keyframes`
   0% {
@@ -57,7 +57,7 @@ const pulse = keyframes`
     box-shadow: 0 0 0 0 ${withAlpha(colors.secondary, 0)};
     opacity: 1;
   }
-`
+`;
 
 const LiveWrap = styled.span`
   display: inline-flex;
@@ -68,7 +68,7 @@ const LiveWrap = styled.span`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: ${colors.secondary};
-`
+`;
 
 const LiveDot = styled.span`
   display: inline-block;
@@ -77,7 +77,7 @@ const LiveDot = styled.span`
   border-radius: ${radii.round}px;
   background: ${colors.secondary};
   animation: ${pulse} 1.6s ease-out infinite;
-`
+`;
 
 const List = styled.ul`
   list-style: none;
@@ -85,7 +85,7 @@ const List = styled.ul`
   padding: 0;
   display: flex;
   flex-direction: column;
-`
+`;
 
 const Item = styled.li`
   display: flex;
@@ -97,7 +97,7 @@ const Item = styled.li`
   &:last-child {
     border-bottom: none;
   }
-`
+`;
 
 const Time = styled.time`
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
@@ -105,7 +105,7 @@ const Time = styled.time`
   color: ${colors.text.secondary};
   white-space: nowrap;
   flex-shrink: 0;
-`
+`;
 
 const TagChip = styled.span<{ $tagColor: string }>`
   display: inline-flex;
@@ -120,7 +120,7 @@ const TagChip = styled.span<{ $tagColor: string }>`
   background: ${(p) => p.$tagColor};
   white-space: nowrap;
   flex-shrink: 0;
-`
+`;
 
 const Source = styled.span`
   font-size: ${typography.sizes.xs}px;
@@ -128,16 +128,16 @@ const Source = styled.span`
   color: ${colors.text.accent};
   white-space: nowrap;
   flex-shrink: 0;
-`
+`;
 
 const Message = styled.span`
   font-size: ${typography.sizes.sm}px;
   color: ${colors.text.primary};
   word-break: break-word;
-`
+`;
 
 export const ActivityFeed: React.FC<ActivityFeedProps> = ({ title, live = false, items }) => {
-  const showHeader = title != null || live
+  const showHeader = title != null || live;
 
   return (
     <Container>
@@ -156,14 +156,16 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({ title, live = false,
         {items.map((item, index) => (
           <Item key={`${item.time}-${index}`}>
             <Time>{item.time}</Time>
-            {item.tag && <TagChip $tagColor={item.tagColor ?? colors.neutral[600]}>{item.tag}</TagChip>}
+            {item.tag && (
+              <TagChip $tagColor={item.tagColor ?? colors.neutral[600]}>{item.tag}</TagChip>
+            )}
             {item.source && <Source>{item.source}</Source>}
             <Message>{item.message}</Message>
           </Item>
         ))}
       </List>
     </Container>
-  )
-}
+  );
+};
 
-export default ActivityFeed
+export default ActivityFeed;

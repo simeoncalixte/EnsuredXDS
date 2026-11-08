@@ -1,13 +1,13 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors, withAlpha } from '../colors.js'
-import { spacing, radii, typography } from '../tokens.js'
+import React from 'react';
+import styled from 'styled-components';
+import { colors, withAlpha } from '../colors.js';
+import { spacing, radii, typography } from '../tokens.js';
 
-const TRACK_WIDTH = 44
-const TRACK_HEIGHT = 24
-const KNOB_SIZE = 18
-const KNOB_INSET = (TRACK_HEIGHT - KNOB_SIZE) / 2
-const KNOB_TRAVEL = TRACK_WIDTH - KNOB_SIZE - KNOB_INSET * 2
+const TRACK_WIDTH = 44;
+const TRACK_HEIGHT = 24;
+const KNOB_SIZE = 18;
+const KNOB_INSET = (TRACK_HEIGHT - KNOB_SIZE) / 2;
+const KNOB_TRAVEL = TRACK_WIDTH - KNOB_SIZE - KNOB_INSET * 2;
 
 const Wrapper = styled.span<{ $disabled: boolean }>`
   display: inline-flex;
@@ -19,7 +19,7 @@ const Wrapper = styled.span<{ $disabled: boolean }>`
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
   user-select: none;
-`
+`;
 
 const Track = styled.button<{ $checked: boolean }>`
   position: relative;
@@ -41,7 +41,7 @@ const Track = styled.button<{ $checked: boolean }>`
   &:disabled {
     cursor: not-allowed;
   }
-`
+`;
 
 const Knob = styled.span<{ $checked: boolean }>`
   position: absolute;
@@ -54,33 +54,33 @@ const Knob = styled.span<{ $checked: boolean }>`
   box-shadow: 0 1px 2px ${withAlpha(colors.black, 0.25)};
   transform: translateX(${({ $checked }) => ($checked ? KNOB_TRAVEL : 0)}px);
   transition: transform 0.2s ease;
-`
+`;
 
 const LabelText = styled.span`
   line-height: 1;
-`
+`;
 
 export type ToggleSwitchProps = {
-  checked: boolean
-  onChange: (v: boolean) => void
-  label?: React.ReactNode
-  disabled?: boolean
-  id?: string
-}
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label?: React.ReactNode;
+  disabled?: boolean;
+  id?: string;
+};
 
 export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   checked,
   onChange,
   label,
   disabled = false,
-  id
+  id,
 }) => {
-  const labelId = id ? `${id}-label` : undefined
+  const labelId = id ? `${id}-label` : undefined;
 
   const handleClick = () => {
-    if (disabled) return
-    onChange(!checked)
-  }
+    if (disabled) return;
+    onChange(!checked);
+  };
 
   return (
     <Wrapper $disabled={disabled}>
@@ -98,7 +98,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       </Track>
       {label != null && <LabelText id={labelId}>{label}</LabelText>}
     </Wrapper>
-  )
-}
+  );
+};
 
-export default ToggleSwitch
+export default ToggleSwitch;

@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { colors } from '../colors.js'
-import { spacing, radii, typography } from '../tokens.js'
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { colors } from '../colors.js';
+import { spacing, radii, typography } from '../tokens.js';
 
 const Surface = styled.div<{ $hover: boolean }>`
   position: relative;
@@ -11,32 +11,33 @@ const Surface = styled.div<{ $hover: boolean }>`
   justify-content: center;
   gap: ${spacing.sm}px;
   padding: ${spacing.xl}px ${spacing.lg}px;
-  border: 2px dashed
-    ${({ $hover }) => ($hover ? colors.primary : colors.outlineVariant)};
+  border: 2px dashed ${({ $hover }) => ($hover ? colors.primary : colors.outlineVariant)};
   border-radius: ${radii.lg}px;
   background: ${({ $hover }) =>
     $hover ? colors.surfaceContainerHigh : colors.surfaceContainerLow};
   text-align: center;
-  transition: border-color 120ms ease, background 120ms ease;
+  transition:
+    border-color 120ms ease,
+    background 120ms ease;
   font-family: ${typography.fontFamily};
-`
+`;
 
 const Icon = styled.span`
   font-size: 40px;
   color: ${colors.primary};
   line-height: 1;
-`
+`;
 
 const Title = styled.div`
   font-size: ${typography.sizes.md}px;
   font-weight: ${typography.weights.semibold};
   color: ${colors.text.primary};
-`
+`;
 
 const Helper = styled.div`
   font-size: ${typography.sizes.sm}px;
   color: ${colors.text.secondary};
-`
+`;
 
 const Filename = styled.div`
   display: inline-flex;
@@ -46,7 +47,7 @@ const Filename = styled.div`
   font-size: ${typography.sizes.sm}px;
   font-weight: ${typography.weights.medium};
   color: ${colors.text.accent};
-`
+`;
 
 const HiddenInput = styled.input`
   position: absolute;
@@ -55,16 +56,16 @@ const HiddenInput = styled.input`
   height: 100%;
   opacity: 0;
   cursor: pointer;
-`
+`;
 
 export type FileDropzoneProps = {
-  title: string
-  helperText?: string
-  accept?: string
-  onFile?: (file: File) => void
-  uploadedFilename?: string
-  id?: string
-}
+  title: string;
+  helperText?: string;
+  accept?: string;
+  onFile?: (file: File) => void;
+  uploadedFilename?: string;
+  id?: string;
+};
 
 export const FileDropzone: React.FC<FileDropzoneProps> = ({
   title,
@@ -72,36 +73,36 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
   accept,
   onFile,
   uploadedFilename,
-  id
+  id,
 }) => {
-  const [hover, setHover] = useState(false)
+  const [hover, setHover] = useState(false);
 
   const handleFiles = (files: FileList | null) => {
-    const file = files && files.item(0)
+    const file = files && files.item(0);
     if (file && onFile) {
-      onFile(file)
+      onFile(file);
     }
-  }
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleFiles(event.target.files)
-  }
+    handleFiles(event.target.files);
+  };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    setHover(true)
-  }
+    event.preventDefault();
+    setHover(true);
+  };
 
   const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    setHover(false)
-  }
+    event.preventDefault();
+    setHover(false);
+  };
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    setHover(false)
-    handleFiles(event.dataTransfer.files)
-  }
+    event.preventDefault();
+    setHover(false);
+    handleFiles(event.dataTransfer.files);
+  };
 
   return (
     <Surface
@@ -123,15 +124,9 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
           {uploadedFilename}
         </Filename>
       ) : null}
-      <HiddenInput
-        id={id}
-        type="file"
-        accept={accept}
-        aria-label={title}
-        onChange={handleChange}
-      />
+      <HiddenInput id={id} type="file" accept={accept} aria-label={title} onChange={handleChange} />
     </Surface>
-  )
-}
+  );
+};
 
-export default FileDropzone
+export default FileDropzone;

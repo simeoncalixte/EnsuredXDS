@@ -1,23 +1,23 @@
-import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { within, userEvent, expect } from '@storybook/test'
-import SegmentedSwitch, { SegmentedSwitchOption } from './SegmentedSwitch.js'
+import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, expect } from '@storybook/test';
+import SegmentedSwitch, { SegmentedSwitchOption } from './SegmentedSwitch.js';
 
 const meta: Meta<typeof SegmentedSwitch> = {
   title: 'XDS/SegmentedSwitch',
-  component: SegmentedSwitch
-}
+  component: SegmentedSwitch,
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof SegmentedSwitch>
+type Story = StoryObj<typeof SegmentedSwitch>;
 
 /**
  * Legacy string[] + numeric index API (backward compatible).
  */
 export const LegacyStringOptions: Story = {
-  render: () => {
-    const [i, setI] = useState(0)
+  render: function Render() {
+    const [i, setI] = useState(0);
     return (
       <SegmentedSwitch
         aria-label="Data range"
@@ -25,41 +25,36 @@ export const LegacyStringOptions: Story = {
         value={i}
         onChange={setI}
       />
-    )
-  }
-}
+    );
+  },
+};
 
 /**
  * Enhanced { label, value }[] + string value API.
  */
 export const ObjectOptions: Story = {
-  render: () => {
+  render: function Render() {
     const options: SegmentedSwitchOption[] = [
       { label: 'Table', value: 'table' },
-      { label: 'Kanban', value: 'kanban' }
-    ]
-    const [value, setValue] = useState('table')
+      { label: 'Kanban', value: 'kanban' },
+    ];
+    const [value, setValue] = useState('table');
     return (
-      <SegmentedSwitch
-        aria-label="View mode"
-        options={options}
-        value={value}
-        onChange={setValue}
-      />
-    )
-  }
-}
+      <SegmentedSwitch aria-label="View mode" options={options} value={value} onChange={setValue} />
+    );
+  },
+};
 
 /**
  * Interaction test: clicking a segment selects it and updates aria-pressed.
  */
 export const Interaction: Story = {
-  render: () => {
+  render: function Render() {
     const options: SegmentedSwitchOption[] = [
       { label: 'Builder View', value: 'builder' },
-      { label: 'Rendered View', value: 'rendered' }
-    ]
-    const [value, setValue] = useState('builder')
+      { label: 'Rendered View', value: 'rendered' },
+    ];
+    const [value, setValue] = useState('builder');
     return (
       <SegmentedSwitch
         aria-label="Editor mode"
@@ -67,25 +62,25 @@ export const Interaction: Story = {
         value={value}
         onChange={setValue}
       />
-    )
+    );
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
-    const group = canvas.getByRole('group', { name: 'Editor mode' })
-    expect(group).toBeInTheDocument()
+    const group = canvas.getByRole('group', { name: 'Editor mode' });
+    expect(group).toBeInTheDocument();
 
-    const builder = canvas.getByRole('button', { name: 'Builder View' })
-    const rendered = canvas.getByRole('button', { name: 'Rendered View' })
+    const builder = canvas.getByRole('button', { name: 'Builder View' });
+    const rendered = canvas.getByRole('button', { name: 'Rendered View' });
 
     // Initial state: first option active.
-    expect(builder).toHaveAttribute('aria-pressed', 'true')
-    expect(rendered).toHaveAttribute('aria-pressed', 'false')
+    expect(builder).toHaveAttribute('aria-pressed', 'true');
+    expect(rendered).toHaveAttribute('aria-pressed', 'false');
 
     // Click the second option.
-    await userEvent.click(rendered)
+    await userEvent.click(rendered);
 
-    expect(rendered).toHaveAttribute('aria-pressed', 'true')
-    expect(builder).toHaveAttribute('aria-pressed', 'false')
-  }
-}
+    expect(rendered).toHaveAttribute('aria-pressed', 'true');
+    expect(builder).toHaveAttribute('aria-pressed', 'false');
+  },
+};

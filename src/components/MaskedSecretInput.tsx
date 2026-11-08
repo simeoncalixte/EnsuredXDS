@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { colors } from '../colors.js'
-import { spacing, typography } from '../tokens.js'
-import Input from './Input.js'
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { colors } from '../colors.js';
+import { spacing, typography } from '../tokens.js';
+import Input from './Input.js';
 
 export type MaskedSecretInputProps = {
-  value: string
-  onChange: (v: string) => void
-  readOnly?: boolean
-  placeholder?: string
-  id?: string
-}
+  value: string;
+  onChange: (v: string) => void;
+  readOnly?: boolean;
+  placeholder?: string;
+  id?: string;
+};
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-`
+`;
 
 const ToggleButton = styled.button`
   position: absolute;
@@ -41,20 +41,20 @@ const ToggleButton = styled.button`
     outline: 1px solid ${colors.primary};
     outline-offset: 2px;
   }
-`
+`;
 
 const PaddedInput = styled(Input)`
   padding-right: ${spacing.lg}px;
-`
+`;
 
 export const MaskedSecretInput: React.FC<MaskedSecretInputProps> = ({
   value,
   onChange,
   readOnly,
   placeholder,
-  id
+  id,
 }) => {
-  const [revealed, setRevealed] = useState(false)
+  const [revealed, setRevealed] = useState(false);
 
   return (
     <Wrapper>
@@ -77,7 +77,7 @@ export const MaskedSecretInput: React.FC<MaskedSecretInputProps> = ({
         </span>
       </ToggleButton>
     </Wrapper>
-  )
-}
+  );
+};
 
-export default MaskedSecretInput
+export default MaskedSecretInput;

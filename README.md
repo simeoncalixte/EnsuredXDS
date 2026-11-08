@@ -1,6 +1,7 @@
 # EnsuredXDS — shared UI library
 
 `@ensured/xds` is the common React design system for EnsuredUI and future microfrontends. It owns reusable components, charts, theme providers, design tokens, CSS and their Storybook stories.
+
 ## Develop
 
 ```sh
@@ -16,12 +17,16 @@ npm run storybook
 The parent repository pins this project as a sibling submodule. EnsuredUI declares `"@ensured/xds": "file:../EnsuredXDS"`, resolving the compiled package through its public exports. It has no source alias back into this project.
 
 ```tsx
-import { XdsThemeProvider, Button } from '@ensured/xds'
-import '@ensured/xds/colors.css'
-import '@ensured/xds/styles.css'
+import { XdsThemeProvider, Button } from '@ensured/xds';
+import '@ensured/xds/colors.css';
+import '@ensured/xds/styles.css';
 
 export function App() {
-  return <XdsThemeProvider><Button>Continue</Button></XdsThemeProvider>
+  return (
+    <XdsThemeProvider>
+      <Button>Continue</Button>
+    </XdsThemeProvider>
+  );
 }
 ```
 
@@ -117,3 +122,47 @@ Pass the relevant component schemas to the agent and validate its selected props
 with AJV. Keep `excludedProps` for diagnostics rather than adding them to prompts.
 Build the shared package after syncing when consuming its published `dist` files;
 the workspace Jest mappings already resolve the JSON from source.
+
+## Filtered results components
+
+Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` for filtered dashboards. They use XDS color, typography, spacing and radius tokens and compose existing Badge, Button and ProgressBar controls. They are exported from the package root and component subpaths and registered in the generated component manifest.
+
+Dashboard component props, item types, result states, filters, and loss-ratio snapshots are defined in `src/components/UnderwritingDashboard.types.ts` and exported from the package root. Component modules re-export their existing type names for compatibility. The overview fixture is checked against `UnderwritingDashboardData`; this presentation model is not a backend API schema.
+
+Review `Results/Underwriting dashboard` in Storybook for the responsive composition and the individual `Results/*` stories for all data states. Story values are illustrative fixtures, not live financial results. The preview's filter action toggles a sample selection; the application owns the real drawer and query state.
+
+Pass formatted values and explicit business meaning from the application. Null metric values render unavailable; zero remains a valid result. Loading, empty, unavailable and error states hide stale values, comparisons and health badges. Comparison direction and favorable/unfavorable tone are independent. Coverage specifies populated records out of matching records. Targets require a positive denominator. Allocation shares require an explicit basis and do not infer whether overlapping categories sum to 100 percent.
+
+Backend aggregation, effective revision selection, financial calculations and live dashboard adoption are separate integration work. These components do not fetch data or infer underwriting decisions.
+
+### Catastrophe and treaty sections
+
+`NatCatRiskBanner` displays a scenario title, gross exposure, retained exposure, treaty count, monitoring status and attachment buffer. GIS and stress-test buttons are controlled by callbacks; stress-test progress and errors are supplied by the application. Optional details support controlled or local disclosure state with accessible expanded/controls attributes. The component does not run models or infer retention.
+
+`TreatyRenewalCard` displays broker/reference, status, target limit, indicative rate on line, explicit rate-change tone, expiry, syndicate participation and terms status. `TreatyRenewalWatchlist` composes cards in a responsive grid, derives the critical count from supplied flags, and accepts a formatted total and valuation basis. Totals are never calculated from display strings. Loading, empty, error and unavailable watchlists suppress stale totals and cards.
+
+See the individual `Results/NatCatRiskBanner`, `Results/TreatyRenewalCard` and `Results/TreatyRenewalWatchlist` stories, or the combined `Results/Underwriting dashboard` preview. GIS, catastrophe models, treaty calculations and live API integration remain application responsibilities. All preview figures are illustrative fixtures.
+
+### Submission pipeline results
+
+`SubmissionPipelineOverview` composes `PipelineStageCard` with optional
+`AppetiteDistribution`, `SlaVelocityPanel`, and `PriorityUnderwriterQueue` children.
+The components use XDS tokens, badges, buttons, result states, and responsive grids.
+See **Results / SubmissionPipelineOverview** and **Results / Underwriting dashboard**
+in Storybook for the complete illustrative composition, including mobile and missing-data states.
+
+Supply authoritative totals and formatted values from the application aggregation layer.
+Stage totals are not automatically summed, capacity is distinct from insured exposure,
+and SLA values are not calculated in the UI. Appetite percentages require mutually
+exclusive categories; unknown or invalid shares suppress the chart, and totals below
+100% retain an explicit unspecified remainder. Zero is a valid result.
+
+`onOpenStage(stageId)` and `onOpenSubmission(submissionId)` let the consuming application
+navigate or update its filters. These components perform no backend requests, LLM calls,
+or modeling runs. Storybook data and callbacks are fixtures, not live integrations.
+
+## Code quality
+
+Run `npm run lint` for ESLint checks and `npm run lint:fix` for automatic fixes. Run `npm run format` to format XDS with Prettier, or `npm run format:check` to verify formatting. CI checks both before building. Generated artifacts and dependencies are excluded.
+
+ESLint checks TypeScript, React hooks, stories, scripts, and tests. The existing extensible DataTable, KanbanBoard, and RequestedCoverageEditor APIs retain their explicit `any` types for compatibility; the other recommended rules still apply to those files. Node 22.13 or newer is required by the lint tooling.

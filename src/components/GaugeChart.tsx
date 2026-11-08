@@ -22,9 +22,9 @@ interface Props {
 }
 
 const DEFAULT_THRESHOLDS: Threshold[] = [
-  { upTo: 1.0, color: colors.dataViz.red },   // danger – below minimum solvency
-  { upTo: 1.5, color: colors.dataViz.orange },   // warning
-  { upTo: 2.5, color: colors.dataViz.green },   // healthy
+  { upTo: 1.0, color: colors.dataViz.red }, // danger – below minimum solvency
+  { upTo: 1.5, color: colors.dataViz.orange }, // warning
+  { upTo: 2.5, color: colors.dataViz.green }, // healthy
   { upTo: Infinity, color: colors.dataViz.blue }, // strong
 ];
 
@@ -57,11 +57,7 @@ export default function GaugeChart({
           endAngle={-20}
         >
           <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
-          <RadialBar
-            dataKey="value"
-            cornerRadius={6}
-            background={{ fill: colors.surfacePanel }}
-          />
+          <RadialBar dataKey="value" cornerRadius={6} background={{ fill: colors.surfacePanel }} />
         </RadialBarChart>
       </ResponsiveContainer>
 
