@@ -155,6 +155,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -176,10 +180,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -219,6 +219,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -228,10 +232,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -303,15 +303,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -324,10 +328,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -543,6 +543,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -568,10 +572,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -791,6 +791,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -808,10 +812,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -860,11 +860,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -873,10 +877,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -1168,6 +1168,11 @@
           "name": "inlist",
           "required": false,
           "reason": "Unresolved, unconstrained, or unsupported type"
+        },
+        {
+          "name": "key",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
         },
         {
           "name": "onAbort",
@@ -2015,6 +2020,11 @@
           "reason": "Function or constructor supplied by the UI"
         },
         {
+          "name": "ref",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
           "name": "role",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
@@ -2191,6 +2201,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -2212,10 +2226,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -2255,6 +2265,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -2264,10 +2278,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -2339,15 +2349,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -2360,10 +2374,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -2579,6 +2589,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -2604,10 +2618,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -2821,6 +2831,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -2838,10 +2852,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -2890,11 +2900,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -2903,10 +2917,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -4209,6 +4219,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -4230,10 +4244,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -4273,6 +4283,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -4282,10 +4296,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -4357,15 +4367,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -4378,10 +4392,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -4597,6 +4607,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -4622,10 +4636,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -4749,6 +4759,9 @@
           "autoSave": {
             "type": "string"
           },
+          "bare": {
+            "type": "boolean"
+          },
           "className": {
             "type": "string"
           },
@@ -4822,6 +4835,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -4839,10 +4856,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -4869,11 +4882,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -4882,10 +4899,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -5101,6 +5114,11 @@
           "name": "inlist",
           "required": false,
           "reason": "Unresolved, unconstrained, or unsupported type"
+        },
+        {
+          "name": "key",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
         },
         {
           "name": "onAbort",
@@ -5943,6 +5961,11 @@
           "reason": "Function or constructor supplied by the UI"
         },
         {
+          "name": "ref",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
           "name": "role",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
@@ -6111,6 +6134,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -6132,10 +6159,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -6175,6 +6198,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -6184,10 +6211,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -6259,15 +6282,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -6280,10 +6307,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -6499,6 +6522,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -6524,10 +6551,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -6741,6 +6764,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -6758,10 +6785,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -6810,11 +6833,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -6823,10 +6850,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -8132,6 +8155,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -8153,10 +8180,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -8196,6 +8219,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -8205,10 +8232,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -8280,15 +8303,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -8301,10 +8328,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -8520,6 +8543,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -8545,10 +8572,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -8751,6 +8774,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -8768,10 +8795,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -8798,11 +8821,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -8811,10 +8838,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -9042,6 +9065,11 @@
           "name": "inlist",
           "required": false,
           "reason": "Unresolved, unconstrained, or unsupported type"
+        },
+        {
+          "name": "key",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
         },
         {
           "name": "onAbort",
@@ -9884,6 +9912,11 @@
           "reason": "Function or constructor supplied by the UI"
         },
         {
+          "name": "ref",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
           "name": "role",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
@@ -10248,6 +10281,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -10269,10 +10306,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -10312,6 +10345,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -10321,10 +10358,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -10396,15 +10429,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -10417,10 +10454,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -10636,6 +10669,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -10661,10 +10698,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -10878,6 +10911,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -10895,10 +10932,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -10947,11 +10980,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -10960,10 +10997,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -12557,6 +12590,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -12578,10 +12615,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -12621,6 +12654,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -12630,10 +12667,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -12705,15 +12738,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -12726,10 +12763,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -12945,6 +12978,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -12970,10 +13007,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -13187,6 +13220,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -13204,10 +13241,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -13259,11 +13292,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -13272,10 +13309,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -14578,6 +14611,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -14599,10 +14636,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -14642,6 +14675,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -14651,10 +14688,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -14726,15 +14759,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -14747,10 +14784,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -14966,6 +14999,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -14991,10 +15028,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -15188,6 +15221,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -15205,10 +15242,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -15247,11 +15280,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -15260,10 +15297,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -15547,6 +15580,11 @@
           "name": "inlist",
           "required": false,
           "reason": "Unresolved, unconstrained, or unsupported type"
+        },
+        {
+          "name": "key",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
         },
         {
           "name": "onAbort",
@@ -16389,6 +16427,11 @@
           "reason": "Function or constructor supplied by the UI"
         },
         {
+          "name": "ref",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
           "name": "role",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
@@ -16550,6 +16593,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -16571,10 +16618,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -16614,6 +16657,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -16623,10 +16670,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -16698,15 +16741,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -16719,10 +16766,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -16938,6 +16981,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -16963,10 +17010,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -17160,6 +17203,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -17177,10 +17224,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -17204,11 +17247,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -17217,10 +17264,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -18344,6 +18387,9 @@
           },
           "count": {
             "type": "number"
+          },
+          "keepMounted": {
+            "type": "boolean"
           },
           "tone": {
             "anyOf": [
@@ -20025,6 +20071,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -20046,10 +20096,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -20089,6 +20135,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -20098,10 +20148,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -20173,15 +20219,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -20194,10 +20244,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -20413,6 +20459,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -20438,10 +20488,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -20632,6 +20678,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -20649,10 +20699,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -20676,11 +20722,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -20689,10 +20739,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -21915,6 +21961,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -21936,10 +21986,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -21979,6 +22025,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -21988,10 +22038,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -22063,15 +22109,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -22084,10 +22134,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -22303,6 +22349,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -22328,10 +22378,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -22522,6 +22568,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -22539,10 +22589,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -22566,11 +22612,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -22579,10 +22629,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -23805,6 +23851,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -23826,10 +23876,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -23869,6 +23915,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -23878,10 +23928,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -23953,15 +23999,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -23974,10 +24024,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -24193,6 +24239,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -24218,10 +24268,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -24412,6 +24458,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -24429,10 +24479,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -24456,11 +24502,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -24469,10 +24519,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -25695,6 +25741,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -25716,10 +25766,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -25759,6 +25805,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -25768,10 +25818,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -25843,15 +25889,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -25864,10 +25914,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -26083,6 +26129,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -26108,10 +26158,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -26302,6 +26348,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -26319,10 +26369,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -26346,11 +26392,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -26359,10 +26409,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -27585,6 +27631,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -27606,10 +27656,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -27649,6 +27695,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -27658,10 +27708,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -27733,15 +27779,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -27754,10 +27804,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -27973,6 +28019,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -27998,10 +28048,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -28192,6 +28238,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -28209,10 +28259,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -28236,11 +28282,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -28249,10 +28299,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -29475,6 +29521,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -29496,10 +29546,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -29539,6 +29585,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -29548,10 +29598,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -29623,15 +29669,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -29644,10 +29694,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -29863,6 +29909,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -29888,10 +29938,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -30082,6 +30128,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -30099,10 +30149,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -30126,11 +30172,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -30139,10 +30189,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -31370,6 +31416,10 @@
               },
               {
                 "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
@@ -31391,10 +31441,6 @@
               {
                 "type": "string",
                 "const": "date"
-              },
-              {
-                "type": "string",
-                "const": "time"
               }
             ]
           },
@@ -31434,6 +31480,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
                 "const": "none"
               },
               {
@@ -31443,10 +31493,6 @@
               {
                 "type": "string",
                 "const": "execute"
-              },
-              {
-                "type": "string",
-                "const": "link"
               },
               {
                 "type": "string",
@@ -31518,15 +31564,19 @@
               },
               {
                 "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
                 "const": "true"
               },
               {
                 "type": "string",
                 "const": "false"
-              },
-              {
-                "type": "string",
-                "const": "menu"
               },
               {
                 "type": "string",
@@ -31539,10 +31589,6 @@
               {
                 "type": "string",
                 "const": "grid"
-              },
-              {
-                "type": "string",
-                "const": "dialog"
               }
             ]
           },
@@ -31758,6 +31804,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
                 "const": "additions"
               },
               {
@@ -31783,10 +31833,6 @@
               {
                 "type": "string",
                 "const": "removals text"
-              },
-              {
-                "type": "string",
-                "const": "text"
               },
               {
                 "type": "string",
@@ -31977,6 +32023,10 @@
             "anyOf": [
               {
                 "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
                 "const": "enter"
               },
               {
@@ -31994,10 +32044,6 @@
               {
                 "type": "string",
                 "const": "previous"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -32021,11 +32067,15 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "none"
+                "const": "search"
               },
               {
                 "type": "string",
                 "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
               },
               {
                 "type": "string",
@@ -32034,10 +32084,6 @@
               {
                 "type": "string",
                 "const": "tel"
-              },
-              {
-                "type": "string",
-                "const": "search"
               },
               {
                 "type": "string",
@@ -34031,6 +34077,9 @@
                 "critical": {
                   "type": "boolean"
                 },
+                "title": {
+                  "type": "string"
+                },
                 "status": {
                   "type": "object",
                   "properties": {
@@ -34082,9 +34131,6 @@
                   "required": [
                     "label"
                   ]
-                },
-                "title": {
-                  "type": "string"
                 },
                 "broker": {
                   "anyOf": [
@@ -34217,8 +34263,8 @@
               "additionalProperties": false,
               "required": [
                 "id",
-                "status",
                 "title",
+                "status",
                 "expiryLabel",
                 "indicativeRate",
                 "participation",
@@ -35340,6 +35386,94 @@
           "reason": "Function or constructor supplied by the UI"
         }
       ]
+    }
+  ],
+  "policyVersion": 1,
+  "defaults": [
+    {
+      "fieldTypes": [
+        "text",
+        "date"
+      ],
+      "ref": {
+        "id": "xds.input",
+        "version": 1
+      }
+    },
+    {
+      "fieldTypes": [
+        "number",
+        "integer",
+        "currency",
+        "percentage"
+      ],
+      "ref": {
+        "id": "xds.number",
+        "version": 1
+      }
+    },
+    {
+      "fieldTypes": [
+        "select",
+        "radio"
+      ],
+      "ref": {
+        "id": "xds.select",
+        "version": 1
+      }
+    },
+    {
+      "fieldTypes": [
+        "multiselect"
+      ],
+      "ref": {
+        "id": "xds.checkbox",
+        "version": 1
+      }
+    },
+    {
+      "fieldTypes": [
+        "textarea"
+      ],
+      "ref": {
+        "id": "xds.textarea",
+        "version": 1
+      }
+    },
+    {
+      "fieldTypes": [
+        "boolean"
+      ],
+      "ref": {
+        "id": "xds.toggle-switch",
+        "version": 1
+      },
+      "surfaces": [
+        "manual",
+        "results"
+      ]
+    },
+    {
+      "fieldTypes": [
+        "array"
+      ],
+      "semantic": "coverages",
+      "ref": {
+        "id": "xds.requested-coverage",
+        "version": 1
+      }
+    },
+    {
+      "fieldTypes": [
+        "boolean"
+      ],
+      "surfaces": [
+        "legacy"
+      ],
+      "ref": {
+        "id": "xds.select",
+        "version": 1
+      }
     }
   ]
 }

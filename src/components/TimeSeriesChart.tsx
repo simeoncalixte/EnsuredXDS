@@ -26,7 +26,7 @@ export default function TimeSeriesChart({ points, height = 160 }: Props) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: colors.neutral[400],
+          color: colors.text.secondary,
         }}
       >
         No data
@@ -51,13 +51,13 @@ export default function TimeSeriesChart({ points, height = 160 }: Props) {
             tickFormatter={(t) =>
               new Date(Number(t)).toLocaleDateString(undefined, { month: 'short', year: '2-digit' })
             }
-            tick={{ fill: colors.neutral[400], fontSize: 11 }}
+            tick={{ fill: colors.text.secondary, fontSize: 11 }}
             axisLine={false}
           />
           <YAxis
             dataKey="value"
             tickFormatter={(v) => Number(v).toLocaleString()}
-            tick={{ fill: colors.neutral[400], fontSize: 11 }}
+            tick={{ fill: colors.text.secondary, fontSize: 11 }}
             axisLine={false}
           />
           <Tooltip

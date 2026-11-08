@@ -78,10 +78,10 @@ export default function GaugeChart({
           {value.toFixed(2)}x
         </span>
         {label && (
-          <span style={{ fontSize: 11, color: colors.neutral[400], marginTop: 4 }}>{label}</span>
+          <span style={{ fontSize: 11, color: colors.text.secondary, marginTop: 4 }}>{label}</span>
         )}
         {sublabel && (
-          <span style={{ fontSize: 10, color: colors.neutral[500], marginTop: 2 }}>{sublabel}</span>
+          <span style={{ fontSize: 10, color: colors.text.secondary, marginTop: 2 }}>{sublabel}</span>
         )}
       </div>
     </div>

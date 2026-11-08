@@ -166,3 +166,15 @@ or modeling runs. Storybook data and callbacks are fixtures, not live integratio
 Run `npm run lint` for ESLint checks and `npm run lint:fix` for automatic fixes. Run `npm run format` to format XDS with Prettier, or `npm run format:check` to verify formatting. CI checks both before building. Generated artifacts and dependencies are excluded.
 
 ESLint checks TypeScript, React hooks, stories, scripts, and tests. The existing extensible DataTable, KanbanBoard, and RequestedCoverageEditor APIs retain their explicit `any` types for compatibility; the other recommended rules still apply to those files. Node 22.13 or newer is required by the lint tooling.
+
+## Digital Vermilion palette and ownership
+
+`src/palette.ts` is the canonical source for Obsidian, Vermilion, Paper, Powder Blue, Stone, Gunmetal, Salmon, Blue Haze, Pewter and Off White. It also owns the accessible light/dark semantic roles and derived chart ramps. The approved ten base values remain available as `colors.palette`; use `colors.primary`, `colors.text.primary`, `colors.surfacePanel`, etc. for UI roles. Foregrounds must match their fill (`onPrimary`, `onPrimaryContainer`, `onSecondaryContainer`). Vermilion/blue shades and tints provide readable text in each mode; raw brand swatches are not interchangeable with semantic text colors.
+
+`npm run build` generates `src/colors.css` and `dist/colors.css` from this same contract. Consumers import `@ensured/xds/colors.css` and the host mounts `XdsThemeProvider`. The workspace's `theme:sync` copies the generated stylesheet to static/standalone applications; `theme:check` detects stale copies and local product color literals. Do not edit generated copies or define a second palette in a page.
+
+Use XDS Button, Input, Select and Textarea for controls. `Select bare` preserves a native select element without its optional chevron wrapper when a page owns the layout. Native props, refs, validation and submitted payloads are preserved. Domain pages own composition and application state, not another set of control primitives or colors.
+
+Canvas, WebGL, map expressions, and saved signature images require literal colors: use XDS raw palette/dataViz exports rather than CSS variables. `categoryColor(key, themeName)` returns a stable readable category color for the requested theme. Third-party vendor marks retain their centrally defined brand colors. Stored signatures and generated document formats are not retroactively recolored.
+
+Verification: `node --test test/palette.test.mjs` checks exact base values, generated CSS and semantic contrast. Story `xds-palette-workflow--theme-and-form` exercises both themes, persistence, input refs, validation, keyboard submit/payload, disabled states, status fills and heatmap rendering; the workspace `scripts/verify-palette-stories.mjs` also checks actual browser hover and captures previews.

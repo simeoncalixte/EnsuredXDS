@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { colors } from '../colors.js';
 import { spacing, radii, typography } from '../tokens.js';
 
-export type XdsTextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+export type XdsTextareaProps = React.ComponentPropsWithRef<'textarea'>;
 
 const StyledTextarea = styled.textarea`
   width: 100%;

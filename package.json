@@ -41,7 +41,11 @@
     },
     "./styles.css": "./dist/styles.css",
     "./schema/component-registry.json": "./schema/component-registry.json",
-    "./schema/component-manifest.generated.json": "./schema/component-manifest.generated.json"
+    "./schema/component-manifest.generated.json": "./schema/component-manifest.generated.json",
+    "./palette": {
+      "types": "./dist/palette.d.ts",
+      "import": "./dist/palette.js"
+    }
   },
   "scripts": {
     "build": "node scripts/clean.mjs && npm run generate:dashboard-validators && tsc -p tsconfig.build.json && node scripts/copy-css.mjs",
@@ -50,7 +54,7 @@
     "prepack": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "npm run build && node --test test/package.test.mjs test/component-manifest.test.mjs test/results.test.mjs",
+    "test": "npm run build && node --test test/package.test.mjs test/component-manifest.test.mjs test/results.test.mjs test/palette.test.mjs",
     "sync:schema-registry": "node scripts/sync-schema-registry.mjs",
     "check:schema-registry": "node scripts/sync-schema-registry.mjs --check",
     "generate:component-manifest": "node scripts/generate-component-manifest.mjs",
@@ -59,7 +63,9 @@
     "lint:fix": "eslint . --fix --max-warnings=0",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "generate:dashboard-validators": "node scripts/generate-dashboard-validators.mjs"
+    "generate:dashboard-validators": "node scripts/generate-dashboard-validators.mjs",
+    "generate:component-policy": "node scripts/generate-component-policy.mjs",
+    "check:component-policy": "node scripts/generate-component-policy.mjs --check"
   },
   "peerDependencies": {
     "react": "^19.0.0",
