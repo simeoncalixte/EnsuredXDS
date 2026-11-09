@@ -154,6 +154,7 @@ test('generates the XDS catalog without executing React and preserves reviewed v
     'SideBarNav',
     'ScrollableNavigation',
     'ThemeToggle',
+    'RightHandPanel', // Application filtering shell, not a generated form control.
   ]);
   const registered = new Set(
     manifest.components.map((component) => component.export.split('/').pop()),
