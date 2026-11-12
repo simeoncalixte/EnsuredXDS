@@ -80,3 +80,5 @@ export * from './PriorityUnderwriterQueue.js';
 export * from './SubmissionPipelineOverview.js';
 export type * from './UnderwritingDashboard.types.js';
 export { default as LossRatioTrajectory } from './LossRatioTrajectory.js';
+
+export * from './RightHandPanel.js';

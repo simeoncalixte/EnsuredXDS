@@ -6,51 +6,35 @@
       "id": "xds.input",
       "version": 1,
       "export": "@ensured/xds/components/Input",
-      "fieldTypes": [
-        "text",
-        "date"
-      ],
+      "fieldTypes": ["text", "date"],
       "description": "Single-line text or date"
     },
     {
       "id": "xds.number",
       "version": 1,
       "export": "@ensured/xds/components/NumberInput",
-      "fieldTypes": [
-        "number",
-        "integer",
-        "currency",
-        "percentage"
-      ],
+      "fieldTypes": ["number", "integer", "currency", "percentage"],
       "description": "Numeric input with units and constraints"
     },
     {
       "id": "xds.select",
       "version": 1,
       "export": "@ensured/xds/components/Select",
-      "fieldTypes": [
-        "select",
-        "boolean",
-        "radio"
-      ],
+      "fieldTypes": ["select", "boolean", "radio"],
       "description": "Single choice from a picklist"
     },
     {
       "id": "xds.checkbox",
       "version": 1,
       "export": "@ensured/xds/components/Checkbox",
-      "fieldTypes": [
-        "multiselect"
-      ],
+      "fieldTypes": ["multiselect"],
       "description": "Multiple choices from a picklist"
     },
     {
       "id": "xds.textarea",
       "version": 1,
       "export": "@ensured/xds/components/Textarea",
-      "fieldTypes": [
-        "textarea"
-      ],
+      "fieldTypes": ["textarea"],
       "description": "Multi-line text"
     },
     {
@@ -106,21 +90,11 @@
               "type": "string"
             },
             "limit": {
-              "type": [
-                "number",
-                "string",
-                "object",
-                "null"
-              ],
+              "type": ["number", "string", "object", "null"],
               "minimum": 0
             },
             "deductible": {
-              "type": [
-                "number",
-                "string",
-                "object",
-                "null"
-              ],
+              "type": ["number", "string", "object", "null"],
               "minimum": 0
             },
             "currencyCode": {
@@ -147,9 +121,7 @@
       "version": 1,
       "export": "@ensured/xds/components/CurrencyInput",
       "kind": "field",
-      "fieldTypes": [
-        "currency"
-      ],
+      "fieldTypes": ["currency"],
       "description": "Amount with a separate currency selector; the renderer binds amount and currency independently."
     },
     {
@@ -157,11 +129,7 @@
       "version": 1,
       "export": "@ensured/xds/components/Range",
       "kind": "field",
-      "fieldTypes": [
-        "number",
-        "integer",
-        "percentage"
-      ],
+      "fieldTypes": ["number", "integer", "percentage"],
       "description": "Numeric slider with minimum, maximum and step."
     },
     {
@@ -169,9 +137,7 @@
       "version": 1,
       "export": "@ensured/xds/components/ToggleSwitch",
       "kind": "field",
-      "fieldTypes": [
-        "boolean"
-      ],
+      "fieldTypes": ["boolean"],
       "description": "Boolean on/off switch."
     },
     {
@@ -179,11 +145,7 @@
       "version": 1,
       "export": "@ensured/xds/components/SegmentedSwitch",
       "kind": "field",
-      "fieldTypes": [
-        "select",
-        "radio",
-        "boolean"
-      ],
+      "fieldTypes": ["select", "radio", "boolean"],
       "description": "Single choice using string options with an index value, or label/value options with a string value."
     },
     {
@@ -191,9 +153,7 @@
       "version": 1,
       "export": "@ensured/xds/components/MaskedSecretInput",
       "kind": "field",
-      "fieldTypes": [
-        "text"
-      ],
+      "fieldTypes": ["text"],
       "description": "Secret text input with a visibility control."
     },
     {
@@ -209,11 +169,7 @@
       "version": 1,
       "export": "@ensured/xds/components/SelectionCard",
       "kind": "field",
-      "fieldTypes": [
-        "select",
-        "radio",
-        "boolean"
-      ],
+      "fieldTypes": ["select", "radio", "boolean"],
       "description": "Selectable card with title, description content and selection callbacks."
     },
     {
@@ -221,12 +177,7 @@
       "version": 1,
       "export": "@ensured/xds/components/FormField",
       "kind": "field",
-      "fieldTypes": [
-        "text",
-        "date",
-        "number",
-        "integer"
-      ],
+      "fieldTypes": ["text", "date", "number", "integer"],
       "description": "Labeled HTML input with an inline validation error."
     },
     {
@@ -656,72 +607,50 @@
   "policyVersion": 1,
   "defaults": [
     {
-      "fieldTypes": [
-        "text",
-        "date"
-      ],
+      "fieldTypes": ["text", "date"],
       "ref": {
         "id": "xds.input",
         "version": 1
       }
     },
     {
-      "fieldTypes": [
-        "number",
-        "integer",
-        "currency",
-        "percentage"
-      ],
+      "fieldTypes": ["number", "integer", "currency", "percentage"],
       "ref": {
         "id": "xds.number",
         "version": 1
       }
     },
     {
-      "fieldTypes": [
-        "select",
-        "radio"
-      ],
+      "fieldTypes": ["select", "radio"],
       "ref": {
         "id": "xds.select",
         "version": 1
       }
     },
     {
-      "fieldTypes": [
-        "multiselect"
-      ],
+      "fieldTypes": ["multiselect"],
       "ref": {
         "id": "xds.checkbox",
         "version": 1
       }
     },
     {
-      "fieldTypes": [
-        "textarea"
-      ],
+      "fieldTypes": ["textarea"],
       "ref": {
         "id": "xds.textarea",
         "version": 1
       }
     },
     {
-      "fieldTypes": [
-        "boolean"
-      ],
+      "fieldTypes": ["boolean"],
       "ref": {
         "id": "xds.toggle-switch",
         "version": 1
       },
-      "surfaces": [
-        "manual",
-        "results"
-      ]
+      "surfaces": ["manual", "results"]
     },
     {
-      "fieldTypes": [
-        "array"
-      ],
+      "fieldTypes": ["array"],
       "semantic": "coverages",
       "ref": {
         "id": "xds.requested-coverage",
@@ -729,12 +658,8 @@
       }
     },
     {
-      "fieldTypes": [
-        "boolean"
-      ],
-      "surfaces": [
-        "legacy"
-      ],
+      "fieldTypes": ["boolean"],
+      "surfaces": ["legacy"],
       "ref": {
         "id": "xds.select",
         "version": 1

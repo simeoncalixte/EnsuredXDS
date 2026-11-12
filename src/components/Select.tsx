@@ -14,7 +14,10 @@ const StyledSelect = styled.select`
   background: ${colors.surfaceContainer};
   border: none;
   color: ${colors.text.primary};
-  &:focus-visible { outline: 2px solid ${colors.primary}; outline-offset: 3px; }
+  &:focus-visible {
+    outline: 2px solid ${colors.primary};
+    outline-offset: 3px;
+  }
 `;
 
 const Chevron = styled.span`
@@ -32,7 +35,12 @@ export const Select: React.FC<React.ComponentPropsWithRef<'select'> & { bare?: b
   style,
   ...rest
 }) => {
-  if (bare) return <StyledSelect {...rest} style={style}>{children}</StyledSelect>;
+  if (bare)
+    return (
+      <StyledSelect {...rest} style={style}>
+        {children}
+      </StyledSelect>
+    );
   return (
     <Wrapper>
       <StyledSelect {...rest} style={style}>

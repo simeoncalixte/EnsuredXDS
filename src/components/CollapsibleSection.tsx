@@ -96,7 +96,9 @@ const Chevron = styled.span<{ $collapsed: boolean }>`
 `;
 
 const Body = styled.div`
-  &[hidden] { display: none; }
+  &[hidden] {
+    display: none;
+  }
   padding: ${spacing.md}px;
   border-top: 1px solid ${colors.outlineVariant};
   font-family: ${typography.fontFamily};
@@ -116,10 +118,19 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
 }) => {
   const id = useId();
   const [opened, setOpened] = useState(!collapsed);
-  useEffect(() => { if (!collapsed) setOpened(true); }, [collapsed]);
+  useEffect(() => {
+    if (!collapsed) setOpened(true);
+  }, [collapsed]);
   return (
     <Container>
-      <Header id={`${id}-toggle`} type="button" $tone={tone} aria-expanded={!collapsed} aria-controls={`${id}-body`} onClick={onToggle}>
+      <Header
+        id={`${id}-toggle`}
+        type="button"
+        $tone={tone}
+        aria-expanded={!collapsed}
+        aria-controls={`${id}-body`}
+        onClick={onToggle}
+      >
         <TitleBlock>
           <TitleRow>
             <Title>{title}</Title>
@@ -128,10 +139,23 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           {description !== undefined && <Description>{description}</Description>}
         </TitleBlock>
         <Chevron $collapsed={collapsed} aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
         </Chevron>
       </Header>
-      {(!collapsed || (keepMounted && opened)) && <Body id={`${id}-body`} role="region" aria-labelledby={`${id}-toggle`} hidden={collapsed}>{children}</Body>}
+      {(!collapsed || (keepMounted && opened)) && (
+        <Body id={`${id}-body`} role="region" aria-labelledby={`${id}-toggle`} hidden={collapsed}>
+          {children}
+        </Body>
+      )}
     </Container>
   );
 };

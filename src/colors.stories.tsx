@@ -122,9 +122,10 @@ export const Colors: StoryObj = {
   render: () => (
     <Page>
       <Intro>
-        Every color in EnsuredUI is sourced from these tokens in <code>EnsuredXDS/src/palette.ts</code>. Use{' '}
-        <code>colors.*</code> directly, and <code>withAlpha(colors.x, alpha)</code> for translucent
-        variants — never hand-write hex or rgba literals in components or pages.
+        Every color in EnsuredUI is sourced from these tokens in{' '}
+        <code>EnsuredXDS/src/palette.ts</code>. Use <code>colors.*</code> directly, and{' '}
+        <code>withAlpha(colors.x, alpha)</code> for translucent variants — never hand-write hex or
+        rgba literals in components or pages.
       </Intro>
 
       <Section

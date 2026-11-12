@@ -81,7 +81,9 @@ export default function GaugeChart({
           <span style={{ fontSize: 11, color: colors.text.secondary, marginTop: 4 }}>{label}</span>
         )}
         {sublabel && (
-          <span style={{ fontSize: 10, color: colors.text.secondary, marginTop: 2 }}>{sublabel}</span>
+          <span style={{ fontSize: 10, color: colors.text.secondary, marginTop: 2 }}>
+            {sublabel}
+          </span>
         )}
       </div>
     </div>

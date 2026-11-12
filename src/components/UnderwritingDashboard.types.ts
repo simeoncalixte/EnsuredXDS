@@ -335,6 +335,6 @@ export interface DashboardConfiguration {
   id: string;
   title: string;
   description: string;
-  filters: { parameter: 'submissionFilters'; optionsPath: '/api/underwriting/submissions/search' };
+  filters: { parameter: 'submissionFilters'; optionsPath: string };
   widgets: DashboardWidgetConfig[];
 }
