@@ -142,7 +142,7 @@ Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` f
 
 Dashboard component props, item types, result states, filters, and loss-ratio snapshots are defined in `src/components/UnderwritingDashboard.types.ts` and exported from the package root. Component modules re-export their existing type names for compatibility. The overview fixture is checked against `UnderwritingDashboardData`; this presentation model is not a backend API schema.
 
-Review `Results/Underwriting dashboard` in Storybook for the responsive composition and the individual `Results/*` stories for all data states. Story values are illustrative fixtures, not live financial results. The preview's filter action toggles a sample selection; the application owns the real drawer and query state.
+Review `Page Compositions/Underwriting Dashboard` in Storybook for the responsive composition and the individual Data Display, Feedback, Workflow and Insurance stories for all data states. Story values are illustrative fixtures, not live financial results. The preview's filter action toggles a sample selection; the application owns the real drawer and query state.
 
 Pass formatted values and explicit business meaning from the application. Null metric values render unavailable; zero remains a valid result. Loading, empty, unavailable and error states hide stale values, comparisons and health badges. Comparison direction and favorable/unfavorable tone are independent. Coverage specifies populated records out of matching records. Targets require a positive denominator. Allocation shares require an explicit basis and do not infer whether overlapping categories sum to 100 percent.
 
@@ -154,7 +154,7 @@ Backend aggregation, effective revision selection, financial calculations and li
 
 `TreatyRenewalCard` displays broker/reference, status, target limit, indicative rate on line, explicit rate-change tone, expiry, syndicate participation and terms status. `TreatyRenewalWatchlist` composes cards in a responsive grid, derives the critical count from supplied flags, and accepts a formatted total and valuation basis. Totals are never calculated from display strings. Loading, empty, error and unavailable watchlists suppress stale totals and cards.
 
-See the individual `Results/NatCatRiskBanner`, `Results/TreatyRenewalCard` and `Results/TreatyRenewalWatchlist` stories, or the combined `Results/Underwriting dashboard` preview. GIS, catastrophe models, treaty calculations and live API integration remain application responsibilities. All preview figures are illustrative fixtures.
+See the individual `Feedback/NatCatRiskBanner`, `Insurance/TreatyRenewalCard` and `Insurance/TreatyRenewalWatchlist` stories, or the combined `Page Compositions/Underwriting Dashboard` preview. GIS, catastrophe models, treaty calculations and live API integration remain application responsibilities. All preview figures are illustrative fixtures.
 
 ### Submission pipeline results
 
