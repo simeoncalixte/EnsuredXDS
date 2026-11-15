@@ -35,12 +35,14 @@ test('shared source imports stay inside the package and contain no application e
 test('a packed artifact builds in a separate consumer with exported components, styles and declarations', async () => {
   const temp = realpathSync(mkdtempSync(join(tmpdir(), 'ensured-xds-consumer-')));
   try {
-    const packed = JSON.parse(
-      execFileSync('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', temp], {
-        cwd: root,
-        encoding: 'utf8',
-      }),
-    )[0];
+    // npm 10 can run prepare despite --ignore-scripts and prefix its JSON with
+    // lifecycle output. Keep the real npm archive check while reading its final report.
+    const packOutput = execFileSync(
+      'npm',
+      ['pack', '--ignore-scripts', '--json', '--pack-destination', temp],
+      { cwd: root, encoding: 'utf8' },
+    );
+    const packed = JSON.parse(packOutput.slice(packOutput.lastIndexOf('\n[') + 1))[0];
     assert.ok(packed.files.some((f) => f.path === 'dist/index.d.ts'));
     assert.ok(packed.files.some((f) => f.path === 'schema/component-registry.json'));
     assert.equal(

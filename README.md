@@ -52,6 +52,10 @@ npm test
 npm run build-storybook
 ```
 
+The default tests run without sibling repositories. In the full application checkout,
+`XDS_CHECK_SIBLING_CATALOG=1 npm test` also checks the downstream catalog copy.
+Tests run sequentially because some npm versions rebuild during packing.
+
 The package test installs the actual packed artifact into an isolated consumer and builds an application through the exported API. It also rejects source dependencies that escape the library directory. It uses the local npm cache; run `npm ci` first.
 
 Typography uses Inter, Manrope and Material Symbols where available. The host owns font loading (or self-hosting); the library does not fetch fonts. Standalone Storybook loads them through its preview head.

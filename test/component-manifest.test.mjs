@@ -133,18 +133,6 @@ test('generates the XDS catalog without executing React and preserves reviewed v
       readFileSync(new URL('../schema/component-manifest.generated.json', import.meta.url), 'utf8'),
     ),
   );
-  assert.deepEqual(
-    manifest,
-    JSON.parse(
-      readFileSync(
-        new URL(
-          '../../EnsuredPipelineShared/src/formCatalog/xds-components.generated.json',
-          import.meta.url,
-        ),
-        'utf8',
-      ),
-    ),
-  );
 
   // Every component that can live in a form/section is registered. Application
   // shell navigation and global theme switching are deliberately out of scope.
@@ -189,3 +177,20 @@ test('generates the XDS catalog without executing React and preserves reviewed v
   );
   assert.equal(ajv.compile(selection.propsSchema)({ selectionId: 'property' }), false);
 });
+
+// Cross-repository parity belongs to the application integration checkout.
+test(
+  'the sibling application catalog matches the published manifest',
+  {
+    skip:
+      process.env.XDS_CHECK_SIBLING_CATALOG !== '1' &&
+      'Set XDS_CHECK_SIBLING_CATALOG=1 in the application checkout',
+  },
+  () => {
+    const read = (relative) => JSON.parse(readFileSync(new URL(relative, import.meta.url), 'utf8'));
+    assert.deepEqual(
+      read('../schema/component-manifest.generated.json'),
+      read('../../EnsuredPipelineShared/src/formCatalog/xds-components.generated.json'),
+    );
+  },
+);
