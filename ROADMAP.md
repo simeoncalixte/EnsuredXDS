@@ -185,20 +185,70 @@ query, publication and investment workflows remain owned by Marketplace.
    provider are needed for library development. Host integrations must separately
    verify authorization, persistence, concurrency and financial invariants.
 
+## Priority palette update: distinguish brand from status
+
+**P1 — user-reported visual conflict, added 2026-11-15.** The current warm
+vermilion/salmon brand palette can compete with familiar warning and danger
+indicators. Review the palette before expanding the insurance component families
+so normal actions, selection and decoration are distinguishable from conditions
+requiring attention. This is planned design and implementation work; replacement
+colors have not been selected or applied.
+
+Catalog placement: `Foundations/Palette`, `Foundations/Colors` and
+`Foundations/Tokens`, with representative examples in Feedback, Form Elements,
+Filters, Modals and Insurance.
+
+Acceptance criteria:
+
+- Compare candidate primary/accent palettes against warning, error/danger,
+  success and informational states in both themes. Include normal and destructive
+  buttons, selected filters, input validation, alerts, badges and risk indicators
+  together on a page; isolated swatches are insufficient.
+- Define distinct semantic tokens for brand/action, selection/focus, warning,
+  error/danger, success, information and neutral/unknown states. Review familiar
+  amber warning, red danger, green success and blue information cues; prevent
+  ordinary brand treatments from appearing to signal a problem. Unknown,
+  unavailable and disabled states must not appear successful or safe.
+- Separate categorical chart colors from severity colors. Document ordered risk
+  scales and reserve alert treatments for meaningful states; neither a party's
+  category nor a selected row should imply elevated risk merely through hue.
+- Pair status colors with text and, where appropriate, icons or patterns. Verify
+  meaning remains clear in grayscale and color-vision-deficiency previews.
+  Check text, icons, borders, focus rings and interactive states for accessible
+  contrast on their actual light/dark surfaces, including hover and disabled states.
+- Review before/after Storybook page compositions and obtain maintainer agreement
+  on the replacement palette before changing the canonical colors. Record the
+  chosen roles and examples in the public design guidance.
+- Update `src/palette.ts`, derived CSS/theme tokens and component usages together;
+  migrate hardcoded brand/status colors and keep documented consumer aliases
+  compatible where possible. Update exact-palette assertions to the approved
+  replacement and retain semantic contrast checks; do not weaken tests to accept
+  an arbitrary color change.
+- Verify representative component interactions and capture matching light/dark,
+  desktop/narrow-screen examples. Document consumer migration and any intentional
+  visual changes before publishing the palette release.
+
+Provisional estimate: **8–12 hours**, including palette comparison, token
+migration, representative component checks and documentation. Refine against the
+responsive/theme work below to avoid counting the same checks twice. This is a
+new user-requested roadmap item, not a claim of an existing Jira ticket.
+
 ## Cross-cutting quality work
 
-Retained from the initial roadmap; these are library-wide improvements beyond the
+These library-wide improvements include the initial roadmap and the new palette
+priority above. They extend beyond the
 component-specific acceptance checks above. Refine overlaps before scheduling.
 
 | Work                             | Acceptance criteria                                                                                                           | Estimate   |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Brand and semantic palette       | Deliver the P1 palette review, approved token migration and state distinction checks described above.                         | 8–12 hours |
 | Keyboard and focus accessibility | Audit Modal, Select, Navigation and filter panels; fix observed issues; add keyboard regression stories.                      | 8–12 hours |
 | Interaction coverage             | Add assertions for form validation, disabled controls, dialog dismissal and filter reset; run browser interactions in CI.     | 6–10 hours |
 | Responsive and theme coverage    | Exercise representative components at mobile and desktop widths in light/dark themes; fix overflow and contrast issues found. | 6–8 hours  |
 | Consumer documentation           | Document theme setup, router requirements and common composition examples; verify examples against the packed library.        | 4–6 hours  |
 | Package compatibility            | Extend packed-consumer checks for documented subpaths, CSS and supported peer versions.                                       | 4–6 hours  |
 
-Quality-work estimate: **28–42 hours**, subject to overlap refinement. Do not add
+Quality-work estimate: **36–54 hours**, subject to overlap refinement. Do not add
 it mechanically to the first-delivery estimate.
 
 ## Scope and status of this plan
