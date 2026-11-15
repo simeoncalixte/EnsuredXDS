@@ -1,8 +1,17 @@
 # EnsuredXDS — shared UI library
 
+[Storybook](https://simeoncalixte.github.io/EnsuredXDS/) · [Roadmap](ROADMAP.md) · [MIT license](LICENSE)
+
 `@ensured/xds` is the common React design system for EnsuredUI and future microfrontends. It owns reusable components, charts, theme providers, design tokens, CSS and their Storybook stories.
 
+Built with TypeScript, React, styled-components, Recharts and Storybook. It is
+intended for developers building consistent forms, navigation and dashboards.
+The component library renders data supplied by its host; the standalone Storybook
+does not require an application backend or AI provider.
+
 ## Develop
+
+Use Node.js 22.13 or newer. Clone this repository and run from its root:
 
 ```sh
 npm ci
@@ -32,7 +41,7 @@ export function App() {
 
 Component subpaths such as `@ensured/xds/components/Button`, and `@ensured/xds/theme`, `@ensured/xds/colors`, `@ensured/xds/tokens` are also supported. JavaScript and TypeScript declarations are emitted to `dist`. React, React DOM, styled-components, React Router and Recharts are peer dependencies, so the consuming application provides them. Router-aware navigation components require the host's router.
 
-A consumer outside the parent can install a versioned archive produced by `npm pack`. The package is currently private and is not published to an npm registry. A private registry can replace the local dependency with a pinned version when independent deployment is introduced.
+A consumer outside the parent can install an archive produced by `npm pack`. Versioned packages are also published to GitHub Packages; registry installation requires package access as described in [PACKAGES.md](PACKAGES.md). Building the library and Storybook from source uses public npm dependencies and does not require a registry token.
 
 For future runtime composition, configure React, React DOM, styled-components, React Router **and `@ensured/xds`** as shared singletons; mount the theme provider in the host. Peer dependencies alone do not configure a federation runtime. This extraction creates the shared library; it does not add microfrontend routing, federation or independent deployment yet.
 
@@ -178,3 +187,29 @@ Use XDS Button, Input, Select and Textarea for controls. `Select bare` preserves
 Canvas, WebGL, map expressions, and saved signature images require literal colors: use XDS raw palette/dataViz exports rather than CSS variables. `categoryColor(key, themeName)` returns a stable readable category color for the requested theme. Third-party vendor marks retain their centrally defined brand colors. Stored signatures and generated document formats are not retroactively recolored.
 
 Verification: `node --test test/palette.test.mjs` checks exact base values, generated CSS and semantic contrast. Story `xds-palette-workflow--theme-and-form` exercises both themes, persistence, input refs, validation, keyboard submit/payload, disabled states, status fills and heatmap rendering; the workspace `scripts/verify-palette-stories.mjs` also checks actual browser hover and captures previews.
+
+## Storybook hosting
+
+The `Storybook Pages` workflow builds and tests pull requests, then publishes the
+static Storybook from `main` to GitHub Pages. In repository Settings → Pages,
+select **GitHub Actions** as the build source. The workflow can also be started
+manually from Actions. The expected URL is
+https://simeoncalixte.github.io/EnsuredXDS/.
+
+Storybook uses relative asset paths for project-site hosting and does not load
+local environment files. Preview stories use in-repository fixtures; never add
+customer documents, credentials or real personal data. Fonts load from Google
+Fonts. To preview the production build locally:
+
+```sh
+npm run build-storybook
+python3 -m http.server 6006 --directory storybook-static
+```
+
+## Contributing and license
+
+See [ROADMAP.md](ROADMAP.md) for proposed work. Include a representative Storybook
+example with component changes and run `npm test`, `npm run lint`,
+`npm run format:check` and `npm run build-storybook` before submitting changes.
+Preserve the existing Git history. EnsuredXDS is available under the
+[MIT license](LICENSE).

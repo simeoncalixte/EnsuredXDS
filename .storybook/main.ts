@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-vite';
 import { mergeConfig } from 'vite';
 
@@ -11,7 +10,9 @@ const config: StorybookConfig = {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
-      envDir: fileURLToPath(new URL('../../EnsuredAPI', import.meta.url)),
+      // Keep the public demo independent of application environment files.
+      envDir: false,
+      base: './',
       optimizeDeps: {
         exclude: ['storybook-addon-remix-react-router'],
       },

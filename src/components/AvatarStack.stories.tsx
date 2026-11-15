@@ -2,6 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { within, userEvent, expect } from '@storybook/test';
 import AvatarStack from './AvatarStack.js';
 
+// Generated geometric fixtures keep the image example independent of photo services.
+const avatarImage = (color: string) =>
+  `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" fill="${color}"/><circle cx="40" cy="30" r="14" fill="white"/><path d="M14 80a26 30 0 0 1 52 0" fill="white"/></svg>`)}`;
+
 const meta: Meta<typeof AvatarStack> = {
   title: 'XDS/AvatarStack',
   component: AvatarStack,
@@ -26,8 +30,8 @@ export const WithImages: Story = {
   args: {
     size: 40,
     avatars: [
-      { src: 'https://i.pravatar.cc/80?img=1', initials: 'AB' },
-      { src: 'https://i.pravatar.cc/80?img=2', initials: 'CD' },
+      { src: avatarImage('#6366f1'), initials: 'AB' },
+      { src: avatarImage('#0891b2'), initials: 'CD' },
       { initials: 'EF' },
     ],
   },
