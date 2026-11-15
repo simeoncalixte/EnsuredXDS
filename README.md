@@ -192,6 +192,37 @@ Canvas, WebGL, map expressions, and saved signature images require literal color
 
 Verification: `node --test test/palette.test.mjs` checks exact base values, generated CSS and semantic contrast. Story `xds-palette-workflow--theme-and-form` exercises both themes, persistence, input refs, validation, keyboard submit/payload, disabled states, status fills and heatmap rendering; the workspace `scripts/verify-palette-stories.mjs` also checks actual browser hover and captures previews.
 
+## Component organization
+
+Storybook and its source stories are organized by composition and placement.
+Stories live in `src/stories/<category>/`; reusable implementations retain their
+stable `src/components` locations and published import paths. Existing Storybook
+IDs are explicit so saved story links continue to resolve after regrouping.
+
+| Category          | Use and examples                                                                              |
+| ----------------- | --------------------------------------------------------------------------------------------- |
+| Foundations       | Colors, palette, design tokens and typography                                                 |
+| Form Elements     | Inputs, selects, checkboxes, toggles, ranges, selection cards, field wrappers and file inputs |
+| Actions           | Buttons and reusable action controls                                                          |
+| Filters           | Filter panels, segmented filtering and results toolbars                                       |
+| Navigation        | Main/side/sub navigation, breadcrumbs and steppers                                            |
+| Page Layout       | Page/section headers, cards, collapsible sections, grids and panels                           |
+| Location          | Planned subject location, route and boundary controls; appears when implemented               |
+| Icons             | Icon grids and icon presentation                                                              |
+| Modals            | Dialogs and modal compositions                                                                |
+| Data Display      | Tables, document rows, activity, avatars, metrics and allocation lists                        |
+| Feedback          | Badges, confidence, progress and risk alerts                                                  |
+| Workflow          | Boards, onboarding, pipeline stages, queues and SLA panels                                    |
+| Insurance         | Domain compositions such as deal cards, treaty renewals and appetite distribution             |
+| Page Compositions | Complete examples assembled from multiple component families                                  |
+
+Place each story in one primary category based on its purpose, even when a
+component is reused elsewhere. For example, a checkbox stays in Form Elements
+when used inside a Filters panel. Domain forms belong under `Form Elements/Insurance`,
+while read-only domain compositions belong under `Insurance`. Full-page examples
+belong in Page Compositions. Empty planned categories do not imply implemented
+components. See [ROADMAP.md](ROADMAP.md) for the planned component mapping.
+
 ## Storybook hosting
 
 The `Storybook Pages` workflow builds and tests pull requests, then publishes the

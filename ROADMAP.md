@@ -34,6 +34,36 @@ context. Completed AIN-184/204 provide submission creation and example fixtures.
 Do not reopen or count those as new work. AIN-59 remains In Progress; the party
 onboarding stories below remain To Do at this review.
 
+## Composition and placement taxonomy
+
+Use the same categories as the Storybook catalog and `src/stories` directories.
+Keep primitives separate from the domain sections and pages composed from them.
+Existing component import paths remain stable; this organization governs story
+storage, catalog placement and the intended placement of future additions.
+
+| Catalog category                 | Planned components                                                                                                                             |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Form Elements/Insurance          | `ParticipatingPartyEditor`, `InsuredSubjectEditor`, `RequestedCoverageEditor` extensions and reusable insurance term inputs                    |
+| Filters                          | Shared filtering controls for readiness, schedules, claims and reporting lists; reuse `RightHandPanel`, `SegmentedSwitch` and `ResultsToolbar` |
+| Navigation                       | Section and workflow navigation composed from existing breadcrumbs, steppers and navigation controls                                           |
+| Location                         | `InsuredSubjectGeometry`, `RiskLocationEditor`, `RiskRouteEditor`, `RiskBoundaryEditor` with map-optional textual controls                     |
+| Icons                            | Shared role, subject and state icon presentation; labels must carry meaning independently of icons                                             |
+| Modals                           | Confirmation, evidence preview and comparison dialogs composed using `Modal`; authorization remains host-owned                                 |
+| Data Display                     | `EvidenceReference`, `DocumentVersionList` and reusable comparison/table building blocks                                                       |
+| Feedback                         | `RevisionStatus`, `AuthorityStatus` and obligation/readiness state indicators                                                                  |
+| Workflow                         | `ReadinessIssueList`, `MarketApproachTracker`, `ReferralDecisionPanel`, `ClaimTimeline`, `ReportingObligationList`                             |
+| Insurance/Parties                | `ParticipatingPartyCard`, `ParticipatingPartyList`, `CounterpartyEvidencePanel`                                                                |
+| Insurance/Subjects               | `InsuredSubjectCard`, `InsuredSubjectSchedule`, `ExposureSummary`                                                                              |
+| Insurance/Coverage and Placement | Coverage summaries/comparisons, quote comparison, layer tower and capacity breakdown                                                           |
+| Insurance/Finance and Claims     | Loss experience, premium breakdown, claim summary, recovery breakdown and bordereaux review                                                    |
+| Insurance/Servicing              | Policy changes, renewal comparisons and disclosure package previews                                                                            |
+| Page Compositions                | Integrated synthetic submission, underwriting, placement and servicing examples built from the above                                           |
+
+An editor's low-level input stays under Form Elements; a geographic editor is
+placed under Location because it composes inputs around a spatial task. Keep one
+primary catalog entry per component rather than duplicate stories in each context.
+Location and other new entries appear only when their components are implemented.
+
 ## First delivery: parties and insured subjects
 
 | Priority | Component family                                                                        | Proposed scope                                                                                                                                                                           | Application traceability                                                                                                                                                            | Estimate    |
@@ -70,7 +100,7 @@ subtasks again as additional library effort.
 - Agree AIN-187's versioned contract before host adoption; coordinate required
   AIN-48/59 ownership slices and AIN-190 persistence without moving them into XDS.
 
-Planned Storybook group: `Insurance/ParticipatingParty`, with `MixedParties`,
+Planned Storybook groups: `Insurance/Parties` and `Form Elements/Insurance`, with `MixedParties`,
 `MissingContact`, `AmbiguousMatch`, `MultipleRoles`, `Unclaimed`,
 `ContactVerifiedAuthorityPending`, `Revoked`, `Redacted`, `RetryPreservesDraft`
 and `PaginatedList`. These story names are targets, not existing test evidence.
@@ -101,7 +131,8 @@ and `PaginatedList`. These story names are targets, not existing test evidence.
 - Keep risk scoring, accumulation calculations and binding eligibility in owning
   services. Display supplied results and provenance without deriving decisions.
 
-Planned Storybook group: `Insurance/InsuredSubject`, covering `PropertyLocation`,
+Planned Storybook groups: `Insurance/Subjects`, `Form Elements/Insurance` and
+`Location`, covering `PropertyLocation`,
 `MultipleLocations`, `CargoRoute`, `AreaBoundary`, `BoundaryWithHole`,
 `UnknownLocation`, `InvalidGeometry`, `Antimeridian`, `ReadOnly`, `NoMapProvider`
 and `MixedExposureSchedule`, using invented subjects and coordinates.

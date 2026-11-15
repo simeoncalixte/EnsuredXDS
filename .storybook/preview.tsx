@@ -39,6 +39,27 @@ const withLocationPathControl: Decorator = (Story, context) => {
 export const decorators = [withXdsTheme, withLocationPathControl];
 
 export const parameters = {
+  options: {
+    storySort: {
+      order: [
+        'Foundations',
+        'Form Elements',
+        'Actions',
+        'Filters',
+        'Navigation',
+        'Page Layout',
+        'Location',
+        'Icons',
+        'Modals',
+        'Data Display',
+        'Feedback',
+        'Workflow',
+        'Insurance',
+        'Page Compositions',
+      ],
+      method: 'alphabetical',
+    },
+  },
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
     matchers: {
