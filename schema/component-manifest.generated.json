@@ -34064,6 +34064,10 @@
                   {
                     "type": "string",
                     "const": "neutral"
+                  },
+                  {
+                    "type": "string",
+                    "const": "archived"
                   }
                 ]
               }
@@ -34420,6 +34424,10 @@
                         {
                           "type": "string",
                           "const": "neutral"
+                        },
+                        {
+                          "type": "string",
+                          "const": "archived"
                         }
                       ]
                     }
@@ -34614,6 +34622,10 @@
                   {
                     "type": "string",
                     "const": "neutral"
+                  },
+                  {
+                    "type": "string",
+                    "const": "archived"
                   }
                 ]
               }
@@ -34807,6 +34819,10 @@
                   {
                     "type": "string",
                     "const": "neutral"
+                  },
+                  {
+                    "type": "string",
+                    "const": "archived"
                   }
                 ]
               }
@@ -34958,6 +34974,10 @@
                         {
                           "type": "string",
                           "const": "neutral"
+                        },
+                        {
+                          "type": "string",
+                          "const": "archived"
                         }
                       ]
                     }
@@ -35316,6 +35336,10 @@
               {
                 "type": "string",
                 "const": "neutral"
+              },
+              {
+                "type": "string",
+                "const": "archived"
               }
             ]
           }
@@ -35578,6 +35602,10 @@
                   {
                     "type": "string",
                     "const": "neutral"
+                  },
+                  {
+                    "type": "string",
+                    "const": "archived"
                   }
                 ]
               }
@@ -35707,6 +35735,10 @@
                         {
                           "type": "string",
                           "const": "neutral"
+                        },
+                        {
+                          "type": "string",
+                          "const": "archived"
                         }
                       ]
                     }
@@ -35962,6 +35994,10 @@
                     {
                       "type": "string",
                       "const": "neutral"
+                    },
+                    {
+                      "type": "string",
+                      "const": "archived"
                     }
                   ]
                 }

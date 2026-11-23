@@ -5,11 +5,22 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { createServer } from 'vite';
 import { createServer as createHttpServer } from 'node:http';
 import { xdsThemes } from '../dist/palette.js';
-import {
-  statusTone,
-  isSubmissionSystemStatus,
-  SUBMISSION_SYSTEM_STATUSES,
-} from '../dist/components/Badge.js';
+
+// Load the component source through Vite SSR (as the other component tests do), so
+// styled-components resolves the same way it does in a bundler.
+const withBadge = async (fn) => {
+  const server = await createServer({
+    configFile: false,
+    logLevel: 'silent',
+    server: { middlewareMode: true, hmr: { server: createHttpServer() } },
+    ssr: { noExternal: ['styled-components'] },
+  });
+  try {
+    return await fn(await server.ssrLoadModule('/src/components/Badge.tsx'));
+  } finally {
+    await server.close();
+  }
+};
 
 const rgb = (hex) =>
   hex
@@ -28,25 +39,29 @@ const contrast = (a, b) => {
 // color-mix(in srgb, fg 12%, transparent) painted over the page background.
 const tint = (fg, bg, alpha) => fg.map((v, i) => v * alpha + bg[i] * (1 - alpha));
 
-test('statusTone maps every system submission status and falls back to surface', () => {
-  assert.deepEqual(Object.fromEntries(SUBMISSION_SYSTEM_STATUSES.map((s) => [s, statusTone(s)])), {
-    draft: 'neutral',
-    submitted: 'info',
-    modeling: 'info',
-    priced: 'info',
-    approved: 'primary',
-    rejected: 'danger',
-    quoted: 'primary',
-    bound: 'success',
-  });
-  assert.equal(statusTone(' Bound '), 'success');
-  assert.equal(statusTone('QUOTED'), 'primary');
-  for (const other of ['Awaiting loss runs', '', null, undefined, '__proto__', 'toString'])
-    assert.equal(statusTone(other), 'surface', String(other));
-  assert.equal(isSubmissionSystemStatus('Rejected'), true);
-  assert.equal(isSubmissionSystemStatus('hasOwnProperty'), false);
-  assert.equal(isSubmissionSystemStatus(42), false);
-});
+test('statusTone maps every system submission status and falls back to surface', () =>
+  withBadge(({ statusTone, isSubmissionSystemStatus, SUBMISSION_SYSTEM_STATUSES }) => {
+    assert.deepEqual(
+      Object.fromEntries(SUBMISSION_SYSTEM_STATUSES.map((s) => [s, statusTone(s)])),
+      {
+        draft: 'neutral',
+        submitted: 'info',
+        modeling: 'info',
+        priced: 'info',
+        approved: 'primary',
+        rejected: 'danger',
+        quoted: 'primary',
+        bound: 'success',
+      },
+    );
+    assert.equal(statusTone(' Bound '), 'success');
+    assert.equal(statusTone('QUOTED'), 'primary');
+    for (const other of ['Awaiting loss runs', '', null, undefined, '__proto__', 'toString'])
+      assert.equal(statusTone(other), 'surface', String(other));
+    assert.equal(isSubmissionSystemStatus('Rejected'), true);
+    assert.equal(isSubmissionSystemStatus('hasOwnProperty'), false);
+    assert.equal(isSubmissionSystemStatus(42), false);
+  }));
 
 test('status and archived badge text meets 4.5:1 in light and dark themes', () => {
   const backgrounds = [
@@ -73,15 +88,8 @@ test('status and archived badge text meets 4.5:1 in light and dark themes', () =
   }
 });
 
-test('Badge archived variant renders visible text and a hidden icon', async () => {
-  const server = await createServer({
-    configFile: false,
-    logLevel: 'silent',
-    server: { middlewareMode: true, hmr: { server: createHttpServer() } },
-    ssr: { noExternal: ['styled-components'] },
-  });
-  try {
-    const { Badge } = await server.ssrLoadModule('/src/components/Badge.tsx');
+test('Badge archived variant renders visible text and a hidden icon', () =>
+  withBadge(({ Badge }) => {
     const render = (props) => renderToStaticMarkup(React.createElement(Badge, props));
 
     const archived = render({ variant: 'archived' });
@@ -99,7 +107,4 @@ test('Badge archived variant renders visible text and a hidden icon', async () =
     assert.match(bound, /data-xds-variant="success"/);
     assert.doesNotMatch(bound, /<svg/);
     assert.match(bound, /Bound/);
-  } finally {
-    await server.close();
-  }
-});
+  }));
