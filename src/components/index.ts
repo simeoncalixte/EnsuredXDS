@@ -18,6 +18,8 @@ export { default as ValidationMessage } from './ValidationMessage.js';
 // Layout Components
 export { default as SectionHeader } from './SectionHeader.js';
 export { default as DocumentRow } from './DocumentRow.js';
+export { default as KeyValueList } from './KeyValueList.js';
+export type { KeyValueListProps, KeyValueListItem, KeyValueListItemType } from './KeyValueList.js';
 
 // Typography
 export {

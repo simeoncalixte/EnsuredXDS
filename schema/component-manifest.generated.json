@@ -19239,6 +19239,124 @@
       ]
     },
     {
+      "id": "xds.key-value-list",
+      "version": 1,
+      "export": "@ensured/xds/components/KeyValueList",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Read-only dl/dt/dd list of terms and values in 1, 2 or 3 responsive columns, with a — placeholder for empty values, date-only formatting that never goes through Date, and a skeleton state.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "columns": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 1
+              },
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 3
+              }
+            ],
+            "description": "Maximum columns at wide widths. 3 shows 3 columns at 1024 px and up, 2 from 600 px, and 1 below 600 px. Defaults to 1."
+          },
+          "emptyMessage": {
+            "type": "string",
+            "description": "Shown when `items` is empty. Defaults to \"No details to show.\""
+          },
+          "emptyValue": {
+            "type": "string",
+            "description": "Visible placeholder for an empty value. Defaults to \"—\"."
+          },
+          "emptyValueLabel": {
+            "type": "string",
+            "description": "Screen-reader text for an empty value. Defaults to \"Not set\"."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Stable key for React. Defaults to the label."
+                },
+                "label": {
+                  "type": "string",
+                  "description": "Term shown in the `dt`, e.g. \"Effective date\"."
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "description": "Value shown in the `dd`. `null`, `undefined` or an empty string shows the empty placeholder."
+                },
+                "type": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "text"
+                    },
+                    {
+                      "type": "string",
+                      "const": "date-only"
+                    },
+                    {
+                      "type": "string",
+                      "const": "mono"
+                    }
+                  ],
+                  "description": "How the value is formatted. Defaults to `text`."
+                },
+                "dateTime": {
+                  "type": "string",
+                  "description": "Machine-readable date or datetime. Wraps the value in `<time dateTime>`. Set automatically for valid `date-only` values."
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "label"
+              ]
+            },
+            "description": "Terms and values, in reading order."
+          },
+          "loading": {
+            "type": "boolean",
+            "description": "Shows a skeleton instead of the list and sets `aria-busy`."
+          },
+          "loadingLabel": {
+            "type": "string",
+            "description": "Screen-reader text while loading. Defaults to \"Loading details\"."
+          },
+          "skeletonCount": {
+            "type": "number",
+            "description": "Number of skeleton rows while loading. Defaults to the number of items, or 6 when there are none."
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "excludedProps": []
+    },
+    {
       "id": "xds.info-card",
       "version": 1,
       "export": "@ensured/xds/components/InfoCard",
