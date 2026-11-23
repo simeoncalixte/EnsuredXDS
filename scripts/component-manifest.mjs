@@ -81,20 +81,21 @@ export function createPropsExtractor(tsconfigPath) {
     };
   }
 
+  function optionalAwareSchema(prop, type, seen) {
+    if (!(prop.flags & ts.SymbolFlags.Optional && type.isUnion())) return schemaFor(type, seen);
+    const members = type.types.filter((t) => !(t.flags & ts.TypeFlags.Undefined));
+    if (members.length === 1) return schemaFor(members[0], seen);
+    const choices = members.map((t) => schemaFor(t, seen));
+    if (choices.length === 2 && choices.every((s) => s.type === 'boolean'))
+      return { type: 'boolean' };
+    return { anyOf: choices };
+  }
+
   function propertySchema(prop, seen) {
     const declaration = prop.valueDeclaration ?? prop.declarations?.[0];
-    let type = checker.getTypeOfSymbolAtLocation(prop, declaration);
-    if (prop.flags & ts.SymbolFlags.Optional && type.isUnion()) {
-      const members = type.types.filter((t) => !(t.flags & ts.TypeFlags.Undefined));
-      if (members.length === 1) type = members[0];
-      else {
-        const choices = members.map((t) => schemaFor(t, seen));
-        if (choices.length === 2 && choices.every((s) => s.type === 'boolean'))
-          return { type: 'boolean' };
-        return { anyOf: choices };
-      }
-    }
-    const schema = schemaFor(type, seen);
+    const type = checker.getTypeOfSymbolAtLocation(prop, declaration);
+    const schema = optionalAwareSchema(prop, type, seen);
+    // Attach JSDoc on every path, including optional booleans and optional unions.
     const description = ts.displayPartsToString(prop.getDocumentationComment(checker));
     return description ? { ...schema, description } : schema;
   }
