@@ -34037,6 +34037,80 @@
       ]
     },
     {
+      "id": "xds.unsupported-field",
+      "version": 1,
+      "export": "@ensured/xds/components/UnsupportedField",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Read-only fallback for a shape node whose component is unknown, retired or not allowed in forms; keeps the stored value visible as text, key/value pairs or a table.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "componentRef": {
+            "type": "string",
+            "description": "The component ref that couldn't be rendered, e.g. \"xds.legacy-schedule\"."
+          },
+          "emptyLabel": {
+            "type": "string",
+            "description": "Shown when the stored value is null, undefined, an empty string, array or object. Defaults to \"No value recorded\"."
+          },
+          "label": {
+            "type": "string",
+            "description": "Field label from the shape node."
+          },
+          "path": {
+            "type": "string",
+            "description": "Data path of the node, e.g. \"insured.locations\". Shown so the value can be traced."
+          },
+          "readOnly": {
+            "type": "boolean",
+            "const": true,
+            "description": "Always read-only in v1."
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "unknown-ref"
+              },
+              {
+                "type": "string",
+                "const": "not-form-allowed"
+              },
+              {
+                "type": "string",
+                "const": "retired"
+              }
+            ],
+            "description": "Why the node falls back to this component."
+          },
+          "reasonText": {
+            "type": "string",
+            "description": "Overrides the default visible reason text."
+          },
+          "truncateAt": {
+            "type": "number",
+            "description": "Text longer than this (in characters) is truncated with a \"Show full value\" toggle. Defaults to 160."
+          }
+        },
+        "required": [
+          "label",
+          "reason"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "value",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        }
+      ]
+    },
+    {
       "id": "xds.allocation-list",
       "version": 1,
       "export": "@ensured/xds/components/AllocationList",
