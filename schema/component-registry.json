@@ -277,6 +277,14 @@
       "description": "Breadcrumb trail within a form or section flow."
     },
     {
+      "id": "xds.pagination",
+      "version": 1,
+      "export": "@ensured/xds/components/Pagination",
+      "kind": "navigation",
+      "fieldTypes": [],
+      "description": "Keyset (cursor) pagination with Previous and Next only, no page numbers or total; disabled buttons stay focusable with a reason."
+    },
+    {
       "id": "xds.document-row",
       "version": 1,
       "export": "@ensured/xds/components/DocumentRow",

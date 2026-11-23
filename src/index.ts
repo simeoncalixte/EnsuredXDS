@@ -8,6 +8,7 @@ export * from './components/AvatarStack.js';
 export * from './components/Badge.js';
 export * from './components/BentoStep.js';
 export * from './components/Breadcrumb.js';
+export * from './components/Pagination.js';
 export * from './components/Button.js';
 export * from './components/Card.js';
 export * from './components/Checkbox.js';

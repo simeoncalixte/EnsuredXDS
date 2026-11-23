@@ -162,6 +162,25 @@ Pass `amount` as a decimal string (or `null` when unknown) and `currency` as an 
 
 The component never sums or converts currencies and does not decide a figure's state. The application supplies the state from its data source. See **Data Display/FinancialValue** in Storybook for every state in light and dark themes at 390 px and 1440 px.
 
+## Keyset pagination
+
+Use `Pagination` (`xds.pagination`) for cursor (keyset) lists. It shows **Previous** and **Next** only, with no page numbers and no total, because keyset APIs have no cheap count.
+
+```tsx
+import { Pagination } from '@ensured/xds';
+
+<Pagination
+  hasPrevious={Boolean(previousCursor)}
+  hasNext={Boolean(nextCursor)}
+  onPrevious={goPrevious}
+  onNext={goNext}
+  loading={isFetching}
+  pageSizeLabel="25 per page"
+/>;
+```
+
+A button that cannot be used gets `aria-disabled="true"`, not `disabled`, so it stays in the tab order and its reason ("You're on the first page", "You're on the last page", or "Loading the page" while `loading`) is read through `aria-describedby`. Override the reasons, button text and landmark label with props. Targets are 44 × 44 px on touch pointers and below 1024 px. The application owns the cursors, moves focus after a page loads and announces the result in its own live region. See **Navigation/Pagination** in Storybook.
+
 ## Filtered results components
 
 Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` for filtered dashboards. They use XDS color, typography, spacing and radius tokens and compose existing Badge, Button and ProgressBar controls. They are exported from the package root and component subpaths and registered in the generated component manifest.
