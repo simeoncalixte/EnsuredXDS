@@ -180,6 +180,7 @@ import { Pagination } from '@ensured/xds';
 ```
 
 A button that cannot be used gets `aria-disabled="true"`, not `disabled`, so it stays in the tab order and its reason ("You're on the first page", "You're on the last page", or "Loading the page" while `loading`) is read through `aria-describedby`. Override the reasons, button text and landmark label with props. Targets are 44 × 44 px on touch pointers and below 1024 px. The application owns the cursors, moves focus after a page loads and announces the result in its own live region. See **Navigation/Pagination** in Storybook.
+
 ## Unsupported fields
 
 When a submission shape node's `componentRef` can't be rendered, render `UnsupportedField` (`xds.unsupported-field`) instead of dropping the node. It always shows the stored value read-only, so submitted data is never lost.
@@ -197,6 +198,7 @@ import { UnsupportedField } from '@ensured/xds';
 ```
 
 `reason` is `unknown-ref` (not in the registry), `not-form-allowed` (registered but not allowed in forms) or `retired`. Each has default visible text, which `reasonText` overrides; the reason is never shown by colour alone. Scalars render as text, objects as key/value pairs, arrays of records as a table whose columns are the union of every row's keys (in a keyboard-scrollable region on narrow screens), and arrays of scalars as a list. Null, empty strings, empty arrays and empty objects show `emptyLabel` ("No value recorded"). Text longer than `truncateAt` characters (default 160) gets a "Show full value" toggle with `aria-expanded`. Numbers and decimal strings are shown exactly as stored, with no rounding or locale formatting. The group is named by `label` and described by the visible "Read-only" tag and reason text. See **Data Display/UnsupportedField** in Storybook.
+
 ## Key-value lists and date-only values
 
 Use `KeyValueList` (`xds.key-value-list`) for read-only details such as a submission or policy header. It renders a `dl` with one `dt`/`dd` pair per item, in 1, 2 or 3 columns (`columns={3}` shows 3 columns at 1024 px and up, 2 from 600 px and 1 below 600 px).
