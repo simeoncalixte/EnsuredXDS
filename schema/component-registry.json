@@ -285,6 +285,14 @@
       "description": "Document summary with status and renderer-provided actions."
     },
     {
+      "id": "xds.key-value-list",
+      "version": 1,
+      "export": "@ensured/xds/components/KeyValueList",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Read-only dl/dt/dd list of terms and values in 1, 2 or 3 responsive columns, with a — placeholder for empty values, date-only formatting that never goes through Date, and a skeleton state."
+    },
+    {
       "id": "xds.info-card",
       "version": 1,
       "export": "@ensured/xds/components/InfoCard",

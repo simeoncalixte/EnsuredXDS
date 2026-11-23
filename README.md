@@ -162,6 +162,28 @@ Pass `amount` as a decimal string (or `null` when unknown) and `currency` as an 
 
 The component never sums or converts currencies and does not decide a figure's state. The application supplies the state from its data source. See **Data Display/FinancialValue** in Storybook for every state in light and dark themes at 390 px and 1440 px.
 
+## Key-value lists and date-only values
+
+Use `KeyValueList` (`xds.key-value-list`) for read-only details such as a submission or policy header. It renders a `dl` with one `dt`/`dd` pair per item, in 1, 2 or 3 columns (`columns={3}` shows 3 columns at 1024 px and up, 2 from 600 px and 1 below 600 px).
+
+```tsx
+import { KeyValueList, formatDateOnly } from '@ensured/xds';
+
+<KeyValueList
+  columns={3}
+  loading={isLoading}
+  items={[
+    { label: 'Reference', value: 'SUB-10482', type: 'mono' },
+    { label: 'Effective date', value: '2027-01-01', type: 'date-only' }, // 01 Jan 2027
+    { label: 'Underwriter', value: null }, // —
+  ]}
+/>;
+
+formatDateOnly('2027-01-01'); // '01 Jan 2027' in every time zone
+```
+
+Empty values (`null`, `undefined` or `''`) show "—", which is hidden from screen readers in favour of "Not set". `type: 'date-only'` formats a `YYYY-MM-DD` calendar day (effective, inception or expiry date) from the string itself and wraps it in `<time datetime>`. It never goes through `Date`, so the day never shifts west of UTC. An invalid day is shown as given, so the data stays visible. `formatDateOnly` returns `null` for missing or invalid input. While `loading`, a skeleton replaces the list, the wrapper gets `aria-busy` and "Loading details" is read. Values are plain strings or numbers: format money with `FinancialValue` and instants (for example "Last updated") in the application, passing the ISO instant as `dateTime`. See **Data Display/KeyValueList** in Storybook.
+
 ## Filtered results components
 
 Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` for filtered dashboards. They use XDS color, typography, spacing and radius tokens and compose existing Badge, Button and ProgressBar controls. They are exported from the package root and component subpaths and registered in the generated component manifest.
