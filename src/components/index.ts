@@ -32,6 +32,8 @@ export {
 
 // Navigation Components
 export { default as Breadcrumb } from './Breadcrumb.js';
+export { default as Pagination } from './Pagination.js';
+export type { PaginationProps, PaginationMode } from './Pagination.js';
 export { default as Navigation } from './Navigation.js';
 export { default as SubNavigation } from './SubNavigation.js';
 

@@ -19096,6 +19096,84 @@
       ]
     },
     {
+      "id": "xds.pagination",
+      "version": 1,
+      "export": "@ensured/xds/components/Pagination",
+      "kind": "navigation",
+      "fieldTypes": [],
+      "description": "Keyset (cursor) pagination with Previous and Next only, no page numbers or total; disabled buttons stay focusable with a reason.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "True when the API returned a next cursor. When false, Next is aria-disabled."
+          },
+          "hasPrevious": {
+            "type": "boolean",
+            "description": "True when a previous cursor exists. When false, Previous is aria-disabled."
+          },
+          "label": {
+            "type": "string",
+            "description": "Accessible name of the navigation landmark. Defaults to \"Pagination\"."
+          },
+          "loading": {
+            "type": "boolean",
+            "description": "A page request is in flight: both buttons are aria-disabled and the nav is aria-busy."
+          },
+          "loadingReason": {
+            "type": "string",
+            "description": "Reason read for both buttons while loading. Defaults to \"Loading the page\"."
+          },
+          "mode": {
+            "type": "string",
+            "const": "keyset",
+            "description": "Only keyset (cursor) mode is supported today."
+          },
+          "nextDisabledReason": {
+            "type": "string",
+            "description": "Reason read when Next is disabled. Defaults to \"You're on the last page\"."
+          },
+          "nextLabel": {
+            "type": "string",
+            "description": "Visible text of the Next button. Defaults to \"Next\"."
+          },
+          "pageSizeLabel": {
+            "type": "string",
+            "description": "Optional status text shown at the end of the bar, e.g. \"25 per page\"."
+          },
+          "previousDisabledReason": {
+            "type": "string",
+            "description": "Reason read when Previous is disabled. Defaults to \"You're on the first page\"."
+          },
+          "previousLabel": {
+            "type": "string",
+            "description": "Visible text of the Previous button. Defaults to \"Previous\"."
+          }
+        },
+        "required": [
+          "hasNext",
+          "hasPrevious"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onNext",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPrevious",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
       "id": "xds.document-row",
       "version": 1,
       "export": "@ensured/xds/components/DocumentRow",
