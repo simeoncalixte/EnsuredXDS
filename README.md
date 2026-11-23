@@ -199,6 +199,25 @@ import { UnsupportedField } from '@ensured/xds';
 
 `reason` is `unknown-ref` (not in the registry), `not-form-allowed` (registered but not allowed in forms) or `retired`. Each has default visible text, which `reasonText` overrides; the reason is never shown by colour alone. Scalars render as text, objects as key/value pairs, arrays of records as a table whose columns are the union of every row's keys (in a keyboard-scrollable region on narrow screens), and arrays of scalars as a list. Null, empty strings, empty arrays and empty objects show `emptyLabel` ("No value recorded"). Text longer than `truncateAt` characters (default 160) gets a "Show full value" toggle with `aria-expanded`. Numbers and decimal strings are shown exactly as stored, with no rounding or locale formatting. The group is named by `label` and described by the visible "Read-only" tag and reason text. See **Data Display/UnsupportedField** in Storybook.
 
+## Banners
+
+Use `Banner` (`xds.banner`) for a page-level notice, such as "Figures on this page are illustrative" or "This quote expires on 2 December 2026".
+
+```tsx
+import { Banner } from '@ensured/xds';
+
+<Banner
+  tone="info"
+  title="Figures on this page are illustrative"
+  dismissible
+  onDismiss={focusHeading}
+>
+  Premiums, limits and loss ratios shown here are examples, not quotes or offers.
+</Banner>;
+```
+
+`tone` is `info` (default), `warning` or `neutral`. Each tone has its own icon and a visually hidden prefix ("Information:", "Warning:", "Notice:", overridable with `toneLabel`), so it is never shown by colour alone. The banner is `role="status"` (polite) and is named by its `title`; it is never an `alert`, so use a Modal (alertdialog) or ValidationMessage for anything that must interrupt. `action` takes a link or tertiary Button and wraps below the text on narrow screens. `dismissible` adds a dismiss button named "Dismiss notice: {title}" (`dismissLabel` overrides it). Without `open` the banner hides itself after dismissal; pass `open` to control it. Either way, move focus somewhere sensible in `onDismiss`. See **Feedback/Banner** in Storybook.
+
 ## Key-value lists and date-only values
 
 Use `KeyValueList` (`xds.key-value-list`) for read-only details such as a submission or policy header. It renders a `dl` with one `dt`/`dd` pair per item, in 1, 2 or 3 columns (`columns={3}` shows 3 columns at 1024 px and up, 2 from 600 px and 1 below 600 px).

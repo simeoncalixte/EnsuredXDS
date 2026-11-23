@@ -74,6 +74,7 @@ export * from './ResultsPanel.js';
 export * from './ResultMetricCard.js';
 export * from './FinancialValue.js';
 export * from './UnsupportedField.js';
+export * from './Banner.js';
 export * from './AllocationList.js';
 export * from './ResultsToolbar.js';
 export * from './NatCatRiskBanner.js';

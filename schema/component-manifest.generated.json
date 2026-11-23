@@ -36220,6 +36220,77 @@
           "reason": "Function or constructor supplied by the UI"
         }
       ]
+    },
+    {
+      "id": "xds.banner",
+      "version": 1,
+      "export": "@ensured/xds/components/Banner",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Page-level notice (info, warning or neutral) with a title, body, optional action and dismiss; a polite status, never an alert.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "dismissible": {
+            "type": "boolean",
+            "description": "Shows a dismiss button."
+          },
+          "dismissLabel": {
+            "type": "string",
+            "description": "Accessible name of the dismiss button. Defaults to \"Dismiss notice\", plus the title when there is one."
+          },
+          "open": {
+            "type": "boolean",
+            "description": "Controlled visibility. Leave it unset to let the banner hide itself after dismissal."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short, bold first line. Also names the banner for assistive technology."
+          },
+          "tone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "warning"
+              },
+              {
+                "type": "string",
+                "const": "info"
+              },
+              {
+                "type": "string",
+                "const": "neutral"
+              }
+            ],
+            "description": "Sets the icon, accent stripe and hidden tone prefix. Defaults to `info`."
+          },
+          "toneLabel": {
+            "type": "string",
+            "description": "Overrides the hidden tone prefix (\"Information\", \"Warning\" or \"Notice\")."
+          }
+        }
+      },
+      "excludedProps": [
+        {
+          "name": "action",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "children",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "onDismiss",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
     }
   ],
   "policyVersion": 1,
