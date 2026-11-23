@@ -155,10 +155,10 @@ export const CustomReasons: Story = {
   },
 };
 
-const widths = [375, 768, 1440] as const;
+type Width = 375 | 768 | 1440;
 const themes: XdsThemeName[] = ['dark', 'light'];
 
-const responsive = (theme: XdsThemeName, width: (typeof widths)[number]): Story => ({
+const responsive = (theme: XdsThemeName, width: Width): Story => ({
   name: `First page · ${theme} · ${width} px`,
   args: { hasPrevious: false, hasNext: true },
   decorators: themed(theme),
