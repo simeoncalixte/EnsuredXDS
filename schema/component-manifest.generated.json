@@ -18798,7 +18798,7 @@
       "export": "@ensured/xds/components/Badge",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Compact status badge.",
+      "description": "Compact status badge with semantic tones and an archived variant (icon + text). statusTone() maps submission statuses to tones.",
       "propsSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -18808,7 +18808,7 @@
           },
           "dot": {
             "type": "boolean",
-            "description": "Optional leading dot rendered before the children."
+            "description": "Optional leading dot rendered before the children. Ignored for `archived`, which shows an icon."
           },
           "variant": {
             "anyOf": [
@@ -18847,6 +18847,10 @@
               {
                 "type": "string",
                 "const": "neutral"
+              },
+              {
+                "type": "string",
+                "const": "archived"
               }
             ]
           }
