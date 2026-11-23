@@ -100,6 +100,8 @@ test('Badge archived variant renders visible text and a hidden icon', () =>
       render({ variant: 'archived', children: 'Archived 20 Nov 2026' }),
       /Archived 20 Nov 2026/,
     );
+    // an empty-string child falls back to the visible "Archived" label.
+    assert.match(render({ variant: 'archived', children: '' }), />Archived<\/span>$/);
     // dot is ignored for archived: the icon is the only leading mark.
     assert.equal(render({ variant: 'archived', dot: true }).match(/aria-hidden="true"/g).length, 1);
 

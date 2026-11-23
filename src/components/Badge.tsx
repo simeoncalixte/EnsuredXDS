@@ -181,8 +181,12 @@ const Dot = styled.span`
   flex: 0 0 auto;
 `;
 
+const ArchiveSvg = styled.svg`
+  flex: 0 0 auto;
+`;
+
 const ArchiveIcon = () => (
-  <svg
+  <ArchiveSvg
     aria-hidden="true"
     focusable="false"
     width="12"
@@ -193,12 +197,11 @@ const ArchiveIcon = () => (
     strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
-    style={{ flex: '0 0 auto' }}
   >
     <rect x="3" y="4" width="18" height="5" rx="1" />
     <path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9" />
     <path d="M10 13h4" />
-  </svg>
+  </ArchiveSvg>
 );
 
 export const Badge: React.FC<XdsBadgeProps> = ({
@@ -211,7 +214,9 @@ export const Badge: React.FC<XdsBadgeProps> = ({
   return (
     <StyledBadge $variant={variant} className={className} data-xds-variant={variant}>
       {archived ? <ArchiveIcon /> : dot ? <Dot aria-hidden="true" /> : null}
-      {archived && (children === undefined || children === null) ? 'Archived' : children}
+      {archived && (children === undefined || children === null || children === '')
+        ? 'Archived'
+        : children}
     </StyledBadge>
   );
 };
