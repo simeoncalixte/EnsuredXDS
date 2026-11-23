@@ -532,6 +532,14 @@
       "description": "Money amount, ratio or financial count with an explicit verified, pending, estimated, illustrative, unavailable, mixed-currency or loading state."
     },
     {
+      "id": "xds.unsupported-field",
+      "version": 1,
+      "export": "@ensured/xds/components/UnsupportedField",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Read-only fallback for a shape node whose component is unknown, retired or not allowed in forms; keeps the stored value visible as text, key/value pairs or a table."
+    },
+    {
       "id": "xds.allocation-list",
       "version": 1,
       "export": "@ensured/xds/components/AllocationList",
