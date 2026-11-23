@@ -136,6 +136,32 @@ with AJV. Keep `excludedProps` for diagnostics rather than adding them to prompt
 Build the shared package after syncing when consuming its published `dist` files;
 the workspace Jest mappings already resolve the JSON from source.
 
+## Financial values
+
+Every money amount, ratio or financial count in a product UI must be rendered with `FinancialValue`. Screens must not format money ad hoc. The component makes the figure's truthfulness explicit instead of leaving it to each page:
+
+| `state`          | Renders                                                                       |
+| ---------------- | ----------------------------------------------------------------------------- |
+| `verified`       | Formatted amount with ISO code, no chip                                       |
+| `pending`        | Amount with an outlined **Pending** chip                                      |
+| `estimated`      | `≈` prefix with an **Estimate** chip                                          |
+| `illustrative`   | Muted amount with a warning-tone **Example** chip                             |
+| `unavailable`    | "Not available" in the muted token, never `0`, `$0` or a bare dash            |
+| `mixed-currency` | "Multiple currencies", plus "View by currency" when `onViewByCurrency` is set |
+| `loading`        | A skeleton sized to the expected value, with `aria-busy="true"`               |
+
+```tsx
+import { FinancialValue } from '@ensured/xds';
+
+<FinancialValue amount="4200000" currency="USD" state="verified" asOf={asOf} source="Ledger" />
+<FinancialValue amount="4200000000" currency="USD" state="illustrative" scale="compact" />
+<FinancialValue amount={null} currency="USD" state="unavailable" reason="No reconciled data yet." />
+```
+
+Pass `amount` as a decimal string (or `null` when unknown) and `currency` as an ISO 4217 code (or `null` for ratios and counts). Values are formatted with `Intl.NumberFormat` in the active locale (override with `locale`) and tabular numerals. A `null` or non-decimal amount with an amount-bearing state renders `unavailable` and warns in development. Use `scale="compact"` only in headline tiles (for example "$4.2M USD"); the full value moves into the description. Use `align="end"` in table columns. Negative values keep a minus sign and use the danger text token. `asOf` adds an "As of 20 Nov 2026, 14:05 UTC" caption, marked "(stale)" after 24 hours. The value becomes focusable when it has a description, which is shown as a tooltip on hover and focus (Escape dismisses it) and exposed through `aria-describedby`.
+
+The component never sums or converts currencies and does not decide a figure's state. The application supplies the state from its data source. See **Data Display/FinancialValue** in Storybook for every state in light and dark themes at 390 px and 1440 px.
+
 ## Filtered results components
 
 Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` for filtered dashboards. They use XDS color, typography, spacing and radius tokens and compose existing Badge, Button and ProgressBar controls. They are exported from the package root and component subpaths and registered in the generated component manifest.

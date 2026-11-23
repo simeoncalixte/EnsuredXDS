@@ -33477,6 +33477,129 @@
       ]
     },
     {
+      "id": "xds.financial-value",
+      "version": 1,
+      "export": "@ensured/xds/components/FinancialValue",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Money amount, ratio or financial count with an explicit verified, pending, estimated, illustrative, unavailable, mixed-currency or loading state.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "start"
+              },
+              {
+                "type": "string",
+                "const": "end"
+              }
+            ]
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "Decimal string such as \"4200000\" or \"-12.50\". `null` when the value is unknown."
+          },
+          "asOf": {
+            "type": "string",
+            "description": "ISO datetime of the figure. Adds an \"As of … UTC\" caption."
+          },
+          "className": {
+            "type": "string"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "ISO 4217 code such as \"USD\". `null` for ratios and counts."
+          },
+          "locale": {
+            "type": "string",
+            "description": "BCP 47 locale. Defaults to the browser locale."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why the value is unavailable or otherwise qualified."
+          },
+          "scale": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "full"
+              },
+              {
+                "type": "string",
+                "const": "compact"
+              }
+            ]
+          },
+          "source": {
+            "type": "string",
+            "description": "Short source label, e.g. \"Ledger reconciliation\"."
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "verified"
+              },
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "unavailable"
+              },
+              {
+                "type": "string",
+                "const": "pending"
+              },
+              {
+                "type": "string",
+                "const": "estimated"
+              },
+              {
+                "type": "string",
+                "const": "illustrative"
+              },
+              {
+                "type": "string",
+                "const": "mixed-currency"
+              }
+            ]
+          }
+        },
+        "required": [
+          "amount",
+          "currency",
+          "state"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onViewByCurrency",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
       "id": "xds.allocation-list",
       "version": 1,
       "export": "@ensured/xds/components/AllocationList",
