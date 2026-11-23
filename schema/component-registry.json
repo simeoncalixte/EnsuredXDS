@@ -516,6 +516,14 @@
       "description": "Metric result with explicit comparison tone, evidence coverage and target progress."
     },
     {
+      "id": "xds.financial-value",
+      "version": 1,
+      "export": "@ensured/xds/components/FinancialValue",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Money amount, ratio or financial count with an explicit verified, pending, estimated, illustrative, unavailable, mixed-currency or loading state."
+    },
+    {
       "id": "xds.allocation-list",
       "version": 1,
       "export": "@ensured/xds/components/AllocationList",

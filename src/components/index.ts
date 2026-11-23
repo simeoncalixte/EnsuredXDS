@@ -68,6 +68,7 @@ export * from './CurrencyInput.js';
 export * from './RequestedCoverageEditor.js';
 export * from './ResultsPanel.js';
 export * from './ResultMetricCard.js';
+export * from './FinancialValue.js';
 export * from './AllocationList.js';
 export * from './ResultsToolbar.js';
 export * from './NatCatRiskBanner.js';
