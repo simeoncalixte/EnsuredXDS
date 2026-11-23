@@ -162,6 +162,65 @@ Pass `amount` as a decimal string (or `null` when unknown) and `currency` as an 
 
 The component never sums or converts currencies and does not decide a figure's state. The application supplies the state from its data source. See **Data Display/FinancialValue** in Storybook for every state in light and dark themes at 390 px and 1440 px.
 
+## Keyset pagination
+
+Use `Pagination` (`xds.pagination`) for cursor (keyset) lists. It shows **Previous** and **Next** only, with no page numbers and no total, because keyset APIs have no cheap count.
+
+```tsx
+import { Pagination } from '@ensured/xds';
+
+<Pagination
+  hasPrevious={Boolean(previousCursor)}
+  hasNext={Boolean(nextCursor)}
+  onPrevious={goPrevious}
+  onNext={goNext}
+  loading={isFetching}
+  pageSizeLabel="25 per page"
+/>;
+```
+
+A button that cannot be used gets `aria-disabled="true"`, not `disabled`, so it stays in the tab order and its reason ("You're on the first page", "You're on the last page", or "Loading the page" while `loading`) is read through `aria-describedby`. Override the reasons, button text and landmark label with props. Targets are 44 × 44 px on touch pointers and below 1024 px. The application owns the cursors, moves focus after a page loads and announces the result in its own live region. See **Navigation/Pagination** in Storybook.
+
+## Unsupported fields
+
+When a submission shape node's `componentRef` can't be rendered, render `UnsupportedField` (`xds.unsupported-field`) instead of dropping the node. It always shows the stored value read-only, so submitted data is never lost.
+
+```tsx
+import { UnsupportedField } from '@ensured/xds';
+
+<UnsupportedField
+  label="Schedule of locations"
+  path="insured.locations"
+  componentRef="xds.location-schedule"
+  reason="unknown-ref"
+  value={storedValue}
+/>;
+```
+
+`reason` is `unknown-ref` (not in the registry), `not-form-allowed` (registered but not allowed in forms) or `retired`. Each has default visible text, which `reasonText` overrides; the reason is never shown by colour alone. Scalars render as text, objects as key/value pairs, arrays of records as a table whose columns are the union of every row's keys (in a keyboard-scrollable region on narrow screens), and arrays of scalars as a list. Null, empty strings, empty arrays and empty objects show `emptyLabel` ("No value recorded"). Text longer than `truncateAt` characters (default 160) gets a "Show full value" toggle with `aria-expanded`. Numbers and decimal strings are shown exactly as stored, with no rounding or locale formatting. The group is named by `label` and described by the visible "Read-only" tag and reason text. See **Data Display/UnsupportedField** in Storybook.
+
+## Key-value lists and date-only values
+
+Use `KeyValueList` (`xds.key-value-list`) for read-only details such as a submission or policy header. It renders a `dl` with one `dt`/`dd` pair per item, in 1, 2 or 3 columns (`columns={3}` shows 3 columns at 1024 px and up, 2 from 600 px and 1 below 600 px).
+
+```tsx
+import { KeyValueList, formatDateOnly } from '@ensured/xds';
+
+<KeyValueList
+  columns={3}
+  loading={isLoading}
+  items={[
+    { label: 'Reference', value: 'SUB-10482', type: 'mono' },
+    { label: 'Effective date', value: '2027-01-01', type: 'date-only' }, // 01 Jan 2027
+    { label: 'Underwriter', value: null }, // —
+  ]}
+/>;
+
+formatDateOnly('2027-01-01'); // '01 Jan 2027' in every time zone
+```
+
+Empty values (`null`, `undefined` or `''`) show "—", which is hidden from screen readers in favour of "Not set". `type: 'date-only'` formats a `YYYY-MM-DD` calendar day (effective, inception or expiry date) from the string itself and wraps it in `<time datetime>`. It never goes through `Date`, so the day never shifts west of UTC. An invalid day is shown as given, so the data stays visible. `formatDateOnly` returns `null` for missing or invalid input. While `loading`, a skeleton replaces the list, the wrapper gets `aria-busy` and "Loading details" is read. Values are plain strings or numbers: format money with `FinancialValue` and instants (for example "Last updated") in the application, passing the ISO instant as `dateTime`. See **Data Display/KeyValueList** in Storybook.
+
 ## Filtered results components
 
 Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` for filtered dashboards. They use XDS color, typography, spacing and radius tokens and compose existing Badge, Button and ProgressBar controls. They are exported from the package root and component subpaths and registered in the generated component manifest.

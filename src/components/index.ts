@@ -18,6 +18,8 @@ export { default as ValidationMessage } from './ValidationMessage.js';
 // Layout Components
 export { default as SectionHeader } from './SectionHeader.js';
 export { default as DocumentRow } from './DocumentRow.js';
+export { default as KeyValueList } from './KeyValueList.js';
+export type { KeyValueListProps, KeyValueListItem, KeyValueListItemType } from './KeyValueList.js';
 
 // Typography
 export {
@@ -32,6 +34,8 @@ export {
 
 // Navigation Components
 export { default as Breadcrumb } from './Breadcrumb.js';
+export { default as Pagination } from './Pagination.js';
+export type { PaginationProps, PaginationMode } from './Pagination.js';
 export { default as Navigation } from './Navigation.js';
 export { default as SubNavigation } from './SubNavigation.js';
 
@@ -69,6 +73,7 @@ export * from './RequestedCoverageEditor.js';
 export * from './ResultsPanel.js';
 export * from './ResultMetricCard.js';
 export * from './FinancialValue.js';
+export * from './UnsupportedField.js';
 export * from './AllocationList.js';
 export * from './ResultsToolbar.js';
 export * from './NatCatRiskBanner.js';

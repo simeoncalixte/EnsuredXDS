@@ -277,12 +277,28 @@
       "description": "Breadcrumb trail within a form or section flow."
     },
     {
+      "id": "xds.pagination",
+      "version": 1,
+      "export": "@ensured/xds/components/Pagination",
+      "kind": "navigation",
+      "fieldTypes": [],
+      "description": "Keyset (cursor) pagination with Previous and Next only, no page numbers or total; disabled buttons stay focusable with a reason."
+    },
+    {
       "id": "xds.document-row",
       "version": 1,
       "export": "@ensured/xds/components/DocumentRow",
       "kind": "display",
       "fieldTypes": [],
       "description": "Document summary with status and renderer-provided actions."
+    },
+    {
+      "id": "xds.key-value-list",
+      "version": 1,
+      "export": "@ensured/xds/components/KeyValueList",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Read-only dl/dt/dd list of terms and values in 1, 2 or 3 responsive columns, with a — placeholder for empty values, date-only formatting that never goes through Date, and a skeleton state."
     },
     {
       "id": "xds.info-card",
@@ -522,6 +538,14 @@
       "kind": "display",
       "fieldTypes": [],
       "description": "Money amount, ratio or financial count with an explicit verified, pending, estimated, illustrative, unavailable, mixed-currency or loading state."
+    },
+    {
+      "id": "xds.unsupported-field",
+      "version": 1,
+      "export": "@ensured/xds/components/UnsupportedField",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Read-only fallback for a shape node whose component is unknown, retired or not allowed in forms; keeps the stored value visible as text, key/value pairs or a table."
     },
     {
       "id": "xds.allocation-list",

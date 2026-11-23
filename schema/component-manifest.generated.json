@@ -19096,6 +19096,84 @@
       ]
     },
     {
+      "id": "xds.pagination",
+      "version": 1,
+      "export": "@ensured/xds/components/Pagination",
+      "kind": "navigation",
+      "fieldTypes": [],
+      "description": "Keyset (cursor) pagination with Previous and Next only, no page numbers or total; disabled buttons stay focusable with a reason.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "True when the API returned a next cursor. When false, Next is aria-disabled."
+          },
+          "hasPrevious": {
+            "type": "boolean",
+            "description": "True when a previous cursor exists. When false, Previous is aria-disabled."
+          },
+          "label": {
+            "type": "string",
+            "description": "Accessible name of the navigation landmark. Defaults to \"Pagination\"."
+          },
+          "loading": {
+            "type": "boolean",
+            "description": "A page request is in flight: both buttons are aria-disabled and the nav is aria-busy."
+          },
+          "loadingReason": {
+            "type": "string",
+            "description": "Reason read for both buttons while loading. Defaults to \"Loading the page\"."
+          },
+          "mode": {
+            "type": "string",
+            "const": "keyset",
+            "description": "Only keyset (cursor) mode is supported today."
+          },
+          "nextDisabledReason": {
+            "type": "string",
+            "description": "Reason read when Next is disabled. Defaults to \"You're on the last page\"."
+          },
+          "nextLabel": {
+            "type": "string",
+            "description": "Visible text of the Next button. Defaults to \"Next\"."
+          },
+          "pageSizeLabel": {
+            "type": "string",
+            "description": "Optional status text shown at the end of the bar, e.g. \"25 per page\"."
+          },
+          "previousDisabledReason": {
+            "type": "string",
+            "description": "Reason read when Previous is disabled. Defaults to \"You're on the first page\"."
+          },
+          "previousLabel": {
+            "type": "string",
+            "description": "Visible text of the Previous button. Defaults to \"Previous\"."
+          }
+        },
+        "required": [
+          "hasNext",
+          "hasPrevious"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onNext",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPrevious",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
       "id": "xds.document-row",
       "version": 1,
       "export": "@ensured/xds/components/DocumentRow",
@@ -19159,6 +19237,124 @@
           "reason": "Function or constructor supplied by the UI"
         }
       ]
+    },
+    {
+      "id": "xds.key-value-list",
+      "version": 1,
+      "export": "@ensured/xds/components/KeyValueList",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Read-only dl/dt/dd list of terms and values in 1, 2 or 3 responsive columns, with a — placeholder for empty values, date-only formatting that never goes through Date, and a skeleton state.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "columns": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 1
+              },
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 3
+              }
+            ],
+            "description": "Maximum columns at wide widths. 3 shows 3 columns at 1024 px and up, 2 from 600 px, and 1 below 600 px. Defaults to 1."
+          },
+          "emptyMessage": {
+            "type": "string",
+            "description": "Shown when `items` is empty. Defaults to \"No details to show.\""
+          },
+          "emptyValue": {
+            "type": "string",
+            "description": "Visible placeholder for an empty value. Defaults to \"—\"."
+          },
+          "emptyValueLabel": {
+            "type": "string",
+            "description": "Screen-reader text for an empty value. Defaults to \"Not set\"."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Stable key for React. Defaults to the label."
+                },
+                "label": {
+                  "type": "string",
+                  "description": "Term shown in the `dt`, e.g. \"Effective date\"."
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "description": "Value shown in the `dd`. `null`, `undefined` or an empty string shows the empty placeholder."
+                },
+                "type": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "text"
+                    },
+                    {
+                      "type": "string",
+                      "const": "date-only"
+                    },
+                    {
+                      "type": "string",
+                      "const": "mono"
+                    }
+                  ],
+                  "description": "How the value is formatted. Defaults to `text`."
+                },
+                "dateTime": {
+                  "type": "string",
+                  "description": "Machine-readable date or datetime. Wraps the value in `<time dateTime>`. Set automatically for valid `date-only` values."
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "label"
+              ]
+            },
+            "description": "Terms and values, in reading order."
+          },
+          "loading": {
+            "type": "boolean",
+            "description": "Shows a skeleton instead of the list and sets `aria-busy`."
+          },
+          "loadingLabel": {
+            "type": "string",
+            "description": "Screen-reader text while loading. Defaults to \"Loading details\"."
+          },
+          "skeletonCount": {
+            "type": "number",
+            "description": "Number of skeleton rows while loading. Defaults to the number of items, or 6 when there are none."
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "excludedProps": []
     },
     {
       "id": "xds.info-card",
@@ -34033,6 +34229,80 @@
           "name": "onViewByCurrency",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.unsupported-field",
+      "version": 1,
+      "export": "@ensured/xds/components/UnsupportedField",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Read-only fallback for a shape node whose component is unknown, retired or not allowed in forms; keeps the stored value visible as text, key/value pairs or a table.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "componentRef": {
+            "type": "string",
+            "description": "The component ref that couldn't be rendered, e.g. \"xds.legacy-schedule\"."
+          },
+          "emptyLabel": {
+            "type": "string",
+            "description": "Shown when the stored value is null, undefined, an empty string, array or object. Defaults to \"No value recorded\"."
+          },
+          "label": {
+            "type": "string",
+            "description": "Field label from the shape node."
+          },
+          "path": {
+            "type": "string",
+            "description": "Data path of the node, e.g. \"insured.locations\". Shown so the value can be traced."
+          },
+          "readOnly": {
+            "type": "boolean",
+            "const": true,
+            "description": "Always read-only in v1."
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "unknown-ref"
+              },
+              {
+                "type": "string",
+                "const": "not-form-allowed"
+              },
+              {
+                "type": "string",
+                "const": "retired"
+              }
+            ],
+            "description": "Why the node falls back to this component."
+          },
+          "reasonText": {
+            "type": "string",
+            "description": "Overrides the default visible reason text."
+          },
+          "truncateAt": {
+            "type": "number",
+            "description": "Text longer than this (in characters) is truncated with a \"Show full value\" toggle. Defaults to 160."
+          }
+        },
+        "required": [
+          "label",
+          "reason"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "value",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
         }
       ]
     },
