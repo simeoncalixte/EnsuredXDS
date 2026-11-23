@@ -21,7 +21,7 @@ const Wrapper = styled.span<{ $disabled: boolean }>`
   user-select: none;
 `;
 
-const Track = styled.button<{ $checked: boolean }>`
+const Track = styled.button<{ $checked: boolean; $invalid: boolean }>`
   position: relative;
   flex: 0 0 auto;
   width: ${TRACK_WIDTH}px;
@@ -30,7 +30,10 @@ const Track = styled.button<{ $checked: boolean }>`
   border: none;
   border-radius: ${radii.round}px;
   background: ${({ $checked }) => ($checked ? colors.primary : colors.surfaceElevated)};
-  transition: background 0.2s ease;
+  box-shadow: ${({ $invalid }) => ($invalid ? `0 0 0 2px ${colors.error}` : 'none')};
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
   cursor: inherit;
   outline-offset: 2px;
 
@@ -66,6 +69,12 @@ export type ToggleSwitchProps = {
   label?: React.ReactNode;
   disabled?: boolean;
   id?: string;
+  /** Marks the switch as failing validation: sets `aria-invalid` and shows the error ring. */
+  invalid?: boolean;
+  /** Id(s) of the element(s) describing the switch, usually a ValidationMessage. */
+  describedBy?: string;
+  /** Accessible name when `label` is omitted (consumer renders its own label); ignored when `label` is set. */
+  'aria-label'?: string;
 };
 
 export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
@@ -74,6 +83,9 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   label,
   disabled = false,
   id,
+  invalid = false,
+  describedBy,
+  'aria-label': ariaLabel,
 }) => {
   const labelId = id ? `${id}-label` : undefined;
 
@@ -90,8 +102,12 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
         id={id}
         aria-checked={checked}
         aria-labelledby={label != null ? labelId : undefined}
+        aria-label={label == null ? ariaLabel : undefined}
+        aria-invalid={invalid || undefined}
+        aria-describedby={describedBy || undefined}
         disabled={disabled}
         $checked={checked}
+        $invalid={invalid}
         onClick={handleClick}
       >
         <Knob $checked={checked} aria-hidden="true" />

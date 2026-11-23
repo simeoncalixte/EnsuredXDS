@@ -10067,8 +10067,41 @@
           "allowReorder": {
             "type": "boolean"
           },
+          "describedBy": {
+            "type": "string",
+            "description": "Id(s) of the element(s) describing the group, usually a ValidationMessage."
+          },
           "description": {
             "type": "string"
+          },
+          "fieldErrors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "selected": {
+                  "type": "string"
+                },
+                "limit": {
+                  "type": "string"
+                },
+                "deductible": {
+                  "type": "string"
+                },
+                "terms": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "description": "Row-level errors indexed like `value` (use `{}` for a valid row); each control gets `aria-invalid` and `aria-describedby` to its message."
+          },
+          "invalid": {
+            "type": "boolean",
+            "description": "Marks the whole coverage group as failing validation (`aria-invalid` on the group)."
           },
           "readOnly": {
             "type": "boolean"
@@ -10207,8 +10240,16 @@
           "currencyCode": {
             "type": "string"
           },
+          "describedBy": {
+            "type": "string",
+            "description": "Id(s) of the element(s) describing the amount, usually a ValidationMessage."
+          },
           "disabled": {
             "type": "boolean"
+          },
+          "invalid": {
+            "type": "boolean",
+            "description": "Marks the amount as failing validation (`aria-invalid` on the amount input)."
           },
           "label": {
             "type": "string"
@@ -12302,11 +12343,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "aria-label": {
+            "type": "string",
+            "description": "Accessible name when `label` is omitted (consumer renders its own label); ignored when `label` is set."
+          },
+          "describedBy": {
+            "type": "string",
+            "description": "Id(s) of the element(s) describing the switch, usually a ValidationMessage."
+          },
           "disabled": {
             "type": "boolean"
           },
           "id": {
             "type": "string"
+          },
+          "invalid": {
+            "type": "boolean",
+            "description": "Marks the switch as failing validation: sets `aria-invalid` and shows the error ring."
           }
         }
       },

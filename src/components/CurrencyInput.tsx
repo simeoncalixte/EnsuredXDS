@@ -26,14 +26,18 @@ export type CurrencyInputProps = {
   currencyCode?: string;
   currencies?: string[];
   disabled?: boolean;
+  /** Marks the amount as failing validation (`aria-invalid` on the amount input). */
+  invalid?: boolean;
+  /** Id(s) of the element(s) describing the amount, usually a ValidationMessage. */
+  describedBy?: string;
   renderInput?: (key: 'amount' | 'currencyCode', control: React.ReactNode) => React.ReactNode;
   onChange: (value: number | null) => void;
   onCurrencyChange: (currency: string) => void;
 };
-const Group = styled.div`
+const Group = styled.div<{ $invalid: boolean }>`
   display: flex;
   min-width: 0;
-  border: 1px solid ${colors.outlineVariant};
+  border: 1px solid ${({ $invalid }) => ($invalid ? colors.error : colors.outlineVariant)};
   border-radius: 7px;
   background: ${colors.surfaceContainerLow};
   overflow: hidden;
@@ -75,6 +79,8 @@ export function CurrencyInput({
   currencyCode = '',
   currencies = coverageCurrencies,
   disabled,
+  invalid = false,
+  describedBy,
   onChange,
   onCurrencyChange,
   renderInput,
@@ -93,7 +99,7 @@ export function CurrencyInput({
       control
     );
   return (
-    <Group>
+    <Group $invalid={invalid}>
       {decorate(
         'currencyCode',
         <select
@@ -114,6 +120,8 @@ export function CurrencyInput({
         'amount',
         <input
           aria-label={`${label} amount`}
+          aria-invalid={invalid || undefined}
+          aria-describedby={describedBy || undefined}
           inputMode="decimal"
           placeholder="Amount"
           value={draft}
