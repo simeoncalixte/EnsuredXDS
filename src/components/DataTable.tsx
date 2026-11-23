@@ -77,7 +77,7 @@ export type DataTableGenericProps<T = any> = {
   captionRef?: (element: HTMLTableCaptionElement | null) => void;
   /** Tone per row. `muted` rows keep their text and links; pair with a visible label such as an Archived badge. */
   rowTone?: (row: T) => DataTableRowTone;
-  /** Stable React key per row. Defaults to the row index. */
+  /** Stable React key per row, e.g. the record id. Defaults to the row index; pass an id when rows change between keyset pages. */
   rowKey?: (row: T, index: number) => string;
   /**
    * While `loading`, show this many skeleton rows at the column widths instead of the
@@ -499,7 +499,7 @@ function GenericDataTable<T>({
               </HeaderCell>
             );
           })}
-          {rowActions ? <ActionsHeader aria-label="Actions" /> : null}
+          {rowActions ? <ActionsHeader {...role('columnheader')} aria-label="Actions" /> : null}
         </HeaderRow>
       </thead>
       <tbody {...role('rowgroup')}>{body}</tbody>

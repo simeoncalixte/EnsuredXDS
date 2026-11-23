@@ -19828,11 +19828,11 @@
                       "anyOf": [
                         {
                           "type": "string",
-                          "const": "secondary"
+                          "const": "primary"
                         },
                         {
                           "type": "string",
-                          "const": "primary"
+                          "const": "secondary"
                         },
                         {
                           "type": "string",
