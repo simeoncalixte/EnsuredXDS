@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, userEvent, expect } from '@storybook/test';
 import UnsupportedField from '../../components/UnsupportedField.js';
@@ -199,6 +200,7 @@ export const CustomReason: Story = {
 
 export const NarrowViewport: Story = {
   args: ArrayOfRecords.args,
+  play: ArrayOfRecords.play,
   parameters: { viewport: { defaultViewport: 'mobile1' } },
   decorators: [
     (Story) => (
