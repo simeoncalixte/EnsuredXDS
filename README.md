@@ -199,6 +199,26 @@ import { UnsupportedField } from '@ensured/xds';
 
 `reason` is `unknown-ref` (not in the registry), `not-form-allowed` (registered but not allowed in forms) or `retired`. Each has default visible text, which `reasonText` overrides; the reason is never shown by colour alone. Scalars render as text, objects as key/value pairs, arrays of records as a table whose columns are the union of every row's keys (in a keyboard-scrollable region on narrow screens), and arrays of scalars as a list. Null, empty strings, empty arrays and empty objects show `emptyLabel` ("No value recorded"). Text longer than `truncateAt` characters (default 160) gets a "Show full value" toggle with `aria-expanded`. Numbers and decimal strings are shown exactly as stored, with no rounding or locale formatting. The group is named by `label` and described by the visible "Read-only" tag and reason text. See **Data Display/UnsupportedField** in Storybook.
 
+## Callout panels
+
+Use `CalloutPanel` (`xds.callout-panel`) to set expectations side by side, such as "What the platform is and isn't" in the homepage trust section.
+
+```tsx
+import { CalloutPanel } from '@ensured/xds';
+
+<CalloutPanel
+  title="What the platform is and isn't"
+  isLabel="What the platform is"
+  isntLabel="What the platform isn't"
+  items={{
+    is: ['A shortlist of markets whose appetite fits, for a broker to approach'],
+    isnt: ['An insurer, carrier or broker', 'A place where cover is bound automatically'],
+  }}
+/>;
+```
+
+The panel is a `section` named by its `title`. Each column has a real heading (`isLabel`, default "What it is"; `isntLabel`, default "What it isn't") and a `ul` named by that heading, so the meaning never depends on the tick and cross icons (aria-hidden) or the accent colour. `headingLevel` (2, 3 or 4; default 2) sets the title level, and the column headings use the next level down. A column with no statements shows `emptyLabel` ("Nothing listed yet") instead of an empty list. Columns stack under 600 px, "is" first. See **Data Display/CalloutPanel** in Storybook.
+
 ## Key-value lists and date-only values
 
 Use `KeyValueList` (`xds.key-value-list`) for read-only details such as a submission or policy header. It renders a `dl` with one `dt`/`dd` pair per item, in 1, 2 or 3 columns (`columns={3}` shows 3 columns at 1024 px and up, 2 from 600 px and 1 below 600 px).
