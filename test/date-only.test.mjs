@@ -76,9 +76,10 @@ test('KeyValueList renders dl/dt/dd, date-only values, empty placeholders and a 
     assert.match(html, /^<dl[^>]*data-xds="key-value-list"/);
     assert.equal(html.match(/<dt/g).length, 4);
     assert.equal(html.match(/<dd/g).length, 4);
-    assert.match(html, /<time datetime="2027-01-01">01 Jan 2027<\/time>/);
+    // React 19 SSR may serialise the attribute as dateTime; HTML attributes are case-insensitive.
+    assert.match(html, /<time datetime="2027-01-01">01 Jan 2027<\/time>/i);
     assert.match(html, /2027-02-30/);
-    assert.doesNotMatch(html, /<time datetime="2027-02-30"/);
+    assert.doesNotMatch(html, /<time datetime="2027-02-30"/i);
     assert.match(html, /aria-hidden="true">—<\/span>/);
     assert.match(html, /Not set/);
 
