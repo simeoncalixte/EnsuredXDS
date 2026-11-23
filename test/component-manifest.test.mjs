@@ -31,6 +31,8 @@ test('extracts inherited/nested JSON props and reports unsupported props without
         unknownValue?: unknown; loose?: any; recursive?: Loop;
         value: string; children?: string;
         date?: Date; bigint?: bigint;
+        /** Optional boolean doc */ flag?: boolean;
+        /** Optional union doc */ size?: 'auto' | number;
       }
       export default function Component(props: Props) { return null; }
       export function Untyped(props: any) { return null; }
@@ -41,6 +43,10 @@ test('extracts inherited/nested JSON props and reports unsupported props without
     const result = extract(path.join(dir, 'component.ts'));
     const validate = new Ajv({ strict: false }).compile(result.propsSchema);
     assert.deepEqual(result.propsSchema.required, ['label', 'rows']);
+    // JSDoc must survive every schema path, including optional booleans/unions.
+    assert.equal(result.propsSchema.properties.flag.description, 'Optional boolean doc');
+    assert.equal(result.propsSchema.properties.flag.type, 'boolean');
+    assert.equal(result.propsSchema.properties.size.description, 'Optional union doc');
     assert.equal(
       validate({
         label: 'Example',
