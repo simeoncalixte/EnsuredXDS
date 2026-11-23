@@ -19,7 +19,14 @@ export type RequestedCoverage = Record<string, any> & {
 };
 /** Per-row controls that can carry their own validation error. */
 export type RequestedCoverageField = 'name' | 'selected' | 'limit' | 'deductible' | 'terms';
-export type RequestedCoverageFieldErrors = Partial<Record<RequestedCoverageField, string>>;
+// Spelled out (not Partial<Record<…>>) so the manifest generator can resolve each key.
+export type RequestedCoverageFieldErrors = {
+  name?: string;
+  selected?: string;
+  limit?: string;
+  deductible?: string;
+  terms?: string;
+};
 export type RequestedCoverageEditorProps = {
   value: RequestedCoverage[];
   onChange: (value: RequestedCoverage[]) => void;
