@@ -284,6 +284,31 @@ const StatusCell = ({ status, label, archived }: StatusCellProps) => (
 
 Matching ignores case and surrounding spaces. `SUBMISSION_SYSTEM_STATUSES` and `isSubmissionSystemStatus()` are exported too. The `archived` variant shows an archive icon (hidden from screen readers) and the text "Archived" unless you pass your own text. Badge text keeps at least 4.5:1 contrast in the light and dark themes; `primary` badge text uses `primarySoft` for this. See **Feedback/Badge** in Storybook.
 
+## Status toasts
+
+`StatusToast` (`xds.status-toast`) shows one polite status message with at most one action, such as "SUB-8401 moved from New to Triage." with Undo. Mount it once, after the main content, and pass the current message:
+
+```tsx
+const [toast, setToast] = useState<{ id: number; message: string } | null>(null);
+
+<StatusToast
+  message={toast?.message}
+  messageId={toast?.id}
+  action={{ label: 'Undo', onAction: undoLastMove }}
+  returnFocusRef={moveButtonRef}
+  onDismiss={() => setToast(null)}
+/>;
+```
+
+- The `role="status"` region is always mounted, even with no message, so the next message is announced. It never takes focus.
+- One message at a time: a new `message` or `messageId` replaces the current one and restarts the timer.
+- Neutral toasts dismiss after `duration` (10 000 ms by default; `0` keeps them). Hover or focus pauses the timer, which then resumes with the time left (WCAG 2.2.1).
+- `tone="error"` stays until dismissed, adds a close button ("Dismiss message") and a hidden "Error:" prefix, so the tone is never shown by colour alone.
+- `onDismiss(reason)` reports `'timeout'`, `'action'` or `'close'`. If focus was inside the toast (after Undo or close), it moves to `returnFocusRef`.
+- `position="fixed"` (the default) pins it to the bottom centre above modals; at 768 px and below it spans the content width with 16 px gutters. `position="inline"` is for previews.
+
+See **Feedback/StatusToast** in Storybook.
+
 ## Filtered results components
 
 Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` for filtered dashboards. They use XDS color, typography, spacing and radius tokens and compose existing Badge, Button and ProgressBar controls. They are exported from the package root and component subpaths and registered in the generated component manifest.

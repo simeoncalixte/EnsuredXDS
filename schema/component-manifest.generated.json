@@ -36304,6 +36304,100 @@
           "reason": "Function or constructor supplied by the UI"
         }
       ]
+    },
+    {
+      "id": "xds.status-toast",
+      "version": 1,
+      "export": "@ensured/xds/components/StatusToast",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Polite role=status toast with one optional action (e.g. Undo): a persistent live region, 10 s timer that pauses on hover or focus, never takes focus, one message at a time; the error tone stays until dismissed.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "closeLabel": {
+            "type": "string",
+            "description": "Accessible name of the close button. Defaults to \"Dismiss message\"."
+          },
+          "duration": {
+            "type": "number",
+            "description": "Milliseconds before a neutral toast dismisses itself. Defaults to 10000. The timer pauses\nwhile the toast is hovered or has focus (WCAG 2.2.1). Pass 0 to keep it until dismissed.\nThe error tone ignores this and stays until dismissed."
+          },
+          "errorPrefix": {
+            "type": "string",
+            "description": "Hidden prefix read before an error message. Defaults to \"Error:\"."
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "The message, e.g. \"SUB-8401 moved from New to Triage.\". When empty, nothing is shown but the\n`role=\"status\"` region stays mounted, so the next message is announced."
+          },
+          "messageId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "description": "Identifies one message. A new id replaces the current toast and restarts its timer, even when\nthe text is the same (e.g. two moves of the same submission). Defaults to the message text."
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "inline"
+              },
+              {
+                "type": "string",
+                "const": "fixed"
+              }
+            ],
+            "description": "`fixed` (default) pins the toast to the bottom centre of the viewport, above modals.\n`inline` renders it in the normal flow, for previews and tests."
+          },
+          "tone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "neutral"
+              },
+              {
+                "type": "string",
+                "const": "error"
+              }
+            ],
+            "description": "`error` stays until dismissed, shows a close button and a hidden \"Error:\" prefix."
+          }
+        }
+      },
+      "excludedProps": [
+        {
+          "name": "action",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDismiss",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "returnFocusRef",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
     }
   ],
   "policyVersion": 1,
