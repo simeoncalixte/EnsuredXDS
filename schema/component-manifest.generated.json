@@ -33797,13 +33797,46 @@
       "export": "@ensured/xds/components/Modal",
       "kind": "layout",
       "fieldTypes": [],
-      "description": "Dialog for a form or section; the renderer supplies body, footer and close behavior.",
+      "description": "Dialog for a form or section, with an alertdialog confirmation mode (initial focus on the safe action, consequence description, submitting and error states); the renderer supplies body, footer and close behavior.",
       "propsSchema": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "ariaLabel": {
+            "type": "string",
+            "description": "Accessible name when there is no visible `title`."
+          },
+          "closeOnEscape": {
+            "type": "boolean",
+            "description": "Esc calls `onClose` (acts as Cancel). Default true. Ignored while `submitting`."
+          },
+          "closeOnScrimClick": {
+            "type": "boolean",
+            "description": "Clicking the scrim calls `onClose`. Default true for `dialog`, false for `alertdialog`."
+          },
+          "describedBy": {
+            "type": "string",
+            "description": "Id of the element (usually inside `children`) that states the consequence."
+          },
           "open": {
             "type": "boolean"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "alertdialog"
+              }
+            ],
+            "description": "`alertdialog` is for confirming irreversible or superseding actions (supersede a\nsent quote, accept or decline terms, bind). It defaults `closeOnScrimClick` to\nfalse. Pair it with `describedBy` and an `initialFocusRef` on the safe action."
+          },
+          "submitting": {
+            "type": "boolean",
+            "description": "The action is in flight: sets `aria-busy`, disables the close button and ignores\nEsc and scrim clicks. The caller disables its footer buttons and sets the\nin-progress label (for example \"Superseding…\")."
           },
           "title": {
             "type": "string"
@@ -33823,12 +33856,27 @@
           "reason": "Owned by the UI renderer/data binding"
         },
         {
+          "name": "error",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
           "name": "footer",
           "required": false,
           "reason": "Non-JSON type"
         },
         {
+          "name": "initialFocusRef",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
           "name": "onClose",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "returnFocusRef",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
         }

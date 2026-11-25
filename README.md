@@ -221,6 +221,50 @@ formatDateOnly('2027-01-01'); // '01 Jan 2027' in every time zone
 
 Empty values (`null`, `undefined` or `''`) show "—", which is hidden from screen readers in favour of "Not set". `type: 'date-only'` formats a `YYYY-MM-DD` calendar day (effective, inception or expiry date) from the string itself and wraps it in `<time datetime>`. It never goes through `Date`, so the day never shifts west of UTC. An invalid day is shown as given, so the data stays visible. `formatDateOnly` returns `null` for missing or invalid input. While `loading`, a skeleton replaces the list, the wrapper gets `aria-busy` and "Loading details" is read. Values are plain strings or numbers: format money with `FinancialValue` and instants (for example "Last updated") in the application, passing the ISO instant as `dateTime`. See **Data Display/KeyValueList** in Storybook.
 
+## Confirmation dialogs
+
+Use `Modal` (`xds.modal`) with `role="alertdialog"` to confirm an irreversible or superseding action, such as superseding a sent quote, accepting or declining terms, or binding. The modal manages focus: it focuses `initialFocusRef` on open (point it at the safe action, never the destructive one), traps Tab, and returns focus to the trigger (or `returnFocusRef`) on close.
+
+```tsx
+const backRef = useRef<HTMLButtonElement>(null);
+
+<Modal
+  open={open}
+  role="alertdialog"
+  title="Supersede quote Q-1042 v2?"
+  describedBy="supersede-consequence"
+  initialFocusRef={backRef}
+  onClose={() => setOpen(false)}
+  submitting={isSubmitting}
+  error={errorMessage}
+  footer={
+    <>
+      <Button
+        ref={backRef}
+        variant="secondary"
+        onClick={() => setOpen(false)}
+        disabled={isSubmitting}
+      >
+        Back to quote
+      </Button>
+      <Button tone="danger" onClick={supersede} disabled={isSubmitting}>
+        {isSubmitting ? 'Superseding…' : 'Supersede and create v3'}
+      </Button>
+    </>
+  }
+>
+  <p id="supersede-consequence">…</p>
+</Modal>;
+```
+
+- **Esc and the scrim:** Esc calls `onClose`, acting as Cancel (`closeOnEscape`, default true). A scrim click closes a `dialog` but not an `alertdialog` (`closeOnScrimClick`).
+- **Submitting:** `submitting` sets `aria-busy`, disables the close button, and ignores Esc and scrim clicks. The caller disables its own buttons and sets the in-progress label.
+- **Errors:** `error` shows a `role="alert"` region at the top of the body and moves focus to it.
+- **Labelling:** the title labels the dialog, and `ariaLabel` names it when there is no title.
+- **Narrow screens:** below 480 px, the footer's direct children stack full width with 44 px targets. Pass the buttons as a fragment, not wrapped in an element.
+
+See **Modals/Modal** in Storybook.
+
 ## Filtered results components
 
 Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` for filtered dashboards. They use XDS color, typography, spacing and radius tokens and compose existing Badge, Button and ProgressBar controls. They are exported from the package root and component subpaths and registered in the generated component manifest.
