@@ -264,6 +264,43 @@ formatDateOnly('2027-01-01'); // '01 Jan 2027' in every time zone
 
 Empty values (`null`, `undefined` or `''`) show "—", which is hidden from screen readers in favour of "Not set". `type: 'date-only'` formats a `YYYY-MM-DD` calendar day (effective, inception or expiry date) from the string itself and wraps it in `<time datetime>`. It never goes through `Date`, so the day never shifts west of UTC. An invalid day is shown as given, so the data stays visible. `formatDateOnly` returns `null` for missing or invalid input. While `loading`, a skeleton replaces the list, the wrapper gets `aria-busy` and "Loading details" is read. Values are plain strings or numbers: format money with `FinancialValue` and instants (for example "Last updated") in the application, passing the ISO instant as `dateTime`. See **Data Display/KeyValueList** in Storybook.
 
+## Data tables: sort, links and row tones
+
+`DataTable` (`xds.data-table`) keeps its legacy `rows` API unchanged. The generic `columns`/`data` API adds, all optional:
+
+```tsx
+<DataTable
+  columns={[
+    {
+      key: 'insured',
+      header: 'Insured',
+      href: (row) => `/underwriting/submissions/${row.id}`,
+      linkLabel: (row) => (row.insured ? undefined : `Submission ${row.ref}, insured not set`),
+      secondary: (row) => row.ref,
+    },
+    { key: 'updated', header: 'Last updated', sort: 'descending' },
+  ]}
+  data={rows}
+  caption="Submissions, sorted by last updated, newest first"
+  rowTone={(row) => (row.archived ? 'muted' : 'default')}
+  rowKey={(row) => row.id}
+  loading={loading}
+  skeletonRows={8}
+  loadingLabel="Loading submissions"
+  stacked
+/>
+```
+
+- `sort` sets `aria-sort` and a hidden ▼/▲ glyph on a non-interactive `th`, for a fixed order. Add `onSort` only when the user can change the sort; the header then renders a `<button>` inside the `th`.
+- `href` makes that cell's value the row's single link. Rows are never click targets. Pass `linkAs` (a router link component) to render it instead of `<a>`; it receives `href` and `to`.
+- `secondary` adds a second line in the mono label face, for example a submission or policy reference.
+- `rowTone` `muted` uses `onSurfaceVariant` text, which is at least 4.5:1 in both themes. Pair it with visible text such as an Archived badge.
+- `caption` (with `captionHidden` to hide it visually) names the table. `captionRef` is a callback ref that also gives the caption `tabIndex={-1}`, so the app can move focus to it after a page loads.
+- `skeletonRows` shows a table-shaped skeleton while `loading`, sets `aria-busy` and reads `loadingLabel`. Without it, the existing "Loading..." line is shown.
+- `stacked` shows each row as a card with field labels below 600 px. Column `label` sets the field label when `header` isn't a string.
+
+See **Data Display/DataTable** in Storybook.
+
 ## Submission status badges
 
 Use `statusTone(status)` to pick the `Badge` tone for a submission status, so the Kanban and Table views agree. Always render the status label as the badge text: the tone is never the only signal.
