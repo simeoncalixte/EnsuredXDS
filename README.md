@@ -241,6 +241,32 @@ formatDateOnly('2027-01-01'); // '01 Jan 2027' in every time zone
 
 Empty values (`null`, `undefined` or `''`) show "—", which is hidden from screen readers in favour of "Not set". `type: 'date-only'` formats a `YYYY-MM-DD` calendar day (effective, inception or expiry date) from the string itself and wraps it in `<time datetime>`. It never goes through `Date`, so the day never shifts west of UTC. An invalid day is shown as given, so the data stays visible. `formatDateOnly` returns `null` for missing or invalid input. While `loading`, a skeleton replaces the list, the wrapper gets `aria-busy` and "Loading details" is read. Values are plain strings or numbers: format money with `FinancialValue` and instants (for example "Last updated") in the application, passing the ISO instant as `dateTime`. See **Data Display/KeyValueList** in Storybook.
 
+## Submission status badges
+
+Use `statusTone(status)` to pick the `Badge` tone for a submission status, so the Kanban and Table views agree. Always render the status label as the badge text: the tone is never the only signal.
+
+```tsx
+import { Badge, statusTone } from '@ensured/xds';
+
+const StatusCell = ({ status, label, archived }: StatusCellProps) => (
+  <>
+    <Badge variant={statusTone(status)}>{label}</Badge>
+    {archived ? <Badge variant="archived" /> : null}
+  </>
+);
+```
+
+| Status                          | Tone      |
+| ------------------------------- | --------- |
+| draft                           | `neutral` |
+| submitted, modeling, priced     | `info`    |
+| approved, quoted                | `primary` |
+| bound                           | `success` |
+| rejected (declined)             | `danger`  |
+| org board statuses, unknown, "" | `surface` |
+
+Matching ignores case and surrounding spaces. `SUBMISSION_SYSTEM_STATUSES` and `isSubmissionSystemStatus()` are exported too. The `archived` variant shows an archive icon (hidden from screen readers) and the text "Archived" unless you pass your own text. Badge text keeps at least 4.5:1 contrast in the light and dark themes; `primary` badge text uses `primarySoft` for this. See **Feedback/Badge** in Storybook.
+
 ## Filtered results components
 
 Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` for filtered dashboards. They use XDS color, typography, spacing and radius tokens and compose existing Badge, Button and ProgressBar controls. They are exported from the package root and component subpaths and registered in the generated component manifest.

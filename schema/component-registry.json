@@ -234,7 +234,7 @@
       "export": "@ensured/xds/components/Badge",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Compact status badge."
+      "description": "Compact status badge with semantic tones and an archived variant (icon + text). statusTone() maps submission statuses to tones."
     },
     {
       "id": "xds.confidence-badge",
