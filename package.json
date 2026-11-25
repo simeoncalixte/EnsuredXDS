@@ -54,7 +54,7 @@
     "prepack": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "npm run build && node --test --test-concurrency=1 test/package.test.mjs test/component-manifest.test.mjs test/results.test.mjs test/palette.test.mjs test/financial-value.test.mjs test/date-only.test.mjs test/badge.test.mjs",
+    "test": "npm run build && node --test --test-concurrency=1 test/package.test.mjs test/component-manifest.test.mjs test/results.test.mjs test/palette.test.mjs test/financial-value.test.mjs test/date-only.test.mjs test/badge.test.mjs test/menu-button.test.mjs",
     "sync:schema-registry": "node scripts/sync-schema-registry.mjs",
     "check:schema-registry": "node scripts/sync-schema-registry.mjs --check",
     "generate:component-manifest": "node scripts/generate-component-manifest.mjs",

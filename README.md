@@ -199,6 +199,49 @@ import { UnsupportedField } from '@ensured/xds';
 
 `reason` is `unknown-ref` (not in the registry), `not-form-allowed` (registered but not allowed in forms) or `retired`. Each has default visible text, which `reasonText` overrides; the reason is never shown by colour alone. Scalars render as text, objects as key/value pairs, arrays of records as a table whose columns are the union of every row's keys (in a keyboard-scrollable region on narrow screens), and arrays of scalars as a list. Null, empty strings, empty arrays and empty objects show `emptyLabel` ("No value recorded"). Text longer than `truncateAt` characters (default 160) gets a "Show full value" toggle with `aria-expanded`. Numbers and decimal strings are shown exactly as stored, with no rounding or locale formatting. The group is named by `label` and described by the visible "Read-only" tag and reason text. See **Data Display/UnsupportedField** in Storybook.
 
+## Menu buttons
+
+Use `MenuButton` (`xds.menu-button`) for a per-row "More actions" menu, and as the keyboard and single-pointer alternative to dragging a card between underwriting stages (WCAG 2.5.7).
+
+```tsx
+import { MenuButton } from '@ensured/xds';
+
+<MenuButton
+  label="More actions for SUB-8405"
+  items={[
+    { id: 'open', label: 'Open submission', onSelect: openSubmission },
+    { id: 'refer', label: 'Refer to senior underwriter', hint: 'Above your binding authority' },
+    { type: 'separator' },
+    {
+      id: 'archive',
+      label: 'Archive',
+      disabled: true,
+      hint: 'Bound submissions cannot be archived',
+    },
+  ]}
+  radioGroup={{
+    label: 'Move to a status',
+    value: stage,
+    sections: [
+      {
+        label: 'Underwriting',
+        options: [
+          { value: 'triage', label: 'Triage' },
+          { value: 'referred', label: 'Referred', hint: 'asks to confirm' },
+        ],
+      },
+      {
+        label: 'Decision',
+        options: [{ value: 'declined', label: 'Declined', hint: 'asks to confirm' }],
+      },
+    ],
+    onChange: requestMove,
+  }}
+/>;
+```
+
+It follows the WAI-ARIA APG menu-button pattern. The trigger is a native button with `aria-haspopup="menu"` and `aria-expanded`; it is icon-only unless you pass `triggerText` (keep that text inside `label`). Enter, Space or ArrowDown open the menu on the first item and ArrowUp on the last. In the menu, the arrow keys, Home, End and typeahead move focus, Enter or Space choose, Esc closes and returns focus to the trigger, and Tab closes it. A click outside closes it, and it flips to stay inside the viewport. `items` takes commands (`menuitem`), separators and labelled groups. `radioGroup` renders `menuitemradio`s (flat `options` or labelled `sections`); the option matching `value` is `aria-checked` and marked "Current" (`currentLabel`), and `onChange` is not called for it. `hint` text and the "Current" marker are linked with `aria-describedby`. Disabled commands and options stay focusable with `aria-disabled` and can't be chosen, so say why in `hint`. Choosing an item closes the menu and returns focus to the trigger before `onSelect`/`onChange` runs, so the caller can then open a confirmation (Modal `role="alertdialog"`). See **Navigation/MenuButton** in Storybook.
+
 ## Key-value lists and date-only values
 
 Use `KeyValueList` (`xds.key-value-list`) for read-only details such as a submission or policy header. It renders a `dl` with one `dt`/`dd` pair per item, in 1, 2 or 3 columns (`columns={3}` shows 3 columns at 1024 px and up, 2 from 600 px and 1 below 600 px).

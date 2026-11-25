@@ -36260,6 +36260,91 @@
           "reason": "Function or constructor supplied by the UI"
         }
       ]
+    },
+    {
+      "id": "xds.menu-button",
+      "version": 1,
+      "export": "@ensured/xds/components/MenuButton",
+      "kind": "action",
+      "fieldTypes": [],
+      "description": "APG menu button: a trigger that opens a menu of commands, labelled groups and a single-choice menuitemradio list (e.g. Move to a status), with arrow keys, Home/End, typeahead and Esc.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "defaultOpen": {
+            "type": "boolean",
+            "description": "Opens on first render (for stories and visual tests)."
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string",
+            "description": "Accessible name of the trigger, e.g. \"More actions for SUB-8405\". Also names the menu."
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "bottom-start"
+              },
+              {
+                "type": "string",
+                "const": "bottom-end"
+              },
+              {
+                "type": "string",
+                "const": "top-start"
+              },
+              {
+                "type": "string",
+                "const": "top-end"
+              }
+            ],
+            "description": "Preferred side. The menu flips when it would leave the viewport. Defaults to `bottom-end`."
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "sm"
+              },
+              {
+                "type": "string",
+                "const": "md"
+              }
+            ]
+          },
+          "triggerText": {
+            "type": "string",
+            "description": "Visible trigger text. When omitted the trigger is an icon-only \"more\" button. Keep the visible text inside `label` (WCAG 2.5.3)."
+          }
+        },
+        "required": [
+          "label"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "items",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onOpenChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "radioGroup",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
     }
   ],
   "policyVersion": 1,
