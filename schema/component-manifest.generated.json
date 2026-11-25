@@ -18798,7 +18798,7 @@
       "export": "@ensured/xds/components/Badge",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Compact status badge.",
+      "description": "Compact status badge with semantic tones and an archived variant (icon + text). statusTone() maps submission statuses to tones.",
       "propsSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -18808,7 +18808,7 @@
           },
           "dot": {
             "type": "boolean",
-            "description": "Optional leading dot rendered before the children."
+            "description": "Optional leading dot rendered before the children. Ignored for `archived`, which shows an icon."
           },
           "variant": {
             "anyOf": [
@@ -18847,6 +18847,10 @@
               {
                 "type": "string",
                 "const": "neutral"
+              },
+              {
+                "type": "string",
+                "const": "archived"
               }
             ]
           }
@@ -19800,7 +19804,7 @@
       "export": "@ensured/xds/components/DataTable",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Tabular section data using legacy rows or generic columns and data; generic data and render functions require renderer bindings.",
+      "description": "Tabular section data using legacy rows or generic columns and data, with fixed or button sort headers (aria-sort), a single link cell per row, two-line cells, muted row tone, caption, skeleton loading and an optional stacked layout below 600 px; generic data and render functions require renderer bindings.",
       "propsSchema": {
         "anyOf": [
           {
@@ -19859,6 +19863,14 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
+              "caption": {
+                "type": "string",
+                "description": "Table caption, e.g. \"Submissions, sorted by last updated, newest first\"."
+              },
+              "captionHidden": {
+                "type": "boolean",
+                "description": "Hides the caption visually while keeping it for screen readers."
+              },
               "emptyText": {
                 "type": "string"
               },
@@ -19867,12 +19879,30 @@
               },
               "loading": {
                 "type": "boolean"
+              },
+              "loadingLabel": {
+                "type": "string",
+                "description": "Loading text: the visible line, or the hidden label with `skeletonRows`. Defaults to \"Loading...\"."
+              },
+              "skeletonRows": {
+                "type": "number",
+                "description": "While `loading`, show this many skeleton rows at the column widths instead of the\n\"Loading...\" line. The table gets `aria-busy` and a hidden `loadingLabel`."
+              },
+              "stacked": {
+                "type": "boolean",
+                "description": "Below 600 px, show each row as a stacked card with field labels."
               }
             }
           }
         ]
       },
       "excludedProps": [
+        {
+          "name": "captionRef",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI",
+          "branch": 1
+        },
         {
           "name": "columns",
           "required": true,
@@ -19886,7 +19916,25 @@
           "branch": 1
         },
         {
+          "name": "linkAs",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI",
+          "branch": 1
+        },
+        {
           "name": "rowActions",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI",
+          "branch": 1
+        },
+        {
+          "name": "rowKey",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI",
+          "branch": 1
+        },
+        {
+          "name": "rowTone",
           "required": false,
           "reason": "Function or constructor supplied by the UI",
           "branch": 1
@@ -34108,6 +34156,10 @@
                   {
                     "type": "string",
                     "const": "neutral"
+                  },
+                  {
+                    "type": "string",
+                    "const": "archived"
                   }
                 ]
               }
@@ -34464,6 +34516,10 @@
                         {
                           "type": "string",
                           "const": "neutral"
+                        },
+                        {
+                          "type": "string",
+                          "const": "archived"
                         }
                       ]
                     }
@@ -34658,6 +34714,10 @@
                   {
                     "type": "string",
                     "const": "neutral"
+                  },
+                  {
+                    "type": "string",
+                    "const": "archived"
                   }
                 ]
               }
@@ -34851,6 +34911,10 @@
                   {
                     "type": "string",
                     "const": "neutral"
+                  },
+                  {
+                    "type": "string",
+                    "const": "archived"
                   }
                 ]
               }
@@ -35002,6 +35066,10 @@
                         {
                           "type": "string",
                           "const": "neutral"
+                        },
+                        {
+                          "type": "string",
+                          "const": "archived"
                         }
                       ]
                     }
@@ -35360,6 +35428,10 @@
               {
                 "type": "string",
                 "const": "neutral"
+              },
+              {
+                "type": "string",
+                "const": "archived"
               }
             ]
           }
@@ -35622,6 +35694,10 @@
                   {
                     "type": "string",
                     "const": "neutral"
+                  },
+                  {
+                    "type": "string",
+                    "const": "archived"
                   }
                 ]
               }
@@ -35751,6 +35827,10 @@
                         {
                           "type": "string",
                           "const": "neutral"
+                        },
+                        {
+                          "type": "string",
+                          "const": "archived"
                         }
                       ]
                     }
@@ -36006,6 +36086,10 @@
                     {
                       "type": "string",
                       "const": "neutral"
+                    },
+                    {
+                      "type": "string",
+                      "const": "archived"
                     }
                   ]
                 }
