@@ -258,6 +258,32 @@ Empty values (`null`, `undefined` or `''`) show "—", which is hidden from scre
 
 See **Data Display/DataTable** in Storybook.
 
+## Submission status badges
+
+Use `statusTone(status)` to pick the `Badge` tone for a submission status, so the Kanban and Table views agree. Always render the status label as the badge text: the tone is never the only signal.
+
+```tsx
+import { Badge, statusTone } from '@ensured/xds';
+
+const StatusCell = ({ status, label, archived }: StatusCellProps) => (
+  <>
+    <Badge variant={statusTone(status)}>{label}</Badge>
+    {archived ? <Badge variant="archived" /> : null}
+  </>
+);
+```
+
+| Status                          | Tone      |
+| ------------------------------- | --------- |
+| draft                           | `neutral` |
+| submitted, modeling, priced     | `info`    |
+| approved, quoted                | `primary` |
+| bound                           | `success` |
+| rejected (declined)             | `danger`  |
+| org board statuses, unknown, "" | `surface` |
+
+Matching ignores case and surrounding spaces. `SUBMISSION_SYSTEM_STATUSES` and `isSubmissionSystemStatus()` are exported too. The `archived` variant shows an archive icon (hidden from screen readers) and the text "Archived" unless you pass your own text. Badge text keeps at least 4.5:1 contrast in the light and dark themes; `primary` badge text uses `primarySoft` for this. See **Feedback/Badge** in Storybook.
+
 ## Filtered results components
 
 Use `ResultsToolbar`, `ResultsPanel`, `ResultMetricCard`, and `AllocationList` for filtered dashboards. They use XDS color, typography, spacing and radius tokens and compose existing Badge, Button and ProgressBar controls. They are exported from the package root and component subpaths and registered in the generated component manifest.

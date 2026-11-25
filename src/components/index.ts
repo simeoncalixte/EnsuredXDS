@@ -1,5 +1,16 @@
 // Core Components
-export { default as Badge } from './Badge.js';
+export {
+  default as Badge,
+  statusTone,
+  isSubmissionSystemStatus,
+  SUBMISSION_SYSTEM_STATUSES,
+} from './Badge.js';
+export type {
+  XdsBadgeVariant,
+  XdsBadgeProps,
+  SubmissionSystemStatus,
+  SubmissionStatusTone,
+} from './Badge.js';
 export { default as Button } from './Button.js';
 export { default as Card } from './Card.js';
 export { default as Checkbox } from './Checkbox.js';

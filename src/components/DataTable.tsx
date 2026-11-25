@@ -499,7 +499,11 @@ function GenericDataTable<T>({
               </HeaderCell>
             );
           })}
-          {rowActions ? <ActionsHeader {...role('columnheader')} aria-label="Actions" /> : null}
+          {rowActions ? (
+            <ActionsHeader {...role('columnheader')} scope="col">
+              <VisuallyHidden>Actions</VisuallyHidden>
+            </ActionsHeader>
+          ) : null}
         </HeaderRow>
       </thead>
       <tbody {...role('rowgroup')}>{body}</tbody>
