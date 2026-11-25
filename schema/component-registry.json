@@ -362,7 +362,7 @@
       "export": "@ensured/xds/components/DataTable",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Tabular section data using legacy rows or generic columns and data; generic data and render functions require renderer bindings."
+      "description": "Tabular section data using legacy rows or generic columns and data, with fixed or button sort headers (aria-sort), a single link cell per row, two-line cells, muted row tone, caption, skeleton loading and an optional stacked layout below 600 px; generic data and render functions require renderer bindings."
     },
     {
       "id": "xds.activity-feed",
