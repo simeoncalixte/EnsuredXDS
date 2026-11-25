@@ -81,7 +81,7 @@ test('dismiss button is named, and open=false renders nothing', async () => {
   });
 });
 
-test('banner text, icons and stripes meet WCAG 2.2 AA contrast on surfaceContainerLow', () => {
+test('banner text and tone icons meet WCAG 2.2 AA contrast on surfaceContainerLow', () => {
   for (const [name, theme] of Object.entries(xdsThemes)) {
     const c = theme.colors;
     const bg = c.surfaceContainerLow;

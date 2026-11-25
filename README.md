@@ -216,7 +216,7 @@ import { Banner } from '@ensured/xds';
 </Banner>;
 ```
 
-`tone` is `info` (default), `warning` or `neutral`. Each tone has its own icon and a visually hidden prefix ("Information:", "Warning:", "Notice:", overridable with `toneLabel`), so it is never shown by colour alone. The banner is `role="status"` (polite) and is named by its `title`; it is never an `alert`, so use a Modal (alertdialog) or ValidationMessage for anything that must interrupt. `action` takes a link or tertiary Button and wraps below the text on narrow screens. `dismissible` adds a dismiss button named "Dismiss notice: {title}" (`dismissLabel` overrides it). Without `open` the banner hides itself after dismissal; pass `open` to control it. Either way, move focus somewhere sensible in `onDismiss`. See **Feedback/Banner** in Storybook.
+`tone` is `info` (default), `warning` or `neutral`. Each tone has its own icon and a visually hidden prefix ("Information:", "Warning:", "Notice:", overridable with `toneLabel`), so it is never shown by colour alone. The banner is `role="status"` (polite) and is named by its `title`; it is never an `alert`, so use a Modal (alertdialog) or ValidationMessage for anything that must interrupt. `action` takes a link or tertiary Button and wraps below the text on narrow screens. `dismissible` adds a dismiss button named "Dismiss notice: {title}" (`dismissLabel` overrides it). Without `open` the banner hides itself after dismissal, and because the dismiss button unmounts, focus would fall to `<body>`. So prefer a controlled banner (`open` + `onDismiss`) and move focus in `onDismiss` to the nearest heading or the next control, as the **ControlledWithFocusReturn** story does. See **Feedback/Banner** in Storybook.
 
 ## Key-value lists and date-only values
 

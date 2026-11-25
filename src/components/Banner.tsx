@@ -21,7 +21,7 @@ export type BannerProps = {
   children?: React.ReactNode;
   /** Optional action, e.g. a link or a tertiary Button. Wraps below the text on narrow screens. */
   action?: React.ReactNode;
-  /** Shows a dismiss button. */
+  /** Shows a dismiss button. Prefer a controlled banner (`open` + `onDismiss`) and move focus to the nearest heading or the next control, because the button unmounts on dismiss. */
   dismissible?: boolean;
   /** Called when the dismiss button is pressed. Move focus to a sensible place here. */
   onDismiss?: () => void;

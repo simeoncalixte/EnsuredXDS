@@ -36237,7 +36237,7 @@
           },
           "dismissible": {
             "type": "boolean",
-            "description": "Shows a dismiss button."
+            "description": "Shows a dismiss button. Prefer a controlled banner (`open` + `onDismiss`) and move focus to the nearest heading or the next control, because the button unmounts on dismiss."
           },
           "dismissLabel": {
             "type": "string",
