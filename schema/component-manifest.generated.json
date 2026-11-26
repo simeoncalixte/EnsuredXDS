@@ -37066,6 +37066,136 @@
         ]
       },
       "excludedProps": []
+    },
+    {
+      "id": "xds.input-string",
+      "version": 1,
+      "export": "@ensured/xds/components/InputString",
+      "fieldTypes": [],
+      "description": "Controlled, keyboard-operable illustrative sentence input with gated flows",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "flows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "steps": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "const": "single"
+                          },
+                          {
+                            "type": "string",
+                            "const": "multi"
+                          },
+                          {
+                            "type": "string",
+                            "const": "action"
+                          }
+                        ]
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "label": {
+                              "type": "string"
+                            },
+                            "tag": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "id",
+                            "label"
+                          ]
+                        }
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "label",
+                      "type"
+                    ]
+                  }
+                },
+                "disabled": {
+                  "type": "boolean"
+                },
+                "notice": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "label",
+                "steps"
+              ]
+            }
+          }
+        },
+        "required": [
+          "flows"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onChange",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onComplete",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onFlowChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "renderResult",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "value",
+          "required": true,
+          "reason": "Owned by the UI renderer/data binding"
+        }
+      ]
     }
   ],
   "policyVersion": 1,
