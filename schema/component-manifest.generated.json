@@ -18743,6 +18743,9 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "responsive": {
+            "type": "boolean"
+          },
           "subtitle": {
             "type": "string"
           },
