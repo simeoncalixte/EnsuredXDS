@@ -304,3 +304,52 @@ export const ConnectedPanels: Story = {
     await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
   },
 };
+
+export const InlineNarrowJourney: Story = {
+  args: { narrowVisualPlacement: 'inline', detailMode: 'responsive', composition: 'connected' },
+  render: (args) => (
+    <ScrollFilm {...args} renderVisual={(frame) => <RiskGlobe {...frame} showLegend={false} />} />
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const canvas = canvasElement.querySelector('canvas');
+    const visual = canvasElement.querySelector<HTMLElement>('[data-film-visual]')!;
+    await waitFor(() => expect(canvas).toHaveAttribute('data-renderer-ready', 'true'), {
+      timeout: 15000,
+    });
+    const slot = canvasElement.querySelector<HTMLElement>('[data-film-visual-slot="mechanics"]')!;
+    if (innerWidth >= 1100) {
+      await expect(getComputedStyle(visual).position).toBe('sticky');
+      await expect(slot.getBoundingClientRect().height).toBe(0);
+    } else {
+      slot.scrollIntoView({ block: 'center' });
+      await waitFor(() => expect(visual.dataset.inlineSlot).toBe('mechanics'));
+      await expect(getComputedStyle(visual).position).toBe('absolute');
+      await waitFor(() =>
+        expect(
+          Math.abs(visual.getBoundingClientRect().top - slot.getBoundingClientRect().top),
+        ).toBeLessThan(2),
+      );
+      await expect(
+        c.getByText('Example documents arrive with missing fields.').getBoundingClientRect().bottom,
+      ).toBeLessThanOrEqual(slot.getBoundingClientRect().top);
+      await expect(
+        c.getByText('AI structures a draft and flags the gaps.').getBoundingClientRect().top,
+      ).toBeGreaterThanOrEqual(slot.getBoundingClientRect().bottom);
+      const top = visual.getBoundingClientRect().top;
+      window.scrollBy(0, 80);
+      await waitFor(() =>
+        expect(Math.abs(visual.getBoundingClientRect().top - (top - 80))).toBeLessThan(2),
+      );
+      if (innerWidth < 600) {
+        await userEvent.click(c.getByRole('button', { name: 'View example source fields' }));
+        await expect(within(document.body).getByRole('dialog')).toBeVisible();
+        await userEvent.keyboard('{Escape}');
+        await expect(c.getByRole('button', { name: 'View example source fields' })).toHaveFocus();
+      }
+    }
+    await expect(canvasElement.querySelector('canvas')).toBe(canvas);
+    await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
+  },
+};
