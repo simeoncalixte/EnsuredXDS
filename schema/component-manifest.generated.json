@@ -18760,6 +18760,9 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "responsive": {
+            "type": "boolean"
+          },
           "subtitle": {
             "type": "string"
           },
@@ -19906,8 +19909,21 @@
                 "description": "While `loading`, show this many skeleton rows at the column widths instead of the\n\"Loading...\" line. The table gets `aria-busy` and a hidden `loadingLabel`."
               },
               "stacked": {
-                "type": "boolean",
-                "description": "Below 600 px, show each row as a stacked card with field labels."
+                "anyOf": [
+                  {
+                    "type": "boolean",
+                    "const": false
+                  },
+                  {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  {
+                    "type": "string",
+                    "const": "always"
+                  }
+                ],
+                "description": "Stack below 600 px, or use `always` inside narrow panels at any viewport."
               }
             }
           }
@@ -37067,6 +37083,25 @@
               }
             ]
           },
+          "records": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "targetId": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "label",
+                "targetId"
+              ]
+            }
+          },
           "reducedMotion": {
             "type": "boolean"
           },
@@ -37089,13 +37124,28 @@
                 "const": "capacity"
               }
             ]
+          },
+          "showLegend": {
+            "type": "boolean",
+            "description": "Keep semantic equivalents without the redundant visible footer legend."
           }
         },
         "required": [
           "progress"
         ]
       },
-      "excludedProps": []
+      "excludedProps": [
+        {
+          "name": "detail",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "onAvailability",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
     },
     {
       "id": "xds.input-string",
@@ -37240,7 +37290,48 @@
           "className": {
             "type": "string"
           },
+          "composition": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "split"
+              },
+              {
+                "type": "string",
+                "const": "connected"
+              }
+            ],
+            "description": "Share a desktop overlap strip between the copy and visual panels."
+          },
+          "detailMode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "responsive"
+              }
+            ]
+          },
+          "narrowVisualPlacement": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "inline"
+              },
+              {
+                "type": "string",
+                "const": "sticky"
+              }
+            ],
+            "description": "Below the side-by-side breakpoint, place the shared visual in scene gaps."
+          },
           "reducedMotion": {
+            "type": "boolean"
+          },
+          "staticFallback": {
             "type": "boolean"
           }
         }
@@ -37265,6 +37356,2032 @@
           "name": "shots",
           "required": true,
           "reason": "Non-JSON type"
+        }
+      ]
+    },
+    {
+      "id": "xds.link-button",
+      "version": 1,
+      "export": "@ensured/xds/components/LinkButton",
+      "kind": "action",
+      "fieldTypes": [],
+      "description": "Native navigation link using shared button variants, including keyboard and no-JavaScript navigation.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "about": {
+            "type": "string"
+          },
+          "accessKey": {
+            "type": "string"
+          },
+          "aria-activedescendant": {
+            "type": "string",
+            "description": "Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application."
+          },
+          "aria-atomic": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute."
+          },
+          "aria-autocomplete": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "none"
+              },
+              {
+                "type": "string",
+                "const": "inline"
+              },
+              {
+                "type": "string",
+                "const": "list"
+              },
+              {
+                "type": "string",
+                "const": "both"
+              }
+            ],
+            "description": "Indicates whether inputting text could trigger display of one or more predictions of the user's intended value for an input and specifies how predictions would be\npresented if they are made."
+          },
+          "aria-braillelabel": {
+            "type": "string",
+            "description": "Defines a string value that labels the current element, which is intended to be converted into Braille."
+          },
+          "aria-brailleroledescription": {
+            "type": "string",
+            "description": "Defines a human-readable, author-localized abbreviated description for the role of an element, which is intended to be converted into Braille."
+          },
+          "aria-busy": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ]
+          },
+          "aria-checked": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              },
+              {
+                "type": "string",
+                "const": "mixed"
+              }
+            ],
+            "description": "Indicates the current \"checked\" state of checkboxes, radio buttons, and other widgets."
+          },
+          "aria-colcount": {
+            "type": "number",
+            "description": "Defines the total number of columns in a table, grid, or treegrid."
+          },
+          "aria-colindex": {
+            "type": "number",
+            "description": "Defines an element's column index or position with respect to the total number of columns within a table, grid, or treegrid."
+          },
+          "aria-colindextext": {
+            "type": "string",
+            "description": "Defines a human readable text alternative of aria-colindex."
+          },
+          "aria-colspan": {
+            "type": "number",
+            "description": "Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid."
+          },
+          "aria-controls": {
+            "type": "string",
+            "description": "Identifies the element (or elements) whose contents or presence are controlled by the current element."
+          },
+          "aria-current": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "time"
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              },
+              {
+                "type": "string",
+                "const": "page"
+              },
+              {
+                "type": "string",
+                "const": "step"
+              },
+              {
+                "type": "string",
+                "const": "location"
+              },
+              {
+                "type": "string",
+                "const": "date"
+              }
+            ],
+            "description": "Indicates the element that represents the current item within a container or set of related elements."
+          },
+          "aria-describedby": {
+            "type": "string",
+            "description": "Identifies the element (or elements) that describes the object."
+          },
+          "aria-description": {
+            "type": "string",
+            "description": "Defines a string value that describes or annotates the current element."
+          },
+          "aria-details": {
+            "type": "string",
+            "description": "Identifies the element that provides a detailed, extended description for the object."
+          },
+          "aria-disabled": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable."
+          },
+          "aria-dropeffect": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "link"
+              },
+              {
+                "type": "string",
+                "const": "none"
+              },
+              {
+                "type": "string",
+                "const": "copy"
+              },
+              {
+                "type": "string",
+                "const": "execute"
+              },
+              {
+                "type": "string",
+                "const": "move"
+              },
+              {
+                "type": "string",
+                "const": "popup"
+              }
+            ],
+            "description": "Indicates what functions can be performed when a dragged object is released on the drop target."
+          },
+          "aria-errormessage": {
+            "type": "string",
+            "description": "Identifies the element that provides an error message for the object."
+          },
+          "aria-expanded": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed."
+          },
+          "aria-flowto": {
+            "type": "string",
+            "description": "Identifies the next element (or elements) in an alternate reading order of content which, at the user's discretion,\nallows assistive technology to override the general default of reading in document source order."
+          },
+          "aria-grabbed": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates an element's \"grabbed\" state in a drag-and-drop operation."
+          },
+          "aria-haspopup": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "menu"
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              },
+              {
+                "type": "string",
+                "const": "listbox"
+              },
+              {
+                "type": "string",
+                "const": "tree"
+              },
+              {
+                "type": "string",
+                "const": "grid"
+              }
+            ],
+            "description": "Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element."
+          },
+          "aria-hidden": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates whether the element is exposed to an accessibility API."
+          },
+          "aria-invalid": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              },
+              {
+                "type": "string",
+                "const": "grammar"
+              },
+              {
+                "type": "string",
+                "const": "spelling"
+              }
+            ],
+            "description": "Indicates the entered value does not conform to the format expected by the application."
+          },
+          "aria-keyshortcuts": {
+            "type": "string",
+            "description": "Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element."
+          },
+          "aria-label": {
+            "type": "string",
+            "description": "Defines a string value that labels the current element."
+          },
+          "aria-labelledby": {
+            "type": "string",
+            "description": "Identifies the element (or elements) that labels the current element."
+          },
+          "aria-level": {
+            "type": "number",
+            "description": "Defines the hierarchical level of an element within a structure."
+          },
+          "aria-live": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "off"
+              },
+              {
+                "type": "string",
+                "const": "assertive"
+              },
+              {
+                "type": "string",
+                "const": "polite"
+              }
+            ],
+            "description": "Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region."
+          },
+          "aria-modal": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates whether an element is modal when displayed."
+          },
+          "aria-multiline": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates whether a text box accepts multiple lines of input or only a single line."
+          },
+          "aria-multiselectable": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates that the user may select more than one item from the current selectable descendants."
+          },
+          "aria-orientation": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "horizontal"
+              },
+              {
+                "type": "string",
+                "const": "vertical"
+              }
+            ],
+            "description": "Indicates whether the element's orientation is horizontal, vertical, or unknown/ambiguous."
+          },
+          "aria-owns": {
+            "type": "string",
+            "description": "Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship\nbetween DOM elements where the DOM hierarchy cannot be used to represent the relationship."
+          },
+          "aria-placeholder": {
+            "type": "string",
+            "description": "Defines a short hint (a word or short phrase) intended to aid the user with data entry when the control has no value.\nA hint could be a sample value or a brief description of the expected format."
+          },
+          "aria-posinset": {
+            "type": "number",
+            "description": "Defines an element's number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM."
+          },
+          "aria-pressed": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              },
+              {
+                "type": "string",
+                "const": "mixed"
+              }
+            ],
+            "description": "Indicates the current \"pressed\" state of toggle buttons."
+          },
+          "aria-readonly": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates that the element is not editable, but is otherwise operable."
+          },
+          "aria-relevant": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "additions"
+              },
+              {
+                "type": "string",
+                "const": "additions removals"
+              },
+              {
+                "type": "string",
+                "const": "additions text"
+              },
+              {
+                "type": "string",
+                "const": "all"
+              },
+              {
+                "type": "string",
+                "const": "removals"
+              },
+              {
+                "type": "string",
+                "const": "removals additions"
+              },
+              {
+                "type": "string",
+                "const": "removals text"
+              },
+              {
+                "type": "string",
+                "const": "text additions"
+              },
+              {
+                "type": "string",
+                "const": "text removals"
+              }
+            ],
+            "description": "Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified."
+          },
+          "aria-required": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates that user input is required on the element before a form may be submitted."
+          },
+          "aria-roledescription": {
+            "type": "string",
+            "description": "Defines a human-readable, author-localized description for the role of an element."
+          },
+          "aria-rowcount": {
+            "type": "number",
+            "description": "Defines the total number of rows in a table, grid, or treegrid."
+          },
+          "aria-rowindex": {
+            "type": "number",
+            "description": "Defines an element's row index or position with respect to the total number of rows within a table, grid, or treegrid."
+          },
+          "aria-rowindextext": {
+            "type": "string",
+            "description": "Defines a human readable text alternative of aria-rowindex."
+          },
+          "aria-rowspan": {
+            "type": "number",
+            "description": "Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid."
+          },
+          "aria-selected": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ],
+            "description": "Indicates the current \"selected\" state of various widgets."
+          },
+          "aria-setsize": {
+            "type": "number",
+            "description": "Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM."
+          },
+          "aria-sort": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "none"
+              },
+              {
+                "type": "string",
+                "const": "ascending"
+              },
+              {
+                "type": "string",
+                "const": "descending"
+              },
+              {
+                "type": "string",
+                "const": "other"
+              }
+            ],
+            "description": "Indicates if items in a table or grid are sorted in ascending or descending order."
+          },
+          "aria-valuemax": {
+            "type": "number",
+            "description": "Defines the maximum allowed value for a range widget."
+          },
+          "aria-valuemin": {
+            "type": "number",
+            "description": "Defines the minimum allowed value for a range widget."
+          },
+          "aria-valuenow": {
+            "type": "number",
+            "description": "Defines the current value for a range widget."
+          },
+          "aria-valuetext": {
+            "type": "string",
+            "description": "Defines the human readable text alternative of aria-valuenow for a range widget."
+          },
+          "autoCorrect": {
+            "type": "string"
+          },
+          "autoFocus": {
+            "type": "boolean"
+          },
+          "autoSave": {
+            "type": "string"
+          },
+          "className": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "contentEditable": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              },
+              {
+                "type": "string",
+                "const": "inherit"
+              },
+              {
+                "type": "string",
+                "const": "plaintext-only"
+              }
+            ]
+          },
+          "contextMenu": {
+            "type": "string"
+          },
+          "datatype": {
+            "type": "string"
+          },
+          "dir": {
+            "type": "string"
+          },
+          "draggable": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ]
+          },
+          "enterKeyHint": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
+                "const": "enter"
+              },
+              {
+                "type": "string",
+                "const": "done"
+              },
+              {
+                "type": "string",
+                "const": "go"
+              },
+              {
+                "type": "string",
+                "const": "next"
+              },
+              {
+                "type": "string",
+                "const": "previous"
+              },
+              {
+                "type": "string",
+                "const": "send"
+              }
+            ]
+          },
+          "exportparts": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "href": {
+            "type": "string"
+          },
+          "hrefLang": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "inert": {
+            "type": "boolean"
+          },
+          "inputMode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "search"
+              },
+              {
+                "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "none"
+              },
+              {
+                "type": "string",
+                "const": "email"
+              },
+              {
+                "type": "string",
+                "const": "tel"
+              },
+              {
+                "type": "string",
+                "const": "url"
+              },
+              {
+                "type": "string",
+                "const": "numeric"
+              },
+              {
+                "type": "string",
+                "const": "decimal"
+              }
+            ],
+            "description": "Hints at the type of data that might be entered by the user while editing the element or its contents"
+          },
+          "is": {
+            "type": "string",
+            "description": "Specify that a standard HTML element should behave like a defined custom built-in element"
+          },
+          "itemID": {
+            "type": "string"
+          },
+          "itemProp": {
+            "type": "string"
+          },
+          "itemRef": {
+            "type": "string"
+          },
+          "itemScope": {
+            "type": "boolean"
+          },
+          "itemType": {
+            "type": "string"
+          },
+          "lang": {
+            "type": "string"
+          },
+          "media": {
+            "type": "string"
+          },
+          "nonce": {
+            "type": "string"
+          },
+          "part": {
+            "type": "string"
+          },
+          "ping": {
+            "type": "string"
+          },
+          "popover": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": ""
+              },
+              {
+                "type": "string",
+                "const": "auto"
+              },
+              {
+                "type": "string",
+                "const": "manual"
+              },
+              {
+                "type": "string",
+                "const": "hint"
+              }
+            ]
+          },
+          "popoverTarget": {
+            "type": "string"
+          },
+          "popoverTargetAction": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "toggle"
+              },
+              {
+                "type": "string",
+                "const": "show"
+              },
+              {
+                "type": "string",
+                "const": "hide"
+              }
+            ]
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "property": {
+            "type": "string"
+          },
+          "radioGroup": {
+            "type": "string"
+          },
+          "referrerPolicy": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": ""
+              },
+              {
+                "type": "string",
+                "const": "origin"
+              },
+              {
+                "type": "string",
+                "const": "no-referrer"
+              },
+              {
+                "type": "string",
+                "const": "no-referrer-when-downgrade"
+              },
+              {
+                "type": "string",
+                "const": "origin-when-cross-origin"
+              },
+              {
+                "type": "string",
+                "const": "same-origin"
+              },
+              {
+                "type": "string",
+                "const": "strict-origin"
+              },
+              {
+                "type": "string",
+                "const": "strict-origin-when-cross-origin"
+              },
+              {
+                "type": "string",
+                "const": "unsafe-url"
+              }
+            ]
+          },
+          "rel": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "results": {
+            "type": "number"
+          },
+          "rev": {
+            "type": "string"
+          },
+          "security": {
+            "type": "string"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "sm"
+              },
+              {
+                "type": "string",
+                "const": "md"
+              }
+            ]
+          },
+          "slot": {
+            "type": "string"
+          },
+          "spellCheck": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "true"
+              },
+              {
+                "type": "string",
+                "const": "false"
+              }
+            ]
+          },
+          "suppressContentEditableWarning": {
+            "type": "boolean"
+          },
+          "suppressHydrationWarning": {
+            "type": "boolean"
+          },
+          "tabIndex": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "tone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "default"
+              },
+              {
+                "type": "string",
+                "const": "success"
+              },
+              {
+                "type": "string",
+                "const": "warning"
+              },
+              {
+                "type": "string",
+                "const": "danger"
+              }
+            ]
+          },
+          "translate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "yes"
+              },
+              {
+                "type": "string",
+                "const": "no"
+              }
+            ]
+          },
+          "type": {
+            "type": "string"
+          },
+          "typeof": {
+            "type": "string"
+          },
+          "unselectable": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "off"
+              },
+              {
+                "type": "string",
+                "const": "on"
+              }
+            ]
+          },
+          "variant": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "text"
+              },
+              {
+                "type": "string",
+                "const": "primary"
+              },
+              {
+                "type": "string",
+                "const": "secondary"
+              },
+              {
+                "type": "string",
+                "const": "ghost"
+              },
+              {
+                "type": "string",
+                "const": "outline"
+              }
+            ]
+          },
+          "vocab": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "href"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "autoCapitalize",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "children",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "dangerouslySetInnerHTML",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "defaultChecked",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "defaultValue",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "download",
+          "required": false,
+          "reason": "Unresolved, unconstrained, or unsupported type"
+        },
+        {
+          "name": "inlist",
+          "required": false,
+          "reason": "Unresolved, unconstrained, or unsupported type"
+        },
+        {
+          "name": "key",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "onAbort",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onAbortCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onAnimationEnd",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onAnimationEndCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onAnimationIteration",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onAnimationIterationCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onAnimationStart",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onAnimationStartCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onAuxClick",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onAuxClickCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onBeforeInput",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onBeforeInputCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onBeforeToggle",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onBlur",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onBlurCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCanPlay",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCanPlayCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCanPlayThrough",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCanPlayThroughCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onChangeCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onClick",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onClickCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCompositionEnd",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCompositionEndCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCompositionStart",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCompositionStartCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCompositionUpdate",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCompositionUpdateCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onContextMenu",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onContextMenuCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCopy",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCopyCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCut",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onCutCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDoubleClick",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDoubleClickCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDrag",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragEnd",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragEndCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragEnter",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragEnterCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragExit",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragExitCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragLeave",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragLeaveCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragOver",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragOverCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragStart",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDragStartCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDrop",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDropCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDurationChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDurationChangeCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onEmptied",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onEmptiedCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onEncrypted",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onEncryptedCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onEnded",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onEndedCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onError",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onErrorCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onFocus",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onFocusCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onGotPointerCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onGotPointerCaptureCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onInput",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onInputCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onInvalid",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onInvalidCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onKeyDown",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onKeyDownCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onKeyPress",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onKeyPressCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onKeyUp",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onKeyUpCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLoad",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLoadCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLoadedData",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLoadedDataCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLoadedMetadata",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLoadedMetadataCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLoadStart",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLoadStartCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLostPointerCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLostPointerCaptureCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseDown",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseDownCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseEnter",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseLeave",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseMove",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseMoveCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseOut",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseOutCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseOver",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseOverCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseUp",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMouseUpCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPaste",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPasteCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPause",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPauseCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPlay",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPlayCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPlaying",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPlayingCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerCancel",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerCancelCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerDown",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerDownCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerEnter",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerLeave",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerMove",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerMoveCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerOut",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerOutCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerOver",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerOverCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerUp",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPointerUpCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onProgress",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onProgressCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onRateChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onRateChangeCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onReset",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onResetCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onScroll",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onScrollCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onScrollEnd",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onScrollEndCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSeeked",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSeekedCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSeeking",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSeekingCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSelect",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSelectCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onStalled",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onStalledCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSubmit",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSubmitCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSuspend",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSuspendCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTimeUpdate",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTimeUpdateCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onToggle",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTouchCancel",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTouchCancelCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTouchEnd",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTouchEndCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTouchMove",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTouchMoveCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTouchStart",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTouchStartCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTransitionCancel",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTransitionCancelCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTransitionEnd",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTransitionEndCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTransitionRun",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTransitionRunCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTransitionStart",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onTransitionStartCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onVolumeChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onVolumeChangeCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onWaiting",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onWaitingCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onWheel",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onWheelCapture",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "ref",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "role",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "style",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "target",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
         }
       ]
     }

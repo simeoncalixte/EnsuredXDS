@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { expect, userEvent, within, waitFor } from '@storybook/test';
 import ScrollFilm, { type ScrollFilmProps } from '../../components/ScrollFilm.js';
 import Button from '../../components/Button.js';
+import { PageSubtitle } from '../../components/Typography.js';
 import RiskGlobe from '../../components/RiskGlobe.js';
 const shots = [
   {
@@ -192,5 +193,163 @@ export const RecordNavigation: Story = {
     await expect(within(document.body).getByRole('dialog')).toBeVisible();
     await userEvent.keyboard('{Escape}');
     await expect(c.getByRole('button', { name: 'Back to example record' })).toHaveFocus();
+  },
+};
+
+export const ResponsiveDetails: Story = {
+  args: {
+    detailMode: 'responsive',
+    shots: [
+      { ...shots[0], details: <a href="#mechanics-beat-2">Return to the draft</a> },
+      shots[1],
+    ],
+  },
+  render: (args) => (
+    <ScrollFilm
+      {...args}
+      hero={<h1>Scroll-driven example</h1>}
+      seatControl={<Button>Broker</Button>}
+      renderVisual={(frame) => {
+        const shot = args.shots[frame.shotIndex];
+        return (
+          <RiskGlobe
+            {...frame}
+            detail={
+              shot?.details
+                ? { title: shot.detailLabel ?? 'Example details', content: shot.details }
+                : undefined
+            }
+          />
+        );
+      }}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await userEvent.click(c.getByRole('button', { name: 'Next story beat' }));
+    const controls = c.getByRole('group', { name: 'Scroll story controls' });
+    await expect(controls.getBoundingClientRect().height).toBeLessThanOrEqual(64);
+    if (window.innerWidth < 600) {
+      const trigger = await c.findByRole('button', { name: 'View example source fields' });
+      await userEvent.click(trigger);
+      await expect(within(document.body).getByRole('dialog')).toBeVisible();
+      await userEvent.keyboard('{Escape}');
+      await expect(trigger).toHaveFocus();
+    } else {
+      await waitFor(() =>
+        expect(c.getByRole('heading', { name: 'View example source fields' })).toBeVisible(),
+      );
+      if (window.innerWidth >= 1100)
+        await waitFor(() => expect(c.getByText(/^(PLATFORM|PERSON) ·/)).toBeVisible());
+      const link = c.getByRole('link', { name: 'Return to the draft' });
+      await userEvent.click(link);
+      await waitFor(() => expect(c.getByRole('heading', { name: 'Platform' })).toHaveFocus());
+    }
+  },
+};
+
+export const StaticFallback: Story = {
+  args: {
+    staticFallback: true,
+    shots: shots.map((shot) => ({
+      ...shot,
+      posterSrc:
+        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900"%3E%3Ccircle cx="720" cy="450" r="300" fill="%2397B8C3"/%3E%3C/svg%3E',
+      posterAlt: `Still: ${shot.title}`,
+    })),
+  },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await expect(c.getAllByRole('img')).toHaveLength(2);
+    await expect(c.getByText('The client approves D v2.')).toBeVisible();
+    await expect(c.getByRole('heading', { name: 'A person confirms the draft' })).toBeVisible();
+  },
+};
+
+export const ConnectedPanels: Story = {
+  args: {
+    composition: 'connected',
+    shots: [
+      {
+        ...shots[0],
+        beats: [
+          {
+            ...shots[0].beats[0],
+            content: <PageSubtitle>Example documents arrive with missing fields.</PageSubtitle>,
+          },
+          ...shots[0].beats.slice(1),
+        ],
+      },
+      shots[1],
+    ],
+  },
+  render: (args) => (
+    <ScrollFilm {...args} renderVisual={(frame) => <RiskGlobe {...frame} showLegend={false} />} />
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const copy = canvasElement.querySelector('[data-film-copy]')!;
+    const visual = canvasElement.querySelector('[data-film-visual]')!;
+    if (innerWidth >= 1100) {
+      const overlap = copy.getBoundingClientRect().right - visual.getBoundingClientRect().left;
+      await expect(overlap).toBeGreaterThanOrEqual(48);
+      await expect(overlap).toBeLessThanOrEqual(96);
+    }
+    await userEvent.click(c.getByRole('button', { name: 'Next story beat' }));
+    await waitFor(() => expect(c.getByRole('heading', { name: 'Setup' })).toHaveFocus());
+    const paragraph = c.getByText('Example documents arrive with missing fields.');
+    await expect(parseFloat(getComputedStyle(paragraph).fontSize)).toBeGreaterThanOrEqual(20);
+    await expect(parseFloat(getComputedStyle(paragraph).lineHeight)).toBeGreaterThanOrEqual(30);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
+    await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
+  },
+};
+
+export const InlineNarrowJourney: Story = {
+  args: { narrowVisualPlacement: 'inline', detailMode: 'responsive', composition: 'connected' },
+  render: (args) => (
+    <ScrollFilm {...args} renderVisual={(frame) => <RiskGlobe {...frame} showLegend={false} />} />
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const canvas = canvasElement.querySelector('canvas');
+    const visual = canvasElement.querySelector<HTMLElement>('[data-film-visual]')!;
+    await waitFor(() => expect(canvas).toHaveAttribute('data-renderer-ready', 'true'), {
+      timeout: 15000,
+    });
+    const slot = canvasElement.querySelector<HTMLElement>('[data-film-visual-slot="mechanics"]')!;
+    if (innerWidth >= 1100) {
+      await expect(getComputedStyle(visual).position).toBe('sticky');
+      await expect(slot.getBoundingClientRect().height).toBe(0);
+    } else {
+      slot.scrollIntoView({ block: 'center' });
+      await waitFor(() => expect(visual.dataset.inlineSlot).toBe('mechanics'));
+      await expect(getComputedStyle(visual).position).toBe('absolute');
+      await waitFor(() =>
+        expect(
+          Math.abs(visual.getBoundingClientRect().top - slot.getBoundingClientRect().top),
+        ).toBeLessThan(2),
+      );
+      await expect(
+        c.getByText('Example documents arrive with missing fields.').getBoundingClientRect().bottom,
+      ).toBeLessThanOrEqual(slot.getBoundingClientRect().top);
+      await expect(
+        c.getByText('AI structures a draft and flags the gaps.').getBoundingClientRect().top,
+      ).toBeGreaterThanOrEqual(slot.getBoundingClientRect().bottom);
+      const top = visual.getBoundingClientRect().top;
+      window.scrollBy(0, 80);
+      await waitFor(() =>
+        expect(Math.abs(visual.getBoundingClientRect().top - (top - 80))).toBeLessThan(2),
+      );
+      if (innerWidth < 600) {
+        await userEvent.click(c.getByRole('button', { name: 'View example source fields' }));
+        await expect(within(document.body).getByRole('dialog')).toBeVisible();
+        await userEvent.keyboard('{Escape}');
+        await expect(c.getByRole('button', { name: 'View example source fields' })).toHaveFocus();
+      }
+    }
+    await expect(canvasElement.querySelector('canvas')).toBe(canvas);
+    await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
   },
 };

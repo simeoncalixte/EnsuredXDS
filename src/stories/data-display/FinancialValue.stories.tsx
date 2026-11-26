@@ -236,3 +236,25 @@ export const TableColumn: Story = {
     </table>
   ),
 };
+
+export const ViewportEdgeTooltip: Story = {
+  args: { amount: '48200000', currency: 'USD', state: 'illustrative' },
+  render: (args) => (
+    <div style={{ display: 'flex', justifyContent: 'flex-end', padding: 8 }}>
+      <FinancialValue {...args} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+    const value = c.getByRole('group');
+    value.focus();
+    const tooltip = c.getByRole('tooltip');
+    await expect(tooltip).toBeVisible();
+    const rect = tooltip.getBoundingClientRect();
+    await expect(rect.right).toBeLessThanOrEqual(window.innerWidth);
+    await expect(rect.left).toBeGreaterThanOrEqual(0);
+    await userEvent.keyboard('{Escape}');
+    await expect(tooltip).not.toBeVisible();
+  },
+};

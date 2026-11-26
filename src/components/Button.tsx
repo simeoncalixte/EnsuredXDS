@@ -132,3 +132,36 @@ export const Button: React.FC<XdsButtonProps> = ({
 };
 
 export default Button;
+
+/** A native link with the same visual variants as Button; keeps browser navigation semantics. */
+export type XdsLinkButtonProps = React.ComponentPropsWithRef<'a'> & {
+  href: string;
+  variant?: XdsButtonVariant;
+  tone?: XdsButtonTone;
+  size?: XdsButtonSize;
+};
+export const LinkButton: React.FC<XdsLinkButtonProps> = ({
+  variant = 'primary',
+  tone = 'default',
+  size = 'md',
+  children,
+  ...rest
+}) => (
+  <StyledButton
+    as="a"
+    $variant={variant}
+    $tone={tone}
+    $size={size}
+    {...rest}
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      minHeight: 44,
+      boxSizing: 'border-box',
+      textDecoration: 'none',
+      ...rest.style,
+    }}
+  >
+    {children}
+  </StyledButton>
+);

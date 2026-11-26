@@ -303,7 +303,8 @@ const Tooltip = styled.span<{ $align: 'start' | 'end' }>`
   ${({ $align }) => ($align === 'end' ? 'right: 0;' : 'left: 0;')}
   z-index: ${zIndices.dropdown};
   width: max-content;
-  max-width: min(280px, 80vw);
+  max-width: min(280px, 100%);
+  box-sizing: border-box;
   padding: ${spacing.sm}px ${spacing.sm + 4}px;
   border-radius: ${radii.md}px;
   border: 1px solid ${colors.outlineVariant};

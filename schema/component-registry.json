@@ -709,6 +709,14 @@
       "export": "@ensured/xds/components/ScrollFilm",
       "fieldTypes": [],
       "description": "Native-scroll scene composition with one persistent visual and accessible detail sheets"
+    },
+    {
+      "id": "xds.link-button",
+      "version": 1,
+      "export": "@ensured/xds/components/LinkButton",
+      "kind": "action",
+      "fieldTypes": [],
+      "description": "Native navigation link using shared button variants, including keyboard and no-JavaScript navigation."
     }
   ],
   "policyVersion": 1,
