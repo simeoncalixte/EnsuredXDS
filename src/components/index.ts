@@ -122,3 +122,9 @@ export type * from './UnderwritingDashboard.types.js';
 export { default as LossRatioTrajectory } from './LossRatioTrajectory.js';
 
 export * from './RightHandPanel.js';
+
+export { default as PlaybackControls } from './PlaybackControls.js';
+export type { PlaybackControlsProps } from './PlaybackControls.js';
+
+export { default as SequenceReveal } from './SequenceReveal.js';
+export type { SequenceRevealProps } from './SequenceReveal.js';
