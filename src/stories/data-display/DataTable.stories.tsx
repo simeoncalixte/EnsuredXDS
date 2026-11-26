@@ -455,3 +455,23 @@ export const Dark1440 = responsive('dark', 1440);
 export const Light375 = responsive('light', 375);
 export const Light768 = responsive('light', 768);
 export const Light1440 = responsive('light', 1440);
+
+export const NarrowPanelAtAnyViewport: Story = {
+  render: () => (
+    <div style={{ width: 320, maxWidth: '100%' }}>
+      <SubmissionsTable stacked="always" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const table = c.getByRole('table');
+    await expect(table.getBoundingClientRect().width).toBeLessThanOrEqual(320);
+    await expect(table.scrollWidth).toBeLessThanOrEqual(320);
+    const link = c.getAllByRole('link')[0];
+    link.focus();
+    await expect(link).toHaveFocus();
+    await expect(
+      c.getAllByRole('cell').every((cell) => getComputedStyle(cell).display === 'block'),
+    ).toBe(true);
+  },
+};
