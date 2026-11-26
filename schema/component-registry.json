@@ -513,7 +513,7 @@
       "export": "@ensured/xds/components/Modal",
       "kind": "layout",
       "fieldTypes": [],
-      "description": "Dialog for a form or section; the renderer supplies body, footer and close behavior."
+      "description": "Dialog for a form or section, with an alertdialog confirmation mode (initial focus on the safe action, consequence description, submitting and error states); the renderer supplies body, footer and close behavior."
     },
     {
       "id": "xds.results-panel",
