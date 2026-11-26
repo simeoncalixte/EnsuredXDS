@@ -194,3 +194,73 @@ export const RecordNavigation: Story = {
     await expect(c.getByRole('button', { name: 'Back to example record' })).toHaveFocus();
   },
 };
+
+export const ResponsiveDetails: Story = {
+  args: {
+    detailMode: 'responsive',
+    shots: [
+      { ...shots[0], details: <a href="#mechanics-beat-2">Return to the draft</a> },
+      shots[1],
+    ],
+  },
+  render: (args) => (
+    <ScrollFilm
+      {...args}
+      hero={<h1>Scroll-driven example</h1>}
+      seatControl={<Button>Broker</Button>}
+      renderVisual={(frame) => {
+        const shot = args.shots[frame.shotIndex];
+        return (
+          <RiskGlobe
+            {...frame}
+            detail={
+              shot?.details
+                ? { title: shot.detailLabel ?? 'Example details', content: shot.details }
+                : undefined
+            }
+          />
+        );
+      }}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await userEvent.click(c.getByRole('button', { name: 'Next story beat' }));
+    const controls = c.getByRole('group', { name: 'Scroll story controls' });
+    await expect(controls.getBoundingClientRect().height).toBeLessThanOrEqual(64);
+    if (window.innerWidth < 600) {
+      const trigger = await c.findByRole('button', { name: 'View example source fields' });
+      await userEvent.click(trigger);
+      await expect(within(document.body).getByRole('dialog')).toBeVisible();
+      await userEvent.keyboard('{Escape}');
+      await expect(trigger).toHaveFocus();
+    } else {
+      await waitFor(() =>
+        expect(c.getByRole('heading', { name: 'View example source fields' })).toBeVisible(),
+      );
+      if (window.innerWidth >= 1100)
+        await waitFor(() => expect(c.getByText(/^(PLATFORM|PERSON) ·/)).toBeVisible());
+      const link = c.getByRole('link', { name: 'Return to the draft' });
+      await userEvent.click(link);
+      await waitFor(() => expect(c.getByRole('heading', { name: 'Platform' })).toHaveFocus());
+    }
+  },
+};
+
+export const StaticFallback: Story = {
+  args: {
+    staticFallback: true,
+    shots: shots.map((shot) => ({
+      ...shot,
+      posterSrc:
+        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900"%3E%3Ccircle cx="720" cy="450" r="300" fill="%2397B8C3"/%3E%3C/svg%3E',
+      posterAlt: `Still: ${shot.title}`,
+    })),
+  },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await expect(c.getAllByRole('img')).toHaveLength(2);
+    await expect(c.getByText('The client approves D v2.')).toBeVisible();
+    await expect(c.getByRole('heading', { name: 'A person confirms the draft' })).toBeVisible();
+  },
+};

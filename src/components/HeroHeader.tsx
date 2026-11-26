@@ -1,11 +1,12 @@
 import React from 'react';
 import { colors, withAlpha } from '../colors.js';
 
-export const HeroHeader: React.FC<{ title?: string; subtitle?: string; tag?: string }> = ({
-  title,
-  subtitle,
-  tag,
-}) => {
+export const HeroHeader: React.FC<{
+  title?: string;
+  subtitle?: string;
+  tag?: string;
+  responsive?: boolean;
+}> = ({ title, subtitle, tag, responsive = false }) => {
   return (
     <header style={{ margin: '0 auto' }}>
       {tag && (
@@ -38,7 +39,8 @@ export const HeroHeader: React.FC<{ title?: string; subtitle?: string; tag?: str
 
       <h1
         style={{
-          fontSize: 48,
+          fontSize: responsive ? 'clamp(2rem, 4vw, 3.6rem)' : 48,
+          maxWidth: responsive ? '20ch' : undefined,
           lineHeight: 1.02,
           margin: 0,
           color: colors.text.primary,

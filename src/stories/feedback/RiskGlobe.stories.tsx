@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { expect, userEvent, within, waitFor } from '@storybook/test';
+import { expect, userEvent, within, waitFor, fn } from '@storybook/test';
 import RiskGlobe, { type GlobeMarker } from '../../components/RiskGlobe.js';
+import ThemeToggle from '../../components/ThemeToggle.js';
 import Button from '../../components/Button.js';
 const markers: GlobeMarker[] = [
   { id: 'risk', label: 'Example US origin', longitude: -80, latitude: 26, kind: 'origin' },
@@ -26,7 +27,7 @@ const meta = {
   title: 'Display/RiskGlobe',
   id: 'xds-risk-globe',
   component: RiskGlobe,
-  args: { progress: 0, markers },
+  args: { progress: 0, markers, onAvailability: fn() },
 } satisfies Meta<typeof RiskGlobe>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -153,5 +154,66 @@ export const ReadableMarkers: Story = {
         'Example US origin',
       ),
     ).toBeVisible();
+  },
+};
+
+export const ThemeSwitch: Story = {
+  render: (args) => (
+    <>
+      <ThemeToggle />
+      <RiskGlobe {...args} />
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const canvas = canvasElement.querySelector('canvas');
+    await waitFor(() => expect(canvas).toHaveAttribute('data-renderer-ready', 'true'), {
+      timeout: 15000,
+    });
+    await userEvent.click(c.getByRole('button', { name: 'Switch to light theme' }));
+    await expect(document.documentElement).toHaveAttribute('data-theme', 'light');
+    await expect(canvasElement.querySelector('canvas')).toBe(canvas);
+    await userEvent.click(c.getByRole('button', { name: 'Switch to dark theme' }));
+    await expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
+  },
+};
+
+export const ProjectedRecord: Story = {
+  args: {
+    progress: 0.85,
+    records: Array.from({ length: 10 }, (_, i) => ({
+      label: `Synthetic decision ${i + 1}`,
+      targetId: 'example-record-destination',
+    })),
+  },
+  render: (args) => (
+    <>
+      <RiskGlobe {...args} />
+      <h2 id="example-record-destination" tabIndex={-1}>
+        Example record destination
+      </h2>
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await waitFor(
+      () => expect(c.getAllByRole('link', { name: /Example record/ }).length).toBeGreaterThan(0),
+      { timeout: 15000 },
+    );
+    if (window.innerWidth >= 1100)
+      await expect(c.getAllByRole('link', { name: /Example record/ })).toHaveLength(10);
+    await userEvent.click(c.getAllByRole('link', { name: /Example record/ })[0]);
+    await expect(c.getByRole('heading', { name: 'Example record destination' })).toHaveFocus();
+  },
+};
+
+export const ProjectedRecordWithDetails: Story = {
+  ...ProjectedRecord,
+  args: {
+    ...ProjectedRecord.args,
+    detail: {
+      title: 'Example record summary',
+      content: <p>All ten numbered decisions remain reachable while the detail card is visible.</p>,
+    },
   },
 };

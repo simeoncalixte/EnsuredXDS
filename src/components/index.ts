@@ -11,6 +11,7 @@ export type {
   SubmissionSystemStatus,
   SubmissionStatusTone,
 } from './Badge.js';
+export { LinkButton, type XdsLinkButtonProps } from './Button.js';
 export { default as Button } from './Button.js';
 export { default as Card } from './Card.js';
 export { default as Checkbox } from './Checkbox.js';
@@ -130,7 +131,7 @@ export { default as SequenceReveal } from './SequenceReveal.js';
 export type { SequenceRevealProps } from './SequenceReveal.js';
 
 export { default as RiskGlobe } from './RiskGlobe.js';
-export type { RiskGlobeProps, GlobeMarker, GlobeSeat } from './RiskGlobe.js';
+export type { RiskGlobeProps, GlobeMarker, GlobeSeat, GlobeRecord } from './RiskGlobe.js';
 
 export { default as InputString } from './InputString.js';
 export type {
