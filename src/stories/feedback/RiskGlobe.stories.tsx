@@ -137,6 +137,16 @@ export const ScrollDriven: Story = {
     window.scrollTo(0, window.innerHeight / 2);
     await waitFor(() => expect(c.getByLabelText('Scroll progress')).toHaveTextContent('0.50'));
     await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
+    const canvas = canvasElement.querySelector('canvas');
+    await waitFor(() =>
+      expect(canvas).toHaveAttribute(
+        'data-handoff-trail',
+        String(!window.matchMedia('(prefers-reduced-motion: reduce)').matches),
+      ),
+    );
+    await waitFor(() =>
+      expect(Number(canvas?.getAttribute('data-handoff-progress'))).toBeGreaterThan(0),
+    );
     window.scrollTo(0, 0);
     await waitFor(() => expect(c.getByLabelText('Scroll progress')).toHaveTextContent('0.00'));
   },
@@ -241,5 +251,27 @@ export const KeyboardScrollableDetails: Story = {
     await expect(panel).toHaveFocus();
     await expect(panel).toHaveAttribute('tabindex', '0');
     await expect(panel.scrollHeight).toBeGreaterThan(panel.clientHeight);
+  },
+};
+
+export const SemanticLegend: Story = {
+  args: { showLegend: false, progress: 0.35 },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const legend = canvasElement.querySelector('[data-globe-legend="semantic"]')!;
+    await expect(getComputedStyle(legend).clipPath).toBe('inset(50%)');
+    await expect(c.getByRole('list', { name: 'Illustrative workflow steps' })).toBeInTheDocument();
+    await expect(c.queryByText('Example origins and sample providers')).toBeNull();
+    const canvas = canvasElement.querySelector('canvas');
+    await waitFor(() => expect(canvas).toHaveAttribute('data-renderer-ready', 'true'), {
+      timeout: 15000,
+    });
+    await expect(canvas).toHaveAttribute(
+      'data-handoff-trail',
+      String(!window.matchMedia('(prefers-reduced-motion: reduce)').matches),
+    );
+    await waitFor(() =>
+      expect(Number(canvas?.getAttribute('data-handoff-progress'))).toBeGreaterThan(0),
+    );
   },
 };

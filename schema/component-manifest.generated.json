@@ -37107,6 +37107,10 @@
                 "const": "capacity"
               }
             ]
+          },
+          "showLegend": {
+            "type": "boolean",
+            "description": "Keep semantic equivalents without the redundant visible footer legend."
           }
         },
         "required": [
@@ -37268,6 +37272,19 @@
         "properties": {
           "className": {
             "type": "string"
+          },
+          "composition": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "split"
+              },
+              {
+                "type": "string",
+                "const": "connected"
+              }
+            ],
+            "description": "Share a desktop overlap strip between the copy and visual panels."
           },
           "detailMode": {
             "anyOf": [

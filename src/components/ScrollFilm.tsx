@@ -30,12 +30,30 @@ export type ScrollFilmProps = {
   reducedMotion?: boolean;
   detailMode?: 'dialog' | 'responsive';
   staticFallback?: boolean;
+  /** Share a desktop overlap strip between the copy and visual panels. */
+  composition?: 'split' | 'connected';
   className?: string;
 };
-const Root = styled.div<{ $static: boolean }>`
+const Root = styled.div<{ $static: boolean; $connected: boolean }>`
   display: grid;
   grid-template-columns: ${({ $static }) => ($static ? 'minmax(0,1fr)' : 'minmax(0,.9fr) minmax(0,1.4fr)')};
   gap: ${spacing.lg}px;
+  ${({ $connected, $static }) =>
+    $connected && !$static
+      ? `
+    @media (min-width: 1100px) {
+      grid-template-columns: minmax(0, .9fr) 72px minmax(0, 1.4fr);
+      column-gap: 0;
+      & > [data-film-copy] { grid-column: 1 / 3; position: relative; z-index: 1; padding-right: 24px; }
+      & > [data-film-visual] { grid-column: 2 / 4; }
+      & > [data-film-copy] > * { position: relative; }
+      & > [data-film-copy]::before {
+        content: ''; position: absolute; inset: 0; pointer-events: none;
+        background: linear-gradient(to right, ${colors.surface} 84%, transparent);
+      }
+    }
+  `
+      : ''}
   background: ${colors.surface};
   color: ${colors.text.primary};
   min-width: 0;
@@ -114,12 +132,18 @@ const Beat = styled.div<{ $past: boolean; $active: boolean; $static: boolean }>`
   padding-block: ${spacing.lg}px;
   scroll-margin-top: 80px;
   line-height: 1.6;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
+  color: ${colors.text.primary};
+  & > p {
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
   @media (max-width: 1099px) {
     min-height: ${({ $static }) => ($static ? 'auto' : '50vh')};
     scroll-margin-top: var(--film-reading-top, 55vh);
-    font-size: ${({ $past, $static }) => ($past && !$static ? '1rem' : '1.25rem')};
-    line-height: 1.35;
+    font-size: ${({ $past, $static }) => ($past && !$static ? '1.125rem' : '1.25rem')};
+    line-height: 1.5;
     & > p {
       font-size: inherit;
       line-height: inherit;
@@ -168,6 +192,7 @@ export default function ScrollFilm({
   reducedMotion = false,
   detailMode = 'dialog',
   staticFallback = false,
+  composition = 'split',
   className,
 }: ScrollFilmProps) {
   const nodes = useRef<(HTMLElement | null)[]>([]);
@@ -274,6 +299,7 @@ export default function ScrollFilm({
       ref={rootNode}
       className={className}
       $static={staticStory}
+      $connected={composition === 'connected'}
       onClick={(event) => {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
           return;
@@ -321,13 +347,14 @@ export default function ScrollFilm({
         </Hidden>
       </Controls>
       <Hero
+        data-film-copy
         ref={(node) => {
           nodes.current[0] = node;
         }}
       >
         {hero}
       </Hero>
-      <Visual ref={visualNode} $rows={shots.length + 1} $static={staticStory}>
+      <Visual data-film-visual ref={visualNode} $rows={shots.length + 1} $static={staticStory}>
         {renderVisual({
           progress,
           paused: paused || detail !== null,
@@ -361,7 +388,7 @@ export default function ScrollFilm({
         const start = offset;
         offset += shot.beats.length;
         return (
-          <Shot key={shot.id} id={shot.id}>
+          <Shot data-film-copy key={shot.id} id={shot.id}>
             {shot.eyebrow && <Eyebrow>{shot.eyebrow}</Eyebrow>}
             <Title tabIndex={-1}>{shot.title}</Title>
             {staticStory && shot.posterSrc && (

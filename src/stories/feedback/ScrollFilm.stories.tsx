@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { expect, userEvent, within, waitFor } from '@storybook/test';
 import ScrollFilm, { type ScrollFilmProps } from '../../components/ScrollFilm.js';
 import Button from '../../components/Button.js';
+import { PageSubtitle } from '../../components/Typography.js';
 import RiskGlobe from '../../components/RiskGlobe.js';
 const shots = [
   {
@@ -262,5 +263,44 @@ export const StaticFallback: Story = {
     await expect(c.getAllByRole('img')).toHaveLength(2);
     await expect(c.getByText('The client approves D v2.')).toBeVisible();
     await expect(c.getByRole('heading', { name: 'A person confirms the draft' })).toBeVisible();
+  },
+};
+
+export const ConnectedPanels: Story = {
+  args: {
+    composition: 'connected',
+    shots: [
+      {
+        ...shots[0],
+        beats: [
+          {
+            ...shots[0].beats[0],
+            content: <PageSubtitle>Example documents arrive with missing fields.</PageSubtitle>,
+          },
+          ...shots[0].beats.slice(1),
+        ],
+      },
+      shots[1],
+    ],
+  },
+  render: (args) => (
+    <ScrollFilm {...args} renderVisual={(frame) => <RiskGlobe {...frame} showLegend={false} />} />
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const copy = canvasElement.querySelector('[data-film-copy]')!;
+    const visual = canvasElement.querySelector('[data-film-visual]')!;
+    if (innerWidth >= 1100) {
+      const overlap = copy.getBoundingClientRect().right - visual.getBoundingClientRect().left;
+      await expect(overlap).toBeGreaterThanOrEqual(48);
+      await expect(overlap).toBeLessThanOrEqual(96);
+    }
+    await userEvent.click(c.getByRole('button', { name: 'Next story beat' }));
+    await waitFor(() => expect(c.getByRole('heading', { name: 'Setup' })).toHaveFocus());
+    const paragraph = c.getByText('Example documents arrive with missing fields.');
+    await expect(parseFloat(getComputedStyle(paragraph).fontSize)).toBeGreaterThanOrEqual(20);
+    await expect(parseFloat(getComputedStyle(paragraph).lineHeight)).toBeGreaterThanOrEqual(30);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
+    await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
   },
 };

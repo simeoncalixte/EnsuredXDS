@@ -50,7 +50,15 @@ export const HeroHeader: React.FC<{
         {title}
       </h1>
       {subtitle && (
-        <p style={{ marginTop: 12, color: colors.onSurfaceVariant, fontSize: 18, maxWidth: 720 }}>
+        <p
+          style={{
+            marginTop: 16,
+            color: responsive ? colors.text.primary : colors.onSurfaceVariant,
+            fontSize: responsive ? 22 : 18,
+            lineHeight: responsive ? 1.5 : undefined,
+            maxWidth: 720,
+          }}
+        >
           {subtitle}
         </p>
       )}
