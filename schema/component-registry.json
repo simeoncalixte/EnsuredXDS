@@ -362,7 +362,7 @@
       "export": "@ensured/xds/components/DataTable",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Tabular section data using legacy rows or generic columns and data; generic data and render functions require renderer bindings."
+      "description": "Tabular section data using legacy rows or generic columns and data, with fixed or button sort headers (aria-sort), a single link cell per row, two-line cells, muted row tone, caption, skeleton loading and an optional stacked layout below 600 px; generic data and render functions require renderer bindings."
     },
     {
       "id": "xds.activity-feed",
@@ -513,7 +513,7 @@
       "export": "@ensured/xds/components/Modal",
       "kind": "layout",
       "fieldTypes": [],
-      "description": "Dialog for a form or section; the renderer supplies body, footer and close behavior."
+      "description": "Dialog for a form or section, with an alertdialog confirmation mode (initial focus on the safe action, consequence description, submitting and error states); the renderer supplies body, footer and close behavior."
     },
     {
       "id": "xds.results-panel",
@@ -634,6 +634,46 @@
       "kind": "display",
       "fieldTypes": [],
       "description": "Incoming and bound expected loss ratios compared with aggregated ultimate claims, including actuarial evidence."
+    },
+    {
+      "id": "xds.banner",
+      "version": 1,
+      "export": "@ensured/xds/components/Banner",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Page-level notice (info, warning or neutral) with a title, body, optional action and dismiss; a polite status, never an alert."
+    },
+    {
+      "id": "xds.callout-panel",
+      "version": 1,
+      "export": "@ensured/xds/components/CalloutPanel",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Two-column \"what it is / what it isn't\" panel with a title and two real lists; meaning carried by headings, never icons or colour."
+    },
+    {
+      "id": "xds.menu-button",
+      "version": 1,
+      "export": "@ensured/xds/components/MenuButton",
+      "kind": "action",
+      "fieldTypes": [],
+      "description": "APG menu button: a trigger that opens a menu of commands, labelled groups and a single-choice menuitemradio list (e.g. Move to a status), with arrow keys, Home/End, typeahead and Esc."
+    },
+    {
+      "id": "xds.status-toast",
+      "version": 1,
+      "export": "@ensured/xds/components/StatusToast",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Polite role=status toast with one optional action (e.g. Undo): a persistent live region, 10 s timer that pauses on hover or focus, never takes focus, one message at a time; the error tone stays until dismissed."
+    },
+    {
+      "id": "xds.radio-group",
+      "version": 1,
+      "export": "@ensured/xds/components/RadioGroup",
+      "kind": "field",
+      "fieldTypes": [],
+      "description": "Fieldset with a visible legend and native radios, each with a label and optional description; no default selection, controlled (value or null) or uncontrolled, disabled options keep their reason, hint and error linked to the fieldset."
     }
   ],
   "policyVersion": 1,

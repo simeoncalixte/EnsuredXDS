@@ -199,6 +199,85 @@ import { UnsupportedField } from '@ensured/xds';
 
 `reason` is `unknown-ref` (not in the registry), `not-form-allowed` (registered but not allowed in forms) or `retired`. Each has default visible text, which `reasonText` overrides; the reason is never shown by colour alone. Scalars render as text, objects as key/value pairs, arrays of records as a table whose columns are the union of every row's keys (in a keyboard-scrollable region on narrow screens), and arrays of scalars as a list. Null, empty strings, empty arrays and empty objects show `emptyLabel` ("No value recorded"). Text longer than `truncateAt` characters (default 160) gets a "Show full value" toggle with `aria-expanded`. Numbers and decimal strings are shown exactly as stored, with no rounding or locale formatting. The group is named by `label` and described by the visible "Read-only" tag and reason text. See **Data Display/UnsupportedField** in Storybook.
 
+## Menu buttons
+
+Use `MenuButton` (`xds.menu-button`) for a per-row "More actions" menu, and as the keyboard and single-pointer alternative to dragging a card between underwriting stages (WCAG 2.5.7).
+
+````tsx
+import { MenuButton } from '@ensured/xds';
+
+<MenuButton
+  label="More actions for SUB-8405"
+  items={[
+    { id: 'open', label: 'Open submission', onSelect: openSubmission },
+    { id: 'refer', label: 'Refer to senior underwriter', hint: 'Above your binding authority' },
+    { type: 'separator' },
+    {
+      id: 'archive',
+      label: 'Archive',
+      disabled: true,
+      hint: 'Bound submissions cannot be archived',
+    },
+  ]}
+  radioGroup={{
+    label: 'Move to a status',
+    value: stage,
+    sections: [
+      {
+        label: 'Underwriting',
+        options: [
+          { value: 'triage', label: 'Triage' },
+          { value: 'referred', label: 'Referred', hint: 'asks to confirm' },
+        ],
+      },
+      {
+        label: 'Decision',
+        options: [{ value: 'declined', label: 'Declined', hint: 'asks to confirm' }],
+      },
+    ],
+    onChange: requestMove,
+
+## Callout panels
+
+Use `CalloutPanel` (`xds.callout-panel`) to set expectations side by side, such as "What the platform is and isn't" in the homepage trust section.
+
+```tsx
+import { CalloutPanel } from '@ensured/xds';
+
+<CalloutPanel
+  title="What the platform is and isn't"
+  isLabel="What the platform is"
+  isntLabel="What the platform isn't"
+  items={{
+    is: ['A shortlist of markets whose appetite fits, for a broker to approach'],
+    isnt: ['An insurer, carrier or broker', 'A place where cover is bound automatically'],
+  }}
+/>;
+````
+
+It follows the WAI-ARIA APG menu-button pattern. The trigger is a native button with `aria-haspopup="menu"` and `aria-expanded`; it is icon-only unless you pass `triggerText` (keep that text inside `label`). Enter, Space or ArrowDown open the menu on the first item and ArrowUp on the last. In the menu, the arrow keys, Home, End and typeahead move focus, Enter or Space choose, Esc closes and returns focus to the trigger, and Tab closes it. A click outside closes it, and it flips to stay inside the viewport. `items` takes commands (`menuitem`), separators and labelled groups. `radioGroup` renders `menuitemradio`s (flat `options` or labelled `sections`); the option matching `value` is `aria-checked` and marked "Current" (`currentLabel`), and `onChange` is not called for it. `hint` text and the "Current" marker are linked with `aria-describedby`. Disabled commands and options stay focusable with `aria-disabled` and can't be chosen, so say why in `hint`. Choosing an item closes the menu and returns focus to the trigger before `onSelect`/`onChange` runs, so the caller can then open a confirmation (Modal `role="alertdialog"`). See **Navigation/MenuButton** in Storybook.
+
+The panel is a `section` named by its `title`. Each column has a real heading (`isLabel`, default "What it is"; `isntLabel`, default "What it isn't") and a `ul` named by that heading, so the meaning never depends on the tick and cross icons (aria-hidden) or the accent colour. `headingLevel` (2, 3 or 4; default 2) sets the title level, and the column headings use the next level down. A column with no statements shows `emptyLabel` ("Nothing listed yet") instead of an empty list. Columns stack under 600 px, "is" first. See **Data Display/CalloutPanel** in Storybook.
+
+## Banners
+
+Use `Banner` (`xds.banner`) for a page-level notice, such as "Figures on this page are illustrative" or "This quote expires on 2 December 2026".
+
+```tsx
+import { Banner } from '@ensured/xds';
+
+<Banner
+  tone="info"
+  title="Figures on this page are illustrative"
+  dismissible
+  onDismiss={focusHeading}
+>
+  Premiums, limits and loss ratios shown here are examples, not quotes or offers.
+</Banner>;
+```
+
+`tone` is `info` (default), `warning` or `neutral`. Each tone has its own icon and a visually hidden prefix ("Information:", "Warning:", "Notice:", overridable with `toneLabel`), so it is never shown by colour alone. The banner is `role="status"` (polite) and is named by its `title`; it is never an `alert`, so use a Modal (alertdialog) or ValidationMessage for anything that must interrupt. `action` takes a link or tertiary Button and wraps below the text on narrow screens. `dismissible` adds a dismiss button named "Dismiss notice: {title}" (`dismissLabel` overrides it). Without `open` the banner hides itself after dismissal, and because the dismiss button unmounts, focus would fall to `<body>`. So prefer a controlled banner (`open` + `onDismiss`) and move focus in `onDismiss` to the nearest heading or the next control, as the **ControlledWithFocusReturn** story does. See **Feedback/Banner** in Storybook.
+
 ## Key-value lists and date-only values
 
 Use `KeyValueList` (`xds.key-value-list`) for read-only details such as a submission or policy header. It renders a `dl` with one `dt`/`dd` pair per item, in 1, 2 or 3 columns (`columns={3}` shows 3 columns at 1024 px and up, 2 from 600 px and 1 below 600 px).
@@ -220,6 +299,52 @@ formatDateOnly('2027-01-01'); // '01 Jan 2027' in every time zone
 ```
 
 Empty values (`null`, `undefined` or `''`) show "—", which is hidden from screen readers in favour of "Not set". `type: 'date-only'` formats a `YYYY-MM-DD` calendar day (effective, inception or expiry date) from the string itself and wraps it in `<time datetime>`. It never goes through `Date`, so the day never shifts west of UTC. An invalid day is shown as given, so the data stays visible. `formatDateOnly` returns `null` for missing or invalid input. While `loading`, a skeleton replaces the list, the wrapper gets `aria-busy` and "Loading details" is read. Values are plain strings or numbers: format money with `FinancialValue` and instants (for example "Last updated") in the application, passing the ISO instant as `dateTime`. See **Data Display/KeyValueList** in Storybook.
+
+## Data tables: sort, links and row tones
+
+`DataTable` (`xds.data-table`) keeps its legacy `rows` API unchanged. The generic `columns`/`data` API adds, all optional:
+
+```tsx
+<DataTable
+  columns={[
+    {
+      key: 'insured',
+      header: 'Insured',
+      href: (row) => `/underwriting/submissions/${row.id}`,
+      linkLabel: (row) => (row.insured ? undefined : `Submission ${row.ref}, insured not set`),
+      secondary: (row) => row.ref,
+    },
+    { key: 'updated', header: 'Last updated', sort: 'descending' },
+  ]}
+  data={rows}
+  caption="Submissions, sorted by last updated, newest first"
+  rowTone={(row) => (row.archived ? 'muted' : 'default')}
+  rowKey={(row) => row.id}
+  loading={loading}
+  skeletonRows={8}
+  loadingLabel="Loading submissions"
+  stacked
+/>
+```
+
+- `sort` sets `aria-sort` and a hidden ▼/▲ glyph on a non-interactive `th`, for a fixed order. Add `onSort` only when the user can change the sort; the header then renders a `<button>` inside the `th`.
+- `href` makes that cell's value the row's single link. Rows are never click targets. Pass `linkAs` (a router link component) to render it instead of `<a>`; it receives `href` and `to`.
+- `secondary` adds a second line in the mono label face, for example a submission or policy reference.
+- `rowTone` `muted` uses `onSurfaceVariant` text, which is at least 4.5:1 in both themes. Pair it with visible text such as an Archived badge.
+- `caption` (with `captionHidden` to hide it visually) names the table. `captionRef` is a callback ref that also gives the caption `tabIndex={-1}`, so the app can move focus to it after a page loads.
+- `skeletonRows` shows a table-shaped skeleton while `loading`, sets `aria-busy` and reads `loadingLabel`. Without it, the existing "Loading..." line is shown.
+- `stacked` shows each row as a card with field labels below 600 px. Column `label` sets the field label when `header` isn't a string.
+
+See **Data Display/DataTable** in Storybook.
+
+## Kanban boards: confirm before a move, card controls
+
+`KanbanBoard` never wraps `renderCard` output in an interactive element, so cards can hold links, buttons and menus. Each lane is a list item labelled by its heading (`headingLevel`, default 3), which includes the count ("Triage (2 items)").
+
+- `onMoveRequest(itemId, toStageKey)` runs before every move. Return or resolve `false` to veto it (for example when the underwriter cancels a confirmation); a rejected promise is also a veto. Without it, moves apply at once, as before.
+- `renderCard(item, { requestMove, movePending })`: call `requestMove(stageKey)` from the card's button or menu so keyboard and single-pointer users can move cards (WCAG 2.5.7). The card is `aria-busy` while a request is unsettled.
+- Lane `tag` (a neutral badge, e.g. "Decision"), `subheading` (the statuses in the lane) and `dropPreview` (text shown while a card is dragged over the lane).
+- `draggable={false}` turns pointer drag off; `emptyLabel` and `ariaLabel` set the copy.
 
 ## Submission status badges
 
@@ -246,6 +371,109 @@ const StatusCell = ({ status, label, archived }: StatusCellProps) => (
 | org board statuses, unknown, "" | `surface` |
 
 Matching ignores case and surrounding spaces. `SUBMISSION_SYSTEM_STATUSES` and `isSubmissionSystemStatus()` are exported too. The `archived` variant shows an archive icon (hidden from screen readers) and the text "Archived" unless you pass your own text. Badge text keeps at least 4.5:1 contrast in the light and dark themes; `primary` badge text uses `primarySoft` for this. See **Feedback/Badge** in Storybook.
+
+## Radio groups
+
+`RadioGroup` (`xds.radio-group`) is a `fieldset` with a visible `legend` and native radios. Each option has a label and an optional description. Nothing is selected until the person chooses:
+
+```tsx
+const [decision, setDecision] = useState<string | null>(null);
+
+<RadioGroup
+  name="decision"
+  legend="Decision for SUB-8401"
+  required
+  value={decision}
+  onChange={setDecision}
+  error={showError ? 'Choose Approve or Decline.' : undefined}
+  options={[
+    {
+      value: 'approve',
+      label: 'Approve',
+      description: 'Not priced yet. Price SUB-8401 before approving.',
+      disabled: true,
+    },
+    { value: 'decline', label: 'Decline', description: 'You will be asked for a reason.' },
+  ]}
+/>;
+```
+
+- `value={null}` is controlled with nothing selected; leave `value` undefined for an uncontrolled group. There is never a default selection.
+- Native radio keyboard behaviour: Tab enters the group, arrow keys move and select, Tab leaves.
+- Option descriptions link to their radio with `aria-describedby`. A disabled option keeps its description at full contrast, so the reason is readable.
+- `hint` and `error` link to the fieldset with `aria-describedby`. The error has an icon and a hidden "Error:" prefix, so it is never shown by colour alone.
+- `orientation="horizontal"` lays options out in a wrapping row; `legendHidden` hides the legend visually but keeps it as the group name.
+
+See **Form Elements/RadioGroup** in Storybook.
+
+## Status toasts
+
+`StatusToast` (`xds.status-toast`) shows one polite status message with at most one action, such as "SUB-8401 moved from New to Triage." with Undo. Mount it once, after the main content, and pass the current message:
+
+```tsx
+const [toast, setToast] = useState<{ id: number; message: string } | null>(null);
+
+<StatusToast
+  message={toast?.message}
+  messageId={toast?.id}
+  action={{ label: 'Undo', onAction: undoLastMove }}
+  returnFocusRef={moveButtonRef}
+  onDismiss={() => setToast(null)}
+/>;
+```
+
+- The `role="status"` region is always mounted, even with no message, so the next message is announced. It never takes focus.
+- One message at a time: a new `message` or `messageId` replaces the current one and restarts the timer.
+- Neutral toasts dismiss after `duration` (10 000 ms by default; `0` keeps them). Hover or focus pauses the timer, which then resumes with the time left (WCAG 2.2.1).
+- `tone="error"` stays until dismissed, adds a close button ("Dismiss message") and a hidden "Error:" prefix, so the tone is never shown by colour alone.
+- `onDismiss(reason)` reports `'timeout'`, `'action'` or `'close'`. If focus was inside the toast (after Undo or close), it moves to `returnFocusRef`.
+- `position="fixed"` (the default) pins it to the bottom centre above modals; at 768 px and below it spans the content width with 16 px gutters. `position="inline"` is for previews.
+
+See **Feedback/StatusToast** in Storybook.
+
+## Confirmation dialogs
+
+Use `Modal` (`xds.modal`) with `role="alertdialog"` to confirm an irreversible or superseding action, such as superseding a sent quote, accepting or declining terms, or binding. The modal manages focus: it focuses `initialFocusRef` on open (point it at the safe action, never the destructive one), traps Tab, and returns focus to the trigger (or `returnFocusRef`) on close.
+
+```tsx
+const backRef = useRef<HTMLButtonElement>(null);
+
+<Modal
+  open={open}
+  role="alertdialog"
+  title="Supersede quote Q-1042 v2?"
+  describedBy="supersede-consequence"
+  initialFocusRef={backRef}
+  onClose={() => setOpen(false)}
+  submitting={isSubmitting}
+  error={errorMessage}
+  footer={
+    <>
+      <Button
+        ref={backRef}
+        variant="secondary"
+        onClick={() => setOpen(false)}
+        disabled={isSubmitting}
+      >
+        Back to quote
+      </Button>
+      <Button tone="danger" onClick={supersede} disabled={isSubmitting}>
+        {isSubmitting ? 'Superseding…' : 'Supersede and create v3'}
+      </Button>
+    </>
+  }
+>
+  <p id="supersede-consequence">…</p>
+</Modal>;
+```
+
+- **Esc and the scrim:** Esc calls `onClose`, acting as Cancel (`closeOnEscape`, default true). A scrim click closes a `dialog` but not an `alertdialog` (`closeOnScrimClick`).
+- **Submitting:** `submitting` sets `aria-busy`, disables the close button, and ignores Esc and scrim clicks. The caller disables its own buttons and sets the in-progress label.
+- **Errors:** `error` shows a `role="alert"` region at the top of the body and moves focus to it.
+- **Labelling:** the title labels the dialog, and `ariaLabel` names it when there is no title.
+- **Narrow screens:** below 480 px, the footer's direct children stack full width with 44 px targets. Pass the buttons as a fragment, not wrapped in an element.
+
+See **Modals/Modal** in Storybook.
 
 ## Filtered results components
 
