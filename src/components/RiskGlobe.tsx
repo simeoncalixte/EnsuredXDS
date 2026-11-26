@@ -1,22 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { LinkButton } from './Button.js';
 import { colors } from '../colors.js';
 import { spacing, typography } from '../tokens.js';
 import { land } from './riskGlobe/land.js';
-import type { GlobeFrame, GlobeMarker, GlobeSeat, GlobeLabel } from './riskGlobe/types.js';
+import type {
+  GlobeFrame,
+  GlobeMarker,
+  GlobeSeat,
+  GlobeLabel,
+  GlobeRecord,
+} from './riskGlobe/types.js';
 import type { createGlobeRenderer } from './riskGlobe/renderer.js';
-export type { GlobeMarker, GlobeSeat } from './riskGlobe/types.js';
+export type { GlobeMarker, GlobeSeat, GlobeRecord } from './riskGlobe/types.js';
 export type RiskGlobeProps = {
   /** Normalized native-scroll progress for the combined hero and film (0..1). */
   progress: number;
   seat?: GlobeSeat;
   markers?: readonly GlobeMarker[];
+  records?: readonly GlobeRecord[];
   paused?: boolean;
   reducedMotion?: boolean;
   quality?: 'auto' | 'high' | 'low';
   /** Force the readable static fallback (e.g. WebGL unavailable). */
   fallback?: boolean;
+  onAvailability?: (available: boolean) => void;
   caption?: string;
+  detail?: { title: string; content: React.ReactNode };
   className?: string;
 };
 const Figure = styled.figure`
@@ -28,12 +38,12 @@ const Stage = styled.div`
   isolation: isolate;
   margin: 0;
   min-width: 0;
-  height: clamp(300px, 62vh, 720px);
+  height: clamp(350px, calc(100vh - 180px), 900px);
   @media (min-width: 600px) and (max-width: 1099px) {
     height: 58vh;
   }
   @media (max-width: 599px) {
-    height: 300px;
+    height: clamp(240px, 46vh, 440px);
   }
   overflow: hidden;
   background: ${colors.surface};
@@ -54,7 +64,7 @@ const Poster = styled.svg<{ $ready: boolean }>`
   height: 100%;
   visibility: ${({ $ready }) => ($ready ? 'hidden' : 'visible')};
 `;
-const ProjectedLabel = styled.span<{ $x: number; $y: number }>`
+const ProjectedLabel = styled.span<{ $x: number; $y: number; $width?: number; $kind?: string }>`
   position: absolute;
   left: ${({ $x }) => $x}px;
   top: ${({ $y }) => $y}px;
@@ -62,9 +72,18 @@ const ProjectedLabel = styled.span<{ $x: number; $y: number }>`
   max-width: calc(100% - 24px);
   background: ${colors.surface};
   color: ${colors.text.primary};
-  border: 1px solid ${colors.outlineVariant};
+  border: 1px ${({ $kind }) => ($kind === 'platform' ? 'dashed' : 'solid')} ${colors.outlineVariant};
+  width: ${({ $width }) => ($width ? `${$width}px` : 'auto')};
+  box-sizing: border-box;
   font: 400 0.875rem/1.3 ${typography.bodyFamily};
   pointer-events: none;
+`;
+const RecordLink = styled(LinkButton)<{ $x: number; $y: number }>`
+  position: absolute;
+  left: ${({ $x }) => $x}px;
+  top: ${({ $y }) => $y}px;
+  min-width: 44px;
+  justify-content: center;
 `;
 const Legend = styled.figcaption`
   background: ${colors.surface};
@@ -81,7 +100,37 @@ const Steps = styled.ol`
   margin: 0;
   padding-inline-start: ${spacing.lg}px;
 `;
+const DetailLeader = styled.svg`
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  @media (min-width: 1100px) {
+    display: block;
+  }
+`;
+const DetailCard = styled.aside<{ $left: number; $top: number }>`
+  display: none;
+  @media (min-width: 1100px) {
+    display: block;
+    position: absolute;
+    left: ${({ $left }) => $left}px;
+    top: ${({ $top }) => $top}px;
+    width: min(360px, 48%);
+    max-height: 65%;
+    overflow: auto;
+    box-sizing: border-box;
+    padding: 16px;
+    background: ${colors.surface};
+    border: 1px dashed ${colors.outlineVariant};
+    color: ${colors.text.primary};
+    font-family: ${typography.bodyFamily};
+  }
+`;
 const defaultMarkers: readonly GlobeMarker[] = [];
+const defaultRecords: readonly GlobeRecord[] = [];
 const posterPath = land
   .flatMap(([lon, lat]) => {
     const a = (lat * Math.PI) / 180,
@@ -98,23 +147,31 @@ export default function RiskGlobe({
   progress,
   seat = 'everyone',
   markers = defaultMarkers,
+  records = defaultRecords,
   paused = false,
   reducedMotion = false,
   quality = 'auto',
   fallback = false,
+  onAvailability,
+  detail,
   caption = 'Example data. Dots are submission origins; diamonds are sample providers.',
   className,
 }: RiskGlobeProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const availability = useRef(onAvailability);
+  useEffect(() => {
+    availability.current = onAvailability;
+  }, [onAvailability]);
   const controller = useRef<ReturnType<typeof createGlobeRenderer> | null>(null);
   const requestDraw = useRef<(() => void) | null>(null);
-  const latest = useRef<GlobeFrame>({ progress, seat, reducedMotion, markers });
+  const hasDetail = Boolean(detail);
+  const latest = useRef<GlobeFrame>({ progress, seat, reducedMotion, markers, hasDetail, records });
   const [ready, setReady] = useState(false);
   const [labels, setLabels] = useState<GlobeLabel[]>([]);
   useEffect(() => {
-    if (!paused) latest.current = { progress, seat, reducedMotion, markers };
+    if (!paused) latest.current = { progress, seat, reducedMotion, markers, hasDetail, records };
     if (!paused) requestDraw.current?.();
-  }, [progress, seat, reducedMotion, markers, paused]);
+  }, [progress, seat, reducedMotion, markers, paused, hasDetail, records]);
   useEffect(() => {
     const node = canvas.current;
     if (!node || fallback) return;
@@ -136,29 +193,44 @@ export default function RiskGlobe({
       if (!frame) frame = requestAnimationFrame(draw);
     };
     requestDraw.current = schedule;
+    const readPalette = () => {
+      const style = getComputedStyle(node);
+      const value = (name: string) => style.getPropertyValue(name).trim();
+      return {
+        surface: value('--xds-surface'),
+        outline: value('--xds-outline-variant'),
+        land: value('--xds-secondary'),
+        origin: value('--xds-primary'),
+        provider: value('--xds-secondary'),
+        text: value('--xds-on-surface'),
+      };
+    };
+    const themeObserver = new MutationObserver(() => {
+      controller.current?.setPalette(readPalette());
+      schedule();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'style'],
+    });
     const load = async () => {
       try {
         const { createGlobeRenderer } = await import('./riskGlobe/renderer.js');
         if (disposed) return;
-        const style = getComputedStyle(node);
-        const value = (name: string) => style.getPropertyValue(name).trim();
         controller.current = createGlobeRenderer(
           node,
-          {
-            surface: value('--xds-surface'),
-            outline: value('--xds-outline-variant'),
-            land: value('--xds-secondary'),
-            origin: value('--xds-primary'),
-            provider: value('--xds-secondary'),
-            text: value('--xds-on-surface'),
-          },
+          readPalette(),
           quality === 'low' || (quality === 'auto' && navigator.hardwareConcurrency <= 4),
           setLabels,
         );
         draw();
         setReady(true);
+        availability.current?.(true);
       } catch {
-        if (!disposed) setReady(false);
+        if (!disposed) {
+          setReady(false);
+          availability.current?.(false);
+        }
       }
     };
     // Delay only resource initialization until after paint. It does not advance motion.
@@ -173,6 +245,7 @@ export default function RiskGlobe({
     const lost = (event: Event) => {
       event.preventDefault();
       setReady(false);
+      availability.current?.(false);
     };
     node.addEventListener('webglcontextlost', lost);
     document.addEventListener('visibilitychange', schedule);
@@ -183,6 +256,7 @@ export default function RiskGlobe({
       clearTimeout(idle);
       cancelAnimationFrame(frame);
       resize.disconnect();
+      themeObserver.disconnect();
       observer.disconnect();
       node.removeEventListener('webglcontextlost', lost);
       document.removeEventListener('visibilitychange', schedule);
@@ -191,6 +265,20 @@ export default function RiskGlobe({
       controller.current = null;
     };
   }, [quality, fallback]);
+  const anchor = labels.find((label) => label.id === 'detail-anchor');
+  const stageWidth = canvas.current?.clientWidth ?? 720;
+  const stageHeight = canvas.current?.clientHeight ?? 720;
+  const cardWidth = Math.min(360, stageWidth * 0.48);
+  const cardLeft = Math.max(
+    12,
+    Math.min(
+      stageWidth - cardWidth - 12,
+      (anchor?.x ?? stageWidth / 2) > stageWidth / 2
+        ? (anchor?.x ?? 0) - cardWidth - 32
+        : (anchor?.x ?? 0) + 32,
+    ),
+  );
+  const cardTop = Math.max(64, Math.min(stageHeight * 0.35 - 24, (anchor?.y ?? 100) - 40));
   return (
     <Figure className={className} aria-label="Illustrative risk globe">
       <Stage>
@@ -221,13 +309,53 @@ export default function RiskGlobe({
           aria-hidden="true"
         />
         {ready && !fallback && (
-          <div aria-hidden="true">
-            {labels.map((label) => (
-              <ProjectedLabel key={label.id} $x={label.x} $y={label.y}>
-                {label.text}
-              </ProjectedLabel>
-            ))}
+          <div data-film-detail>
+            {labels
+              .filter((label) => label.id !== 'detail-anchor')
+              .map((label) =>
+                label.kind === 'record' && label.targetId ? (
+                  <RecordLink
+                    key={label.id}
+                    href={`#${label.targetId}`}
+                    aria-label={label.accessibleLabel}
+                    $x={label.x}
+                    $y={label.y}
+                    variant="secondary"
+                  >
+                    {label.text}
+                  </RecordLink>
+                ) : (
+                  <ProjectedLabel
+                    key={label.id}
+                    $x={label.x}
+                    $y={label.y}
+                    $width={label.width}
+                    $kind={label.kind}
+                    aria-hidden="true"
+                  >
+                    {label.text}
+                  </ProjectedLabel>
+                ),
+              )}
           </div>
+        )}
+        {detail && anchor && (
+          <DetailLeader aria-hidden="true">
+            <line
+              x1={anchor.x}
+              y1={anchor.y}
+              x2={cardLeft + (anchor.x > cardLeft ? cardWidth : 0)}
+              y2={cardTop + 24}
+              stroke={colors.outlineVariant}
+              strokeDasharray="4 4"
+            />
+          </DetailLeader>
+        )}
+        {detail && (
+          <DetailCard $left={cardLeft} $top={cardTop} aria-label={detail.title} data-film-detail>
+            <h3>{detail.title}</h3>
+            {detail.content}
+          </DetailCard>
         )}
       </Stage>
       <Legend>

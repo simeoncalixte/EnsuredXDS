@@ -73,6 +73,31 @@ try {
     });
     await context.close();
   }
+  {
+    const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const page = await context.newPage();
+    await page.route('**/*', (route) =>
+      route.request().url().startsWith(origin) ? route.continue() : route.abort(),
+    );
+    await page.goto(origin + '/iframe.html?id=xds-risk-globe--theme-switch&viewMode=story');
+    await page.locator('canvas[data-renderer-ready="true"]').waitFor();
+    await page.waitForTimeout(600);
+    const dark = await page.locator('canvas').screenshot();
+    await page.getByRole('button', { name: 'Switch to light theme' }).click();
+    await page.waitForTimeout(100);
+    assert.ok(
+      !dark.equals(await page.locator('canvas').screenshot()),
+      'theme did not update rendered pixels',
+    );
+    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+    await page.waitForTimeout(100);
+    assert.ok(
+      dark.equals(await page.locator('canvas').screenshot()),
+      'return to dark did not restore pixels',
+    );
+    results.push({ themeSwitch: true, darkRestoresPixels: true });
+    await context.close();
+  }
   for (const width of [1280, 390]) {
     const context = await browser.newContext({
       viewport: { width, height: 900 },

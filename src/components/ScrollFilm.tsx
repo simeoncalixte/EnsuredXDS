@@ -12,19 +12,29 @@ export type ScrollFilmShot = {
   beats: ScrollFilmBeat[];
   details?: React.ReactNode;
   detailLabel?: string;
+  posterSrc?: string;
+  posterAlt?: string;
 };
-export type ScrollFilmFrame = { progress: number; paused: boolean; reducedMotion: boolean };
+export type ScrollFilmFrame = {
+  progress: number;
+  paused: boolean;
+  reducedMotion: boolean;
+  shotIndex: number;
+  beatIndex: number;
+};
 export type ScrollFilmProps = {
   hero: React.ReactNode;
   shots: ScrollFilmShot[];
   renderVisual: (frame: ScrollFilmFrame) => React.ReactNode;
   seatControl?: React.ReactNode;
   reducedMotion?: boolean;
+  detailMode?: 'dialog' | 'responsive';
+  staticFallback?: boolean;
   className?: string;
 };
-const Root = styled.div`
+const Root = styled.div<{ $static: boolean }>`
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  grid-template-columns: ${({ $static }) => ($static ? 'minmax(0,1fr)' : 'minmax(0,.9fr) minmax(0,1.4fr)')};
   gap: ${spacing.lg}px;
   background: ${colors.surface};
   color: ${colors.text.primary};
@@ -34,21 +44,22 @@ const Root = styled.div`
     grid-template-columns: minmax(0, 1fr);
   }
 `;
-const Controls = styled.div`
+const Controls = styled.div<{ $compact: boolean }>`
   grid-column: 1/-1;
   position: sticky;
   top: 0;
   z-index: 20;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: ${spacing.xs}px;
+  flex-wrap: ${({ $compact }) => ($compact ? 'nowrap' : 'wrap')};
+  gap: 4px;
   background: ${colors.surface};
-  padding: ${spacing.sm}px;
+  padding: 8px;
   border-bottom: 1px solid ${colors.outlineVariant};
 `;
 const Control = styled(Button)`
   min-height: 44px;
+  min-width: 44px;
 `;
 const Hero = styled.header`
   grid-column: 1;
@@ -56,7 +67,8 @@ const Hero = styled.header`
   min-width: 0;
   scroll-margin-top: 80px;
 `;
-const Visual = styled.div<{ $rows: number }>`
+const Visual = styled.div<{ $rows: number; $static: boolean }>`
+  display: ${({ $static }) => ($static ? 'none' : 'block')};
   grid-column: 2;
   grid-row: 2 / span ${({ $rows }) => $rows};
   align-self: start;
@@ -76,6 +88,13 @@ const Shot = styled.section`
   padding-block: ${spacing.xl}px;
   border-top: 1px solid ${colors.outlineVariant};
 `;
+const Still = styled.img`
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+`;
 const Title = styled.h2`
   font: 400 clamp(1.8rem, 3vw, 3rem)/1.1 ${typography.headlineFamily};
   margin: 0 0 ${spacing.lg}px;
@@ -86,18 +105,26 @@ const Eyebrow = styled.p`
   color: ${colors.onSurfaceVariant};
   margin: 0 0 ${spacing.sm}px;
 `;
-const Beat = styled.div`
-  min-height: 40vh;
+const Beat = styled.div<{ $past: boolean; $active: boolean; $static: boolean }>`
+  min-height: ${({ $static }) => ($static ? 'auto' : '40vh')};
   padding-block: ${spacing.lg}px;
   scroll-margin-top: 80px;
   line-height: 1.6;
   font-size: 1.125rem;
   @media (max-width: 1099px) {
-    min-height: 50vh;
-    scroll-margin-top: 55vh;
+    min-height: ${({ $static }) => ($static ? 'auto' : '50vh')};
+    scroll-margin-top: var(--film-reading-top, 55vh);
+    font-size: ${({ $past, $static }) => ($past && !$static ? '1rem' : '1.25rem')};
+    line-height: 1.35;
+    & > p {
+      font-size: inherit;
+      line-height: inherit;
+    }
+    ${({ $past, $static }) => ($past && !$static ? 'h3,p{display:inline;}h3{margin-right:8px;}' : '')}
   }
 `;
 const BeatTitle = styled.h3`
+  scroll-margin-top: var(--film-reading-top, 80px);
   font: 600 0.875rem/1.5 ${typography.labelFamily};
   text-transform: uppercase;
   color: ${colors.onSurfaceVariant};
@@ -110,6 +137,22 @@ const Hidden = styled.span`
   clip-path: inset(50%);
   white-space: nowrap;
 `;
+const InlineDetail = styled.div`
+  display: none;
+  @media (min-width: 600px) and (max-width: 1099px) {
+    display: block;
+  }
+`;
+const MobileActions = styled.div`
+  display: none;
+  @media (max-width: 599px) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: ${colors.surface};
+    padding: 8px;
+  }
+`;
 const subscribe = () => () => {};
 /** Semantic, native-scroll film. All scene text is rendered in reading order;
  * scroll only updates the shared visual. No wheel interception or playback clock. */
@@ -119,14 +162,20 @@ export default function ScrollFilm({
   renderVisual,
   seatControl,
   reducedMotion = false,
+  detailMode = 'dialog',
+  staticFallback = false,
   className,
 }: ScrollFilmProps) {
   const nodes = useRef<(HTMLElement | null)[]>([]);
+  const rootNode = useRef<HTMLDivElement>(null);
+  const visualNode = useRef<HTMLDivElement>(null);
+  const controlsNode = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [detail, setDetail] = useState<ScrollFilmShot | null>(null);
   const [announcement, setAnnouncement] = useState('');
+  const [returnTarget, setReturnTarget] = useState('');
   const [returnDetail, setReturnDetail] = useState<ScrollFilmShot | null>(null);
   const enhanced = useSyncExternalStore(
     subscribe,
@@ -139,7 +188,20 @@ export default function ScrollFilm({
     let frame = 0;
     const update = () => {
       frame = 0;
-      const line = window.innerHeight * (window.innerWidth < 1100 ? 0.7 : 0.4);
+      const readingTop =
+        window.innerWidth < 1100
+          ? Math.min(
+              window.innerHeight - 100,
+              (controlsNode.current?.getBoundingClientRect().height ?? 64) +
+                (visualNode.current?.getBoundingClientRect().height ?? 0) +
+                16,
+            )
+          : 80;
+      rootNode.current?.style.setProperty('--film-reading-top', `${readingTop}px`);
+      const line =
+        window.innerWidth < 1100
+          ? Math.max(window.innerHeight * 0.7, readingTop + 24)
+          : window.innerHeight * 0.4;
       let index = 0;
       for (let i = 0; i < nodes.current.length; i++)
         if (nodes.current[i] && nodes.current[i]!.getBoundingClientRect().top <= line) index = i;
@@ -169,11 +231,15 @@ export default function ScrollFilm({
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update);
     };
+    const resizeObserver = new ResizeObserver(schedule);
+    if (visualNode.current) resizeObserver.observe(visualNode.current);
+    if (controlsNode.current) resizeObserver.observe(controlsNode.current);
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
     update();
     return () => {
       cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
     };
@@ -187,12 +253,40 @@ export default function ScrollFilm({
     const heading = node.querySelector<HTMLElement>('h1,h2,h3');
     heading?.setAttribute('tabindex', '-1');
     heading?.focus({ preventScroll: true });
-    setAnnouncement(`Step ${bounded + 1} of ${count}: ${heading?.textContent ?? 'Introduction'}`);
+    setAnnouncement(
+      `Step ${bounded + 1} of ${count}: ${heading?.getAttribute('aria-label') ?? heading?.textContent ?? 'Introduction'}`,
+    );
   };
+  const shotIndex = Math.min(shots.length - 1, Math.floor(progress * (shots.length + 1)) - 1);
+  const currentShot = shots[shotIndex];
+  const beatIndex = Math.min(2, Math.floor(((progress * (shots.length + 1)) % 1) * 3));
+  const staticStory =
+    (reducedMotion || staticFallback || !enhanced) && shots.every((shot) => shot.posterSrc);
   let offset = 1;
   return (
-    <Root className={className}>
-      <Controls role="group" aria-label="Scroll story controls">
+    <Root
+      ref={rootNode}
+      className={className}
+      $static={staticStory}
+      onClick={(event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+          return;
+        const anchor = (event.target as HTMLElement).closest('[data-film-detail] a[href^="#"]');
+        const id = anchor?.getAttribute('href')?.slice(1);
+        const target = id ? document.getElementById(id) : null;
+        if (!target || !currentShot) return;
+        event.preventDefault();
+        setReturnTarget(id!);
+        setReturnDetail(currentShot);
+        target.scrollIntoView({ behavior: 'auto', block: 'start' });
+        target.focus({ preventScroll: true });
+      }}
+    >
+      <Controls
+        $compact={detailMode === 'responsive'}
+        role="group"
+        aria-label="Scroll story controls"
+      >
         <Control
           variant="secondary"
           disabled={active === 0}
@@ -216,11 +310,6 @@ export default function ScrollFilm({
           ↺
         </Control>
         {seatControl}
-        {returnDetail && (
-          <Control variant="text" onClick={() => setDetail(returnDetail)}>
-            Back to example record
-          </Control>
-        )}
         <Hidden role="status" aria-live="polite">
           {announcement}
         </Hidden>
@@ -232,8 +321,35 @@ export default function ScrollFilm({
       >
         {hero}
       </Hero>
-      <Visual $rows={shots.length + 1}>
-        {renderVisual({ progress, paused: paused || detail !== null, reducedMotion })}
+      <Visual ref={visualNode} $rows={shots.length + 1} $static={staticStory}>
+        {renderVisual({
+          progress,
+          paused: paused || detail !== null,
+          reducedMotion,
+          shotIndex,
+          beatIndex,
+        })}
+        {detailMode === 'responsive' && enhanced && (
+          <MobileActions>
+            {currentShot?.details && (
+              <Control variant="secondary" onClick={() => setDetail(currentShot)}>
+                {currentShot.detailLabel ?? 'Read the example details'}
+              </Control>
+            )}
+            {shotIndex >= 2 && (
+              <Control
+                variant="text"
+                onClick={() => {
+                  const node = document.getElementById(shots[shots.length - 1].id);
+                  node?.scrollIntoView({ behavior: 'auto' });
+                  node?.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
+                }}
+              >
+                Skip to the end · Request pilot access
+              </Control>
+            )}
+          </MobileActions>
+        )}
       </Visual>
       {shots.map((shot) => {
         const start = offset;
@@ -242,21 +358,52 @@ export default function ScrollFilm({
           <Shot key={shot.id} id={shot.id}>
             {shot.eyebrow && <Eyebrow>{shot.eyebrow}</Eyebrow>}
             <Title tabIndex={-1}>{shot.title}</Title>
+            {staticStory && shot.posterSrc && (
+              <Still
+                src={shot.posterSrc}
+                alt={shot.posterAlt ?? ''}
+                loading="lazy"
+                width="1440"
+                height="900"
+              />
+            )}
             {shot.beats.map((beat, index) => (
               <Beat
                 key={beat.label}
+                $past={start + index < active}
+                $active={start + index === active}
+                $static={!enhanced || reducedMotion || staticFallback}
                 ref={(node) => {
                   nodes.current[start + index] = node;
                 }}
               >
-                <BeatTitle id={`${shot.id}-beat-${index + 1}`} tabIndex={-1}>
+                <BeatTitle
+                  aria-label={beat.label}
+                  id={`${shot.id}-beat-${index + 1}`}
+                  tabIndex={-1}
+                >
+                  {enhanced && !reducedMotion && start + index < active
+                    ? '✓ '
+                    : enhanced && !reducedMotion && start + index === active + 1
+                      ? 'Next · '
+                      : ''}
                   {beat.label}
                 </BeatTitle>
                 {beat.content}
+                {returnDetail && returnTarget === `${shot.id}-beat-${index + 1}` && (
+                  <Control variant="text" onClick={() => setDetail(returnDetail)}>
+                    Back to example record
+                  </Control>
+                )}
               </Beat>
             ))}
             {shot.details &&
-              (enhanced ? (
+              (enhanced && detailMode === 'responsive' ? (
+                <InlineDetail data-film-detail>
+                  <h3>{shot.detailLabel ?? 'Example details'}</h3>
+                  {shot.details}
+                </InlineDetail>
+              ) : enhanced ? (
                 <Control variant="secondary" onClick={() => setDetail(shot)}>
                   {shot.detailLabel ?? 'Read the example details'}
                 </Control>
@@ -279,11 +426,20 @@ export default function ScrollFilm({
       >
         <div
           onClick={(event) => {
+            if (
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return;
             const anchor = (event.target as HTMLElement).closest('a[href^="#"]');
             const id = anchor?.getAttribute('href')?.slice(1);
             const target = id ? document.getElementById(id) : null;
             if (!target) return;
             event.preventDefault();
+            setReturnTarget(id!);
             setReturnDetail(detail);
             setDetail(null);
             requestAnimationFrame(() => {
