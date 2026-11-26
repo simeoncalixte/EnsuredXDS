@@ -36820,6 +36820,136 @@
           "reason": "Owned by the UI renderer/data binding"
         }
       ]
+    },
+    {
+      "id": "xds.playback-controls",
+      "version": 1,
+      "export": "@ensured/xds/components/PlaybackControls",
+      "fieldTypes": [],
+      "description": "Accessible controlled playback and manual sequence stepping",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "intro": {
+            "type": "boolean"
+          },
+          "labels": {
+            "type": "object",
+            "properties": {
+              "play": {
+                "type": "string"
+              },
+              "pause": {
+                "type": "string"
+              },
+              "replay": {
+                "type": "string"
+              },
+              "skip": {
+                "type": "string"
+              },
+              "previous": {
+                "type": "string"
+              },
+              "next": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "playing": {
+            "type": "boolean"
+          },
+          "reducedMotion": {
+            "type": "boolean"
+          },
+          "step": {
+            "type": "number"
+          },
+          "stepLabel": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "playing"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onNext",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPlayPause",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPrev",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onReplay",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSkip",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.sequence-reveal",
+      "version": 1,
+      "export": "@ensured/xds/components/SequenceReveal",
+      "fieldTypes": [],
+      "description": "Progressively enhanced ordered sequence with reduced-motion support",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "distance": {
+            "type": "number",
+            "description": "Scroll distance over which an item settles, as a fraction of viewport height."
+          },
+          "label": {
+            "type": "string"
+          },
+          "reducedMotion": {
+            "type": "boolean"
+          },
+          "stagger": {
+            "type": "number",
+            "description": "Distance between items' scroll positions, as a fraction of viewport height."
+          }
+        }
+      },
+      "excludedProps": [
+        {
+          "name": "children",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "onDone",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
     }
   ],
   "policyVersion": 1,

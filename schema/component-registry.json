@@ -298,7 +298,7 @@
       "export": "@ensured/xds/components/KeyValueList",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Read-only dl/dt/dd list of terms and values in 1, 2 or 3 responsive columns, with a — placeholder for empty values, date-only formatting that never goes through Date, and a skeleton state."
+      "description": "Read-only dl/dt/dd list of terms and values in 1, 2 or 3 responsive columns, with a \u2014 placeholder for empty values, date-only formatting that never goes through Date, and a skeleton state."
     },
     {
       "id": "xds.info-card",
@@ -674,6 +674,20 @@
       "kind": "field",
       "fieldTypes": [],
       "description": "Fieldset with a visible legend and native radios, each with a label and optional description; no default selection, controlled (value or null) or uncontrolled, disabled options keep their reason, hint and error linked to the fieldset."
+    },
+    {
+      "id": "xds.playback-controls",
+      "version": 1,
+      "export": "@ensured/xds/components/PlaybackControls",
+      "fieldTypes": [],
+      "description": "Accessible controlled playback and manual sequence stepping"
+    },
+    {
+      "id": "xds.sequence-reveal",
+      "version": 1,
+      "export": "@ensured/xds/components/SequenceReveal",
+      "fieldTypes": [],
+      "description": "Progressively enhanced ordered sequence with reduced-motion support"
     }
   ],
   "policyVersion": 1,

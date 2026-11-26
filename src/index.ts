@@ -81,3 +81,9 @@ export type * from './components/UnderwritingDashboard.types.js';
 export { default as LossRatioTrajectory } from './components/LossRatioTrajectory.js';
 
 export * from './components/RightHandPanel.js';
+
+export { default as PlaybackControls } from './components/PlaybackControls.js';
+export type { PlaybackControlsProps } from './components/PlaybackControls.js';
+
+export { default as SequenceReveal } from './components/SequenceReveal.js';
+export type { SequenceRevealProps } from './components/SequenceReveal.js';

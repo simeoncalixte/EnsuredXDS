@@ -20,3 +20,21 @@
     'GRAD' 0,
     'opsz' 24;
 }
+
+/* Shared motion vocabulary. Homepage scenes use scroll progress, not these
+   durations as an autoplay clock. */
+:root {
+  --xds-motion-fast: 160ms;
+  --xds-motion-base: 240ms;
+  --xds-motion-slow: 480ms;
+  --xds-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --xds-ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --xds-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --xds-motion-fast: 0ms;
+    --xds-motion-base: 0ms;
+    --xds-motion-slow: 0ms;
+  }
+}
