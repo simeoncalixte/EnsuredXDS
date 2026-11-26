@@ -130,7 +130,10 @@ export function createGlobeRenderer(
         );
     });
   const update = (frame: GlobeFrame) => {
-    const p = Math.max(0, Math.min(1, frame.progress));
+    const rawProgress = Math.max(0, Math.min(1, frame.progress));
+    const p = frame.reducedMotion
+      ? Math.min(1, (Math.floor(rawProgress * 7) + 0.999) / 7)
+      : rawProgress;
     // Seven segments: hero plus six film shots. Scroll alone selects position.
     const shot = Math.min(6, Math.floor(p * 7));
     const beat = (p * 7) % 1;
