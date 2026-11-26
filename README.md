@@ -219,6 +219,25 @@ import { CalloutPanel } from '@ensured/xds';
 
 The panel is a `section` named by its `title`. Each column has a real heading (`isLabel`, default "What it is"; `isntLabel`, default "What it isn't") and a `ul` named by that heading, so the meaning never depends on the tick and cross icons (aria-hidden) or the accent colour. `headingLevel` (2, 3 or 4; default 2) sets the title level, and the column headings use the next level down. A column with no statements shows `emptyLabel` ("Nothing listed yet") instead of an empty list. Columns stack under 600 px, "is" first. See **Data Display/CalloutPanel** in Storybook.
 
+## Banners
+
+Use `Banner` (`xds.banner`) for a page-level notice, such as "Figures on this page are illustrative" or "This quote expires on 2 December 2026".
+
+```tsx
+import { Banner } from '@ensured/xds';
+
+<Banner
+  tone="info"
+  title="Figures on this page are illustrative"
+  dismissible
+  onDismiss={focusHeading}
+>
+  Premiums, limits and loss ratios shown here are examples, not quotes or offers.
+</Banner>;
+```
+
+`tone` is `info` (default), `warning` or `neutral`. Each tone has its own icon and a visually hidden prefix ("Information:", "Warning:", "Notice:", overridable with `toneLabel`), so it is never shown by colour alone. The banner is `role="status"` (polite) and is named by its `title`; it is never an `alert`, so use a Modal (alertdialog) or ValidationMessage for anything that must interrupt. `action` takes a link or tertiary Button and wraps below the text on narrow screens. `dismissible` adds a dismiss button named "Dismiss notice: {title}" (`dismissLabel` overrides it). Without `open` the banner hides itself after dismissal, and because the dismiss button unmounts, focus would fall to `<body>`. So prefer a controlled banner (`open` + `onDismiss`) and move focus in `onDismiss` to the nearest heading or the next control, as the **ControlledWithFocusReturn** story does. See **Feedback/Banner** in Storybook.
+
 ## Key-value lists and date-only values
 
 Use `KeyValueList` (`xds.key-value-list`) for read-only details such as a submission or policy header. It renders a `dl` with one `dt`/`dd` pair per item, in 1, 2 or 3 columns (`columns={3}` shows 3 columns at 1024 px and up, 2 from 600 px and 1 below 600 px).

@@ -63,6 +63,7 @@ export * from './components/ResultMetricCard.js';
 export * from './components/FinancialValue.js';
 export * from './components/UnsupportedField.js';
 export * from './components/CalloutPanel.js';
+export * from './components/Banner.js';
 export * from './components/AllocationList.js';
 export * from './components/ResultsToolbar.js';
 export * from './components/NatCatRiskBanner.js';
