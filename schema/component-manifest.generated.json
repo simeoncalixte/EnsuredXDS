@@ -33923,6 +33923,19 @@
           "open": {
             "type": "boolean"
           },
+          "placement": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "center"
+              },
+              {
+                "type": "string",
+                "const": "bottom"
+              }
+            ],
+            "description": "Additive bottom-sheet placement; default centered behavior is unchanged."
+          },
           "role": {
             "anyOf": [
               {
@@ -37194,6 +37207,47 @@
           "name": "value",
           "required": true,
           "reason": "Owned by the UI renderer/data binding"
+        }
+      ]
+    },
+    {
+      "id": "xds.scroll-film",
+      "version": 1,
+      "export": "@ensured/xds/components/ScrollFilm",
+      "fieldTypes": [],
+      "description": "Native-scroll scene composition with one persistent visual and accessible detail sheets",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "reducedMotion": {
+            "type": "boolean"
+          }
+        }
+      },
+      "excludedProps": [
+        {
+          "name": "hero",
+          "required": true,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "renderVisual",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "seatControl",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "shots",
+          "required": true,
+          "reason": "Non-JSON type"
         }
       ]
     }

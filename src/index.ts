@@ -100,3 +100,11 @@ export type {
   InputStringValue,
   InputStringResult,
 } from './components/InputString.js';
+
+export { default as ScrollFilm } from './components/ScrollFilm.js';
+export type {
+  ScrollFilmProps,
+  ScrollFilmShot,
+  ScrollFilmBeat,
+  ScrollFilmFrame,
+} from './components/ScrollFilm.js';

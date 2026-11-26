@@ -29,6 +29,12 @@ const Stage = styled.div`
   margin: 0;
   min-width: 0;
   height: clamp(300px, 62vh, 720px);
+  @media (min-width: 600px) and (max-width: 1099px) {
+    height: 58vh;
+  }
+  @media (max-width: 599px) {
+    height: 300px;
+  }
   overflow: hidden;
   background: ${colors.surface};
   color: ${colors.text.primary};
