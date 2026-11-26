@@ -109,6 +109,8 @@ const Visual = styled.div<{ $rows: number; $static: boolean; $inline: boolean }>
     $inline
       ? `
     @media (max-width: 1099px) {
+      visibility: hidden;
+      &[data-inline-slot] { visibility: visible; }
       position: absolute;
       top: var(--film-inline-top, 0px);
       left: 0; right: 0;
