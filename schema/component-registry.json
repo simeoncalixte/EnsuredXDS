@@ -634,6 +634,14 @@
       "kind": "display",
       "fieldTypes": [],
       "description": "Incoming and bound expected loss ratios compared with aggregated ultimate claims, including actuarial evidence."
+    },
+    {
+      "id": "xds.radio-group",
+      "version": 1,
+      "export": "@ensured/xds/components/RadioGroup",
+      "kind": "field",
+      "fieldTypes": [],
+      "description": "Fieldset with a visible legend and native radios, each with a label and optional description; no default selection, controlled (value or null) or uncontrolled, disabled options keep their reason, hint and error linked to the fieldset."
     }
   ],
   "policyVersion": 1,

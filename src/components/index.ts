@@ -25,6 +25,8 @@ export { default as SegmentedSwitch } from './SegmentedSwitch.js';
 // Form Components
 export { default as FormField } from './FormField.js';
 export { default as ValidationMessage } from './ValidationMessage.js';
+export { default as RadioGroup } from './RadioGroup.js';
+export type { RadioGroupProps, RadioGroupOption } from './RadioGroup.js';
 
 // Layout Components
 export { default as SectionHeader } from './SectionHeader.js';
