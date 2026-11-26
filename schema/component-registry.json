@@ -650,6 +650,14 @@
       "kind": "display",
       "fieldTypes": [],
       "description": "Two-column \"what it is / what it isn't\" panel with a title and two real lists; meaning carried by headings, never icons or colour."
+    },
+    {
+      "id": "xds.menu-button",
+      "version": 1,
+      "export": "@ensured/xds/components/MenuButton",
+      "kind": "action",
+      "fieldTypes": [],
+      "description": "APG menu button: a trigger that opens a menu of commands, labelled groups and a single-choice menuitemradio list (e.g. Move to a status), with arrow keys, Home/End, typeahead and Esc."
     }
   ],
   "policyVersion": 1,
