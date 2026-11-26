@@ -19892,8 +19892,21 @@
                 "description": "While `loading`, show this many skeleton rows at the column widths instead of the\n\"Loading...\" line. The table gets `aria-busy` and a hidden `loadingLabel`."
               },
               "stacked": {
-                "type": "boolean",
-                "description": "Below 600 px, show each row as a stacked card with field labels."
+                "anyOf": [
+                  {
+                    "type": "boolean",
+                    "const": false
+                  },
+                  {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  {
+                    "type": "string",
+                    "const": "always"
+                  }
+                ],
+                "description": "Stack below 600 px, or use `always` inside narrow panels at any viewport."
               }
             }
           }

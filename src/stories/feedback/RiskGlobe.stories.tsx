@@ -217,3 +217,29 @@ export const ProjectedRecordWithDetails: Story = {
     },
   },
 };
+
+export const KeyboardScrollableDetails: Story = {
+  args: {
+    progress: 0.35,
+    detail: {
+      title: 'Scrollable example evidence',
+      content: (
+        <div>
+          {Array.from({ length: 40 }, (_, i) => (
+            <p key={i}>Example source field {i + 1}: a person confirms the evidence.</p>
+          ))}
+        </div>
+      ),
+    },
+  },
+  play: async ({ canvasElement }) => {
+    if (window.innerWidth < 1100) return;
+    const panel = within(canvasElement).getByRole('complementary', {
+      name: 'Scrollable example evidence',
+    });
+    panel.focus();
+    await expect(panel).toHaveFocus();
+    await expect(panel).toHaveAttribute('tabindex', '0');
+    await expect(panel.scrollHeight).toBeGreaterThan(panel.clientHeight);
+  },
+};

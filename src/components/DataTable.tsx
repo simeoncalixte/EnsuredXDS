@@ -86,8 +86,8 @@ export type DataTableGenericProps<T = any> = {
   skeletonRows?: number;
   /** Loading text: the visible line, or the hidden label with `skeletonRows`. Defaults to "Loading...". */
   loadingLabel?: string;
-  /** Below 600 px, show each row as a stacked card with field labels. */
-  stacked?: boolean;
+  /** Stack below 600 px, or use `always` inside narrow panels at any viewport. */
+  stacked?: boolean | 'always';
   /** Component used for links instead of `<a>`, e.g. a router link. It receives `href`, and `to` with the same value. */
   linkAs?: React.ComponentType<any>;
 };
@@ -185,17 +185,20 @@ const VisuallyHidden = styled.span`
 
 const STACK_QUERY = '@media (max-width: 599.98px)';
 
-const GenericTable = styled(Table)<{ $stacked: boolean }>`
+const GenericTable = styled(Table)<{ $stacked: boolean | 'always' }>`
   ${({ $stacked }) =>
     $stacked &&
     css`
-      ${STACK_QUERY} {
+      ${$stacked === 'always' ? '@media all' : STACK_QUERY} {
         &,
+        & > caption,
         & > tbody,
         & > tbody > tr,
         & > tbody > tr > td {
           display: block;
           width: 100%;
+          box-sizing: border-box;
+          overflow-wrap: anywhere;
         }
 
         & > thead {
