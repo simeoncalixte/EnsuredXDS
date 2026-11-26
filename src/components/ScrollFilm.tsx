@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
+import { createPortal } from 'react-dom';
 import Button from './Button.js';
 import Modal from './Modal.js';
 import { colors } from '../colors.js';
@@ -34,8 +35,30 @@ export type ScrollFilmProps = {
   composition?: 'split' | 'connected';
   /** Below the side-by-side breakpoint, place the shared visual in scene gaps. */
   narrowVisualPlacement?: 'sticky' | 'inline';
+  /** Give narrow inline scenes viewport-sized pages with native document snapping. */
+  narrowPagination?: boolean;
   className?: string;
 };
+const PageSnap = createGlobalStyle`
+  @media (max-width: 1099px) and (prefers-reduced-motion: no-preference) {
+    html:has([data-film-pagination='pages'][data-film-snap-active='true']):not(:has([role='dialog'])) {
+      scroll-snap-type: y mandatory;
+    }
+  }
+`;
+// Native snap needs explicit exits before and after the host document content.
+// Zero-height portal markers add no visual space and disappear with the film.
+const SnapEdge = styled.div<{ $start?: boolean }>`
+  display: none;
+  @media (max-width: 1099px) {
+    display: block;
+    width: 1px;
+    height: 0;
+    pointer-events: none;
+    scroll-snap-align: ${({ $start }) => ($start ? 'start' : 'end')};
+    ${({ $start }) => ($start ? 'position: absolute; top: 0; left: 0;' : '')}
+  }
+`;
 const Root = styled.div<{ $static: boolean; $connected: boolean }>`
   position: relative;
   display: grid;
@@ -63,6 +86,38 @@ const Root = styled.div<{ $static: boolean; $connected: boolean }>`
   font-family: ${typography.bodyFamily};
   @media (max-width: 1099px) {
     grid-template-columns: minmax(0, 1fr);
+    &[data-film-pagination='pages'] {
+      --film-page-stage-height: clamp(200px, 28svh, 300px);
+      row-gap: 0;
+      & [data-film-page] {
+        box-sizing: border-box;
+        min-height: calc(100svh - var(--film-reading-top, 80px));
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        scroll-margin-top: var(--film-reading-top, 80px);
+        padding-block: ${spacing.md}px;
+        display: flex;
+        flex-direction: column;
+      }
+      & [data-film-page] > [data-film-inline-slot] {
+        margin-block: auto;
+      }
+      & [data-film-beat] {
+        padding-block: ${spacing.sm}px;
+      }
+      & [data-film-beat] > h3 {
+        margin: 0 0 4px;
+      }
+      & [data-film-beat] > p {
+        margin: 0;
+      }
+      & [data-film-page] > h2 {
+        margin-bottom: ${spacing.sm}px;
+      }
+      & [data-film-detail] {
+        display: none;
+      }
+    }
   }
 `;
 const Controls = styled.div<{ $compact: boolean }>`
@@ -129,9 +184,9 @@ const InlineSlot = styled.div`
 const SlotSpace = styled.div`
   position: relative;
   overflow: hidden;
-  height: var(--film-inline-height, clamp(240px, 46vh, 440px));
+  height: var(--film-inline-height, var(--film-page-stage-height, clamp(240px, 46vh, 440px)));
   @media (min-width: 600px) {
-    height: var(--film-inline-height, 58vh);
+    height: var(--film-inline-height, var(--film-page-stage-height, 58vh));
   }
 `;
 const SlotStill = styled.img`
@@ -208,9 +263,9 @@ const InlineDetail = styled.div`
     display: block;
   }
 `;
-const MobileActions = styled.div`
+const MobileActions = styled.div<{ $pages: boolean }>`
   display: none;
-  @media (max-width: 599px) {
+  @media (max-width: ${({ $pages }) => ($pages ? 1099 : 599)}px) {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -231,6 +286,7 @@ export default function ScrollFilm({
   staticFallback = false,
   composition = 'split',
   narrowVisualPlacement = 'sticky',
+  narrowPagination = false,
   className,
 }: ScrollFilmProps) {
   const nodes = useRef<(HTMLElement | null)[]>([]);
@@ -252,6 +308,7 @@ export default function ScrollFilm({
   const staticStory =
     (reducedMotion || staticFallback || !enhanced) && shots.every((shot) => shot.posterSrc);
   const inlineVisual = narrowVisualPlacement === 'inline' && !staticStory;
+  const pages = narrowPagination && inlineVisual && !reducedMotion && !staticFallback;
   const count = 1 + shots.reduce((sum, s) => sum + s.beats.length, 0);
   const beatCounts = shots.map((s) => s.beats.length).join(',');
   useEffect(() => {
@@ -292,6 +349,16 @@ export default function ScrollFilm({
             )
           : 80;
       rootNode.current?.style.setProperty('--film-reading-top', `${readingTop}px`);
+      if (root) {
+        const intro = nodes.current[0]?.getBoundingClientRect();
+        root.dataset.filmSnapActive = String(
+          pages &&
+            inlineNarrow &&
+            !!intro &&
+            intro.top <= readingTop + 1 &&
+            root.getBoundingClientRect().bottom >= window.innerHeight - 1,
+        );
+      }
       const line = inlineNarrow
         ? readingTop + 24
         : window.innerWidth < 1100
@@ -341,7 +408,7 @@ export default function ScrollFilm({
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
     };
-  }, [count, beatCounts, inlineVisual]);
+  }, [count, beatCounts, inlineVisual, pages]);
   const go = (index: number) => {
     const bounded = Math.max(0, Math.min(count - 1, index));
     const node = nodes.current[bounded];
@@ -361,7 +428,7 @@ export default function ScrollFilm({
 
   const renderActions = (shot: ScrollFilmShot | undefined, index: number) =>
     detailMode === 'responsive' && enhanced ? (
-      <MobileActions>
+      <MobileActions $pages={pages}>
         {shot?.details && (
           <Control variant="secondary" onClick={() => setDetail(shot)}>
             {shot.detailLabel ?? 'Read the example details'}
@@ -404,6 +471,7 @@ export default function ScrollFilm({
       $static={staticStory}
       $connected={composition === 'connected'}
       data-narrow-visual={narrowVisualPlacement}
+      data-film-pagination={pages ? 'pages' : undefined}
       onClick={(event) => {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
           return;
@@ -418,6 +486,16 @@ export default function ScrollFilm({
         target.focus({ preventScroll: true });
       }}
     >
+      <PageSnap />
+      {pages &&
+        enhanced &&
+        createPortal(
+          <>
+            <SnapEdge $start aria-hidden="true" />
+            <SnapEdge aria-hidden="true" />
+          </>,
+          document.body,
+        )}
       <Controls
         $compact={detailMode === 'responsive'}
         role="group"
@@ -451,14 +529,16 @@ export default function ScrollFilm({
         </Hidden>
       </Controls>
       <Hero
+        data-film-page={pages ? 'hero' : undefined}
         data-film-copy
         ref={(node) => {
           nodes.current[0] = node;
         }}
       >
         {hero}
+        {pages && renderSlot()}
       </Hero>
-      {inlineVisual && renderSlot()}
+      {inlineVisual && !pages && renderSlot()}
       <Visual
         data-film-visual
         ref={visualNode}
@@ -479,7 +559,12 @@ export default function ScrollFilm({
         const start = offset;
         offset += shot.beats.length;
         return (
-          <Shot data-film-copy key={shot.id} id={shot.id}>
+          <Shot
+            data-film-page={pages ? shot.id : undefined}
+            data-film-copy
+            key={shot.id}
+            id={shot.id}
+          >
             {shot.eyebrow && <Eyebrow>{shot.eyebrow}</Eyebrow>}
             <Title tabIndex={-1}>{shot.title}</Title>
             {staticStory && shot.posterSrc && (

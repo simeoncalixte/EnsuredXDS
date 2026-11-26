@@ -37298,6 +37298,10 @@
               }
             ]
           },
+          "narrowPagination": {
+            "type": "boolean",
+            "description": "Give narrow inline scenes viewport-sized pages with native document snapping."
+          },
           "narrowVisualPlacement": {
             "anyOf": [
               {
