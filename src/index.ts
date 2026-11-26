@@ -81,3 +81,30 @@ export type * from './components/UnderwritingDashboard.types.js';
 export { default as LossRatioTrajectory } from './components/LossRatioTrajectory.js';
 
 export * from './components/RightHandPanel.js';
+
+export { default as PlaybackControls } from './components/PlaybackControls.js';
+export type { PlaybackControlsProps } from './components/PlaybackControls.js';
+
+export { default as SequenceReveal } from './components/SequenceReveal.js';
+export type { SequenceRevealProps } from './components/SequenceReveal.js';
+
+export { default as RiskGlobe } from './components/RiskGlobe.js';
+export type { RiskGlobeProps, GlobeMarker, GlobeSeat } from './components/RiskGlobe.js';
+
+export { default as InputString } from './components/InputString.js';
+export type {
+  InputStringProps,
+  InputStringFlow,
+  InputStringStep,
+  InputStringOption,
+  InputStringValue,
+  InputStringResult,
+} from './components/InputString.js';
+
+export { default as ScrollFilm } from './components/ScrollFilm.js';
+export type {
+  ScrollFilmProps,
+  ScrollFilmShot,
+  ScrollFilmBeat,
+  ScrollFilmFrame,
+} from './components/ScrollFilm.js';

@@ -33940,6 +33940,19 @@
           "open": {
             "type": "boolean"
           },
+          "placement": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "center"
+              },
+              {
+                "type": "string",
+                "const": "bottom"
+              }
+            ],
+            "description": "Additive bottom-sheet placement; default centered behavior is unchanged."
+          },
           "role": {
             "anyOf": [
               {
@@ -36835,6 +36848,423 @@
           "name": "value",
           "required": false,
           "reason": "Owned by the UI renderer/data binding"
+        }
+      ]
+    },
+    {
+      "id": "xds.playback-controls",
+      "version": 1,
+      "export": "@ensured/xds/components/PlaybackControls",
+      "fieldTypes": [],
+      "description": "Accessible controlled playback and manual sequence stepping",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "intro": {
+            "type": "boolean"
+          },
+          "labels": {
+            "type": "object",
+            "properties": {
+              "play": {
+                "type": "string"
+              },
+              "pause": {
+                "type": "string"
+              },
+              "replay": {
+                "type": "string"
+              },
+              "skip": {
+                "type": "string"
+              },
+              "previous": {
+                "type": "string"
+              },
+              "next": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "playing": {
+            "type": "boolean"
+          },
+          "reducedMotion": {
+            "type": "boolean"
+          },
+          "step": {
+            "type": "number"
+          },
+          "stepLabel": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "playing"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onNext",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPlayPause",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onPrev",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onReplay",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSkip",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.sequence-reveal",
+      "version": 1,
+      "export": "@ensured/xds/components/SequenceReveal",
+      "fieldTypes": [],
+      "description": "Progressively enhanced ordered sequence with reduced-motion support",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "distance": {
+            "type": "number",
+            "description": "Scroll distance over which an item settles, as a fraction of viewport height."
+          },
+          "label": {
+            "type": "string"
+          },
+          "reducedMotion": {
+            "type": "boolean"
+          },
+          "stagger": {
+            "type": "number",
+            "description": "Distance between items' scroll positions, as a fraction of viewport height."
+          }
+        }
+      },
+      "excludedProps": [
+        {
+          "name": "children",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "onDone",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.risk-globe",
+      "version": 1,
+      "export": "@ensured/xds/components/RiskGlobe",
+      "fieldTypes": [],
+      "description": "One scroll-driven globe renderer with a readable static fallback",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "caption": {
+            "type": "string"
+          },
+          "className": {
+            "type": "string"
+          },
+          "fallback": {
+            "type": "boolean",
+            "description": "Force the readable static fallback (e.g. WebGL unavailable)."
+          },
+          "markers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "longitude": {
+                  "type": "number"
+                },
+                "latitude": {
+                  "type": "number"
+                },
+                "kind": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "origin"
+                    },
+                    {
+                      "type": "string",
+                      "const": "provider"
+                    }
+                  ]
+                },
+                "matched": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "label",
+                "longitude",
+                "latitude",
+                "kind"
+              ]
+            }
+          },
+          "paused": {
+            "type": "boolean"
+          },
+          "progress": {
+            "type": "number",
+            "description": "Normalized native-scroll progress for the combined hero and film (0..1)."
+          },
+          "quality": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "auto"
+              },
+              {
+                "type": "string",
+                "const": "low"
+              },
+              {
+                "type": "string",
+                "const": "high"
+              }
+            ]
+          },
+          "reducedMotion": {
+            "type": "boolean"
+          },
+          "seat": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "broker"
+              },
+              {
+                "type": "string",
+                "const": "everyone"
+              },
+              {
+                "type": "string",
+                "const": "underwriter"
+              },
+              {
+                "type": "string",
+                "const": "capacity"
+              }
+            ]
+          }
+        },
+        "required": [
+          "progress"
+        ]
+      },
+      "excludedProps": []
+    },
+    {
+      "id": "xds.input-string",
+      "version": 1,
+      "export": "@ensured/xds/components/InputString",
+      "fieldTypes": [],
+      "description": "Controlled, keyboard-operable illustrative sentence input with gated flows",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "flows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "steps": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "const": "single"
+                          },
+                          {
+                            "type": "string",
+                            "const": "multi"
+                          },
+                          {
+                            "type": "string",
+                            "const": "action"
+                          }
+                        ]
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "label": {
+                              "type": "string"
+                            },
+                            "tag": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "id",
+                            "label"
+                          ]
+                        }
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "label",
+                      "type"
+                    ]
+                  }
+                },
+                "disabled": {
+                  "type": "boolean"
+                },
+                "notice": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "label",
+                "steps"
+              ]
+            }
+          }
+        },
+        "required": [
+          "flows"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "onChange",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onComplete",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onFlowChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "renderResult",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "value",
+          "required": true,
+          "reason": "Owned by the UI renderer/data binding"
+        }
+      ]
+    },
+    {
+      "id": "xds.scroll-film",
+      "version": 1,
+      "export": "@ensured/xds/components/ScrollFilm",
+      "fieldTypes": [],
+      "description": "Native-scroll scene composition with one persistent visual and accessible detail sheets",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "reducedMotion": {
+            "type": "boolean"
+          }
+        }
+      },
+      "excludedProps": [
+        {
+          "name": "hero",
+          "required": true,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "renderVisual",
+          "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "seatControl",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "shots",
+          "required": true,
+          "reason": "Non-JSON type"
         }
       ]
     }
