@@ -337,6 +337,15 @@ Empty values (`null`, `undefined` or `''`) show "—", which is hidden from scre
 
 See **Data Display/DataTable** in Storybook.
 
+## Kanban boards: confirm before a move, card controls
+
+`KanbanBoard` never wraps `renderCard` output in an interactive element, so cards can hold links, buttons and menus. Each lane is a list item labelled by its heading (`headingLevel`, default 3), which includes the count ("Triage (2 items)").
+
+- `onMoveRequest(itemId, toStageKey)` runs before every move. Return or resolve `false` to veto it (for example when the underwriter cancels a confirmation); a rejected promise is also a veto. Without it, moves apply at once, as before.
+- `renderCard(item, { requestMove, movePending })`: call `requestMove(stageKey)` from the card's button or menu so keyboard and single-pointer users can move cards (WCAG 2.5.7). The card is `aria-busy` while a request is unsettled.
+- Lane `tag` (a neutral badge, e.g. "Decision"), `subheading` (the statuses in the lane) and `dropPreview` (text shown while a card is dragged over the lane).
+- `draggable={false}` turns pointer drag off; `emptyLabel` and `ariaLabel` set the copy.
+
 ## Submission status badges
 
 Use `statusTone(status)` to pick the `Badge` tone for a submission status, so the Kanban and Table views agree. Always render the status label as the badge text: the tone is never the only signal.
