@@ -61,6 +61,7 @@ export type KanbanBoardProps = {
 };
 
 const Board = styled.div`
+  position: relative;
   display: flex;
   gap: ${spacing.md}px;
   align-items: flex-start;
