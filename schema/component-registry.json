@@ -666,6 +666,14 @@
       "kind": "display",
       "fieldTypes": [],
       "description": "Polite role=status toast with one optional action (e.g. Undo): a persistent live region, 10 s timer that pauses on hover or focus, never takes focus, one message at a time; the error tone stays until dismissed."
+    },
+    {
+      "id": "xds.radio-group",
+      "version": 1,
+      "export": "@ensured/xds/components/RadioGroup",
+      "kind": "field",
+      "fieldTypes": [],
+      "description": "Fieldset with a visible legend and native radios, each with a label and optional description; no default selection, controlled (value or null) or uncontrolled, disabled options keep their reason, hint and error linked to the fieldset."
     }
   ],
   "policyVersion": 1,

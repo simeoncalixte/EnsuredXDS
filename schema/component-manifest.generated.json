@@ -36736,6 +36736,90 @@
           "reason": "Function or constructor supplied by the UI"
         }
       ]
+    },
+    {
+      "id": "xds.radio-group",
+      "version": 1,
+      "export": "@ensured/xds/components/RadioGroup",
+      "kind": "field",
+      "fieldTypes": [],
+      "description": "Fieldset with a visible legend and native radios, each with a label and optional description; no default selection, controlled (value or null) or uncontrolled, disabled options keep their reason, hint and error linked to the fieldset.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "disabled": {
+            "type": "boolean",
+            "description": "Disables every option."
+          },
+          "id": {
+            "type": "string"
+          },
+          "legendHidden": {
+            "type": "boolean",
+            "description": "Visually hide the legend (it stays the accessible name). Use only when a heading already names the group."
+          },
+          "name": {
+            "type": "string",
+            "description": "Shared `name` of the native radios."
+          },
+          "orientation": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "horizontal"
+              },
+              {
+                "type": "string",
+                "const": "vertical"
+              }
+            ],
+            "description": "`vertical` (default) stacks options; `horizontal` lays them out in a wrapping row."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Marks the choice as required (native `required` on the radios, plus a visible \"Required\")."
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "error",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "hint",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "legend",
+          "required": true,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "onChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "options",
+          "required": true,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "value",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        }
+      ]
     }
   ],
   "policyVersion": 1,

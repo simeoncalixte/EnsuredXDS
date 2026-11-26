@@ -372,6 +372,40 @@ const StatusCell = ({ status, label, archived }: StatusCellProps) => (
 
 Matching ignores case and surrounding spaces. `SUBMISSION_SYSTEM_STATUSES` and `isSubmissionSystemStatus()` are exported too. The `archived` variant shows an archive icon (hidden from screen readers) and the text "Archived" unless you pass your own text. Badge text keeps at least 4.5:1 contrast in the light and dark themes; `primary` badge text uses `primarySoft` for this. See **Feedback/Badge** in Storybook.
 
+## Radio groups
+
+`RadioGroup` (`xds.radio-group`) is a `fieldset` with a visible `legend` and native radios. Each option has a label and an optional description. Nothing is selected until the person chooses:
+
+```tsx
+const [decision, setDecision] = useState<string | null>(null);
+
+<RadioGroup
+  name="decision"
+  legend="Decision for SUB-8401"
+  required
+  value={decision}
+  onChange={setDecision}
+  error={showError ? 'Choose Approve or Decline.' : undefined}
+  options={[
+    {
+      value: 'approve',
+      label: 'Approve',
+      description: 'Not priced yet. Price SUB-8401 before approving.',
+      disabled: true,
+    },
+    { value: 'decline', label: 'Decline', description: 'You will be asked for a reason.' },
+  ]}
+/>;
+```
+
+- `value={null}` is controlled with nothing selected; leave `value` undefined for an uncontrolled group. There is never a default selection.
+- Native radio keyboard behaviour: Tab enters the group, arrow keys move and select, Tab leaves.
+- Option descriptions link to their radio with `aria-describedby`. A disabled option keeps its description at full contrast, so the reason is readable.
+- `hint` and `error` link to the fieldset with `aria-describedby`. The error has an icon and a hidden "Error:" prefix, so it is never shown by colour alone.
+- `orientation="horizontal"` lays options out in a wrapping row; `legendHidden` hides the legend visually but keeps it as the group name.
+
+See **Form Elements/RadioGroup** in Storybook.
+
 ## Status toasts
 
 `StatusToast` (`xds.status-toast`) shows one polite status message with at most one action, such as "SUB-8401 moved from New to Triage." with Undo. Mount it once, after the main content, and pass the current message:
