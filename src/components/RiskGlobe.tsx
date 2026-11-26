@@ -42,10 +42,10 @@ const Stage = styled.div`
   min-width: 0;
   height: clamp(350px, calc(100vh - 180px), 900px);
   @media (min-width: 600px) and (max-width: 1099px) {
-    height: 58vh;
+    height: var(--film-page-stage-height, 58vh);
   }
   @media (max-width: 599px) {
-    height: clamp(240px, 46vh, 440px);
+    height: var(--film-page-stage-height, clamp(240px, 46vh, 440px));
   }
   overflow: hidden;
   background: ${colors.surface};

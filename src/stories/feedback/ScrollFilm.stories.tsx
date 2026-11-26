@@ -251,6 +251,8 @@ export const ResponsiveDetails: Story = {
 export const StaticFallback: Story = {
   args: {
     staticFallback: true,
+    narrowVisualPlacement: 'inline',
+    narrowPagination: true,
     shots: shots.map((shot) => ({
       ...shot,
       posterSrc:
@@ -350,6 +352,115 @@ export const InlineNarrowJourney: Story = {
     }
     await expect(canvasElement.querySelector('canvas')).toBe(canvas);
     await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
+  },
+};
+
+export const PageScrollJourney: Story = {
+  ...InlineNarrowJourney,
+  args: { ...InlineNarrowJourney.args, narrowPagination: true },
+  render: (args) => (
+    <>
+      <header style={{ minHeight: 180 }}>Synthetic host header</header>
+      <ScrollFilm {...args} renderVisual={(frame) => <RiskGlobe {...frame} showLegend={false} />} />
+      <footer style={{ minHeight: 300 }}>Synthetic host footer</footer>
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = canvasElement.querySelector('canvas');
+    await waitFor(() => expect(canvas).toHaveAttribute('data-renderer-ready', 'true'), {
+      timeout: 15000,
+    });
+    const first = document.getElementById('mechanics')!;
+    const next = document.getElementById('reserves')!;
+    if (innerWidth < 1100) {
+      const root = canvasElement.querySelector<HTMLElement>('[data-film-pagination="pages"]')!;
+      first.scrollIntoView({ block: 'start' });
+      await waitFor(() =>
+        expect(getComputedStyle(document.documentElement).scrollSnapType).toBe('y mandatory'),
+      );
+      const readingTop = parseFloat(root.style.getPropertyValue('--film-reading-top'));
+      await expect(first.getBoundingClientRect().height).toBeGreaterThanOrEqual(
+        innerHeight - readingTop - 1,
+      );
+      const slot = first.querySelector<HTMLElement>('[data-film-visual-slot]')!;
+      await expect(slot.getBoundingClientRect().top).toBeGreaterThan(
+        first.getBoundingClientRect().top,
+      );
+      await expect(slot.getBoundingClientRect().bottom).toBeLessThan(
+        first.getBoundingClientRect().bottom,
+      );
+      window.scrollBy(0, first.getBoundingClientRect().height * 0.8);
+      await waitFor(() =>
+        expect(Math.abs(next.getBoundingClientRect().top - readingTop)).toBeLessThan(2),
+      );
+      window.scrollBy(0, -first.getBoundingClientRect().height * 0.8);
+      await waitFor(() =>
+        expect(Math.abs(first.getBoundingClientRect().top - readingTop)).toBeLessThan(2),
+      );
+      await userEvent.click(
+        within(canvasElement).getByRole('button', { name: 'View example source fields' }),
+      );
+      await expect(within(document.body).getByRole('dialog')).toBeVisible();
+      await expect(getComputedStyle(document.documentElement).scrollSnapType).toBe('none');
+      await userEvent.keyboard('{Escape}');
+      await expect(
+        within(canvasElement).getByRole('button', { name: 'View example source fields' }),
+      ).toHaveFocus();
+    } else {
+      await expect(getComputedStyle(document.documentElement).scrollSnapType).toBe('none');
+      await expect(
+        getComputedStyle(canvasElement.querySelector('[data-film-visual]')!).position,
+      ).toBe('sticky');
+    }
+    await expect(canvasElement.querySelector('canvas')).toBe(canvas);
+    await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
+    window.scrollTo(0, 0);
+    await waitFor(() => expect(window.scrollY).toBe(0));
+    const footer = within(canvasElement).getByText('Synthetic host footer');
+    footer.scrollIntoView({ block: 'end' });
+    await waitFor(() =>
+      expect(footer.getBoundingClientRect().bottom).toBeLessThanOrEqual(innerHeight + 1),
+    );
+    await waitFor(() =>
+      expect(getComputedStyle(document.documentElement).scrollSnapType).toBe('none'),
+    );
+  },
+};
+
+export const OverflowingPage: Story = {
+  ...PageScrollJourney,
+  args: {
+    ...PageScrollJourney.args,
+    shots: shots.map((shot) => ({
+      ...shot,
+      beats: shot.beats.map((beat) => ({
+        ...beat,
+        content: (
+          <>
+            <p>
+              {Array(4)
+                .fill(
+                  'This synthetic example keeps the full explanation readable when text is enlarged or the viewport is short.',
+                )
+                .join(' ')}
+            </p>
+            {beat.content}
+          </>
+        ),
+      })),
+    })),
+  },
+  play: async ({ canvasElement }) => {
+    const target = document.getElementById('mechanics-beat-3')!;
+    target.scrollIntoView({ block: 'start' });
+    target.focus({ preventScroll: true });
+    await waitFor(() => expect(target.getBoundingClientRect().top).toBeGreaterThanOrEqual(0));
+    await expect(target.getBoundingClientRect().bottom).toBeLessThanOrEqual(innerHeight);
+    await expect(target).toHaveFocus();
+    await expect(
+      within(canvasElement).getByText('A broker confirms the values before sharing.'),
+    ).toBeVisible();
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
   },
 };
