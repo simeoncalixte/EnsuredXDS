@@ -8119,6 +8119,10 @@
           "accessKey": {
             "type": "string"
           },
+          "announceDelay": {
+            "type": "number",
+            "description": "Milliseconds after the last keystroke before the count is announced. Default 750."
+          },
           "aria-activedescendant": {
             "type": "string",
             "description": "Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application."
@@ -8990,6 +8994,10 @@
           "lang": {
             "type": "string"
           },
+          "limitReachedText": {
+            "type": "string",
+            "description": "Visible text added after the count when it reaches `maxLength`. Default \"limit reached\"."
+          },
           "maxLength": {
             "type": "number"
           },
@@ -9080,6 +9088,10 @@
           "security": {
             "type": "string"
           },
+          "showCount": {
+            "type": "boolean",
+            "description": "Show a visible \"n / max\" character count under the field. Needs `maxLength`.\nThe count is linked to the textarea with aria-describedby, and a polite live\nregion announces it after typing pauses (not on every keystroke)."
+          },
           "slot": {
             "type": "string"
           },
@@ -9160,6 +9172,11 @@
           "name": "children",
           "required": false,
           "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "countAnnouncement",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
         },
         {
           "name": "dangerouslySetInnerHTML",
