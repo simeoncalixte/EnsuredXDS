@@ -90,3 +90,13 @@ export type { SequenceRevealProps } from './components/SequenceReveal.js';
 
 export { default as RiskGlobe } from './components/RiskGlobe.js';
 export type { RiskGlobeProps, GlobeMarker, GlobeSeat } from './components/RiskGlobe.js';
+
+export { default as InputString } from './components/InputString.js';
+export type {
+  InputStringProps,
+  InputStringFlow,
+  InputStringStep,
+  InputStringOption,
+  InputStringValue,
+  InputStringResult,
+} from './components/InputString.js';
