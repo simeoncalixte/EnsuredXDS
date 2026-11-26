@@ -87,3 +87,6 @@ export type { PlaybackControlsProps } from './components/PlaybackControls.js';
 
 export { default as SequenceReveal } from './components/SequenceReveal.js';
 export type { SequenceRevealProps } from './components/SequenceReveal.js';
+
+export { default as RiskGlobe } from './components/RiskGlobe.js';
+export type { RiskGlobeProps, GlobeMarker, GlobeSeat } from './components/RiskGlobe.js';

@@ -36950,6 +36950,122 @@
           "reason": "Function or constructor supplied by the UI"
         }
       ]
+    },
+    {
+      "id": "xds.risk-globe",
+      "version": 1,
+      "export": "@ensured/xds/components/RiskGlobe",
+      "fieldTypes": [],
+      "description": "One scroll-driven globe renderer with a readable static fallback",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "caption": {
+            "type": "string"
+          },
+          "className": {
+            "type": "string"
+          },
+          "fallback": {
+            "type": "boolean",
+            "description": "Force the readable static fallback (e.g. WebGL unavailable)."
+          },
+          "markers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "longitude": {
+                  "type": "number"
+                },
+                "latitude": {
+                  "type": "number"
+                },
+                "kind": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "origin"
+                    },
+                    {
+                      "type": "string",
+                      "const": "provider"
+                    }
+                  ]
+                },
+                "matched": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "label",
+                "longitude",
+                "latitude",
+                "kind"
+              ]
+            }
+          },
+          "paused": {
+            "type": "boolean"
+          },
+          "progress": {
+            "type": "number",
+            "description": "Normalized native-scroll progress for the combined hero and film (0..1)."
+          },
+          "quality": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "auto"
+              },
+              {
+                "type": "string",
+                "const": "low"
+              },
+              {
+                "type": "string",
+                "const": "high"
+              }
+            ]
+          },
+          "reducedMotion": {
+            "type": "boolean"
+          },
+          "seat": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "broker"
+              },
+              {
+                "type": "string",
+                "const": "everyone"
+              },
+              {
+                "type": "string",
+                "const": "underwriter"
+              },
+              {
+                "type": "string",
+                "const": "capacity"
+              }
+            ]
+          }
+        },
+        "required": [
+          "progress"
+        ]
+      },
+      "excludedProps": []
     }
   ],
   "policyVersion": 1,

@@ -601,3 +601,17 @@ motion-duration/easing tokens; durations collapse to zero under reduced motion.
 `PlaybackControls` is controlled and does not run a clock. A scroll-driven host
 uses its callbacks to pause the visual response or navigate to a specific step.
 It must not interpret Play/Replay as permission for timed homepage autoplay.
+
+### RiskGlobe (AIN-275, implementation in progress)
+
+`RiskGlobe` takes a normalized `progress` value from the host's native scroll
+position. Hero and film share this one instance and WebGL context. The renderer
+has no clock: it draws only when progress/seat/markers, size or visibility change.
+`paused` freezes the last accepted frame; resuming uses current scroll progress.
+Reduced motion selects static shot states. WebGL initialization errors or context
+loss preserve the static SVG and readable HTML step legend.
+
+The land sample is derived from Natural Earth 110m public-domain topology, using
+a two-degree longitude/latitude grid. The current film camera and scene objects
+are an initial implementation; full page composition, labels/choreography against
+the approved storyboard, accessibility and performance acceptance remain open.
