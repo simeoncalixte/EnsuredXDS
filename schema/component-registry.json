@@ -658,6 +658,14 @@
       "kind": "action",
       "fieldTypes": [],
       "description": "APG menu button: a trigger that opens a menu of commands, labelled groups and a single-choice menuitemradio list (e.g. Move to a status), with arrow keys, Home/End, typeahead and Esc."
+    },
+    {
+      "id": "xds.status-toast",
+      "version": 1,
+      "export": "@ensured/xds/components/StatusToast",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Polite role=status toast with one optional action (e.g. Undo): a persistent live region, 10 s timer that pauses on hover or focus, never takes focus, one message at a time; the error tone stays until dismissed."
     }
   ],
   "policyVersion": 1,
