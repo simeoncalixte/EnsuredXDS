@@ -20097,6 +20097,43 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "ariaLabel": {
+            "type": "string",
+            "description": "Accessible name of the board. Defaults to \"Kanban board\"."
+          },
+          "draggable": {
+            "type": "boolean",
+            "description": "Allow pointer drag and drop. Defaults to true. Moving through the card's own controls always works."
+          },
+          "emptyLabel": {
+            "type": "string",
+            "description": "Text for an empty lane. Defaults to \"Drop cards here\" when draggable, otherwise \"No items\"."
+          },
+          "headingLevel": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 3
+              },
+              {
+                "type": "number",
+                "const": 4
+              },
+              {
+                "type": "number",
+                "const": 5
+              },
+              {
+                "type": "number",
+                "const": 6
+              }
+            ],
+            "description": "Heading level of each lane heading. Defaults to 3."
+          },
           "items": {
             "type": "array",
             "items": {
@@ -20129,6 +20166,18 @@
                 },
                 "accent": {
                   "type": "string"
+                },
+                "tag": {
+                  "type": "string",
+                  "description": "Short lane tag shown as a neutral badge beside the heading, e.g. \"Decision\"."
+                },
+                "subheading": {
+                  "type": "string",
+                  "description": "Line under the lane heading, e.g. the statuses the lane holds: \"Referred, Approved, Declined\"."
+                },
+                "dropPreview": {
+                  "type": "string",
+                  "description": "Text shown in the lane while a card is dragged over it. Defaults to \"Drop to move to {label}\".\nUse it to say what happens next, e.g. \"Drop to choose a decision: Approve or Decline\"."
                 }
               },
               "additionalProperties": false,
@@ -20148,6 +20197,11 @@
         {
           "name": "onMoveItem",
           "required": true,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMoveRequest",
+          "required": false,
           "reason": "Function or constructor supplied by the UI"
         },
         {
@@ -33845,13 +33899,46 @@
       "export": "@ensured/xds/components/Modal",
       "kind": "layout",
       "fieldTypes": [],
-      "description": "Dialog for a form or section; the renderer supplies body, footer and close behavior.",
+      "description": "Dialog for a form or section, with an alertdialog confirmation mode (initial focus on the safe action, consequence description, submitting and error states); the renderer supplies body, footer and close behavior.",
       "propsSchema": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "ariaLabel": {
+            "type": "string",
+            "description": "Accessible name when there is no visible `title`."
+          },
+          "closeOnEscape": {
+            "type": "boolean",
+            "description": "Esc calls `onClose` (acts as Cancel). Default true. Ignored while `submitting`."
+          },
+          "closeOnScrimClick": {
+            "type": "boolean",
+            "description": "Clicking the scrim calls `onClose`. Default true for `dialog`, false for `alertdialog`."
+          },
+          "describedBy": {
+            "type": "string",
+            "description": "Id of the element (usually inside `children`) that states the consequence."
+          },
           "open": {
             "type": "boolean"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "alertdialog"
+              }
+            ],
+            "description": "`alertdialog` is for confirming irreversible or superseding actions (supersede a\nsent quote, accept or decline terms, bind). It defaults `closeOnScrimClick` to\nfalse. Pair it with `describedBy` and an `initialFocusRef` on the safe action."
+          },
+          "submitting": {
+            "type": "boolean",
+            "description": "The action is in flight: sets `aria-busy`, disables the close button and ignores\nEsc and scrim clicks. The caller disables its footer buttons and sets the\nin-progress label (for example \"Superseding…\")."
           },
           "title": {
             "type": "string"
@@ -33871,12 +33958,27 @@
           "reason": "Owned by the UI renderer/data binding"
         },
         {
+          "name": "error",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
           "name": "footer",
           "required": false,
           "reason": "Non-JSON type"
         },
         {
+          "name": "initialFocusRef",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
           "name": "onClose",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "returnFocusRef",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
         }
@@ -36300,6 +36402,336 @@
       "excludedProps": [
         {
           "name": "onRetry",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.banner",
+      "version": 1,
+      "export": "@ensured/xds/components/Banner",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Page-level notice (info, warning or neutral) with a title, body, optional action and dismiss; a polite status, never an alert.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "dismissible": {
+            "type": "boolean",
+            "description": "Shows a dismiss button. Prefer a controlled banner (`open` + `onDismiss`) and move focus to the nearest heading or the next control, because the button unmounts on dismiss."
+          },
+          "dismissLabel": {
+            "type": "string",
+            "description": "Accessible name of the dismiss button. Defaults to \"Dismiss notice\", plus the title when there is one."
+          },
+          "open": {
+            "type": "boolean",
+            "description": "Controlled visibility. Leave it unset to let the banner hide itself after dismissal."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short, bold first line. Also names the banner for assistive technology."
+          },
+          "tone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "warning"
+              },
+              {
+                "type": "string",
+                "const": "info"
+              },
+              {
+                "type": "string",
+                "const": "neutral"
+              }
+            ],
+            "description": "Sets the icon, accent stripe and hidden tone prefix. Defaults to `info`."
+          },
+          "toneLabel": {
+            "type": "string",
+            "description": "Overrides the hidden tone prefix (\"Information\", \"Warning\" or \"Notice\")."
+          }
+        }
+      },
+      "excludedProps": [
+        {
+          "name": "action",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "children",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "onDismiss",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.callout-panel",
+      "version": 1,
+      "export": "@ensured/xds/components/CalloutPanel",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Two-column \"what it is / what it isn't\" panel with a title and two real lists; meaning carried by headings, never icons or colour.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "emptyLabel": {
+            "type": "string",
+            "description": "Shown in a column that has no statements. Defaults to \"Nothing listed yet\"."
+          },
+          "headingLevel": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 3
+              },
+              {
+                "type": "number",
+                "const": 4
+              }
+            ],
+            "description": "Heading level of the panel title, so it fits the page outline. Columns use the next level. Defaults to 2."
+          },
+          "isLabel": {
+            "type": "string",
+            "description": "Heading of the \"is\" column. Defaults to \"What it is\"."
+          },
+          "isntLabel": {
+            "type": "string",
+            "description": "Heading of the \"isn't\" column. Defaults to \"What it isn't\"."
+          },
+          "items": {
+            "type": "object",
+            "properties": {
+              "is": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Statements for the \"is\" column, e.g. \"A place to structure and check submissions\"."
+              },
+              "isnt": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Statements for the \"isn't\" column, e.g. \"An insurer, broker or carrier\"."
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "is",
+              "isnt"
+            ],
+            "description": "The two lists. Each column renders as a real `ul`."
+          },
+          "title": {
+            "type": "string",
+            "description": "Panel heading, e.g. \"What the platform is and isn't\". Also names the region."
+          }
+        },
+        "required": [
+          "items",
+          "title"
+        ]
+      },
+      "excludedProps": []
+    },
+    {
+      "id": "xds.menu-button",
+      "version": 1,
+      "export": "@ensured/xds/components/MenuButton",
+      "kind": "action",
+      "fieldTypes": [],
+      "description": "APG menu button: a trigger that opens a menu of commands, labelled groups and a single-choice menuitemradio list (e.g. Move to a status), with arrow keys, Home/End, typeahead and Esc.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "defaultOpen": {
+            "type": "boolean",
+            "description": "Opens on first render (for stories and visual tests)."
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string",
+            "description": "Accessible name of the trigger, e.g. \"More actions for SUB-8405\". Also names the menu."
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "bottom-start"
+              },
+              {
+                "type": "string",
+                "const": "bottom-end"
+              },
+              {
+                "type": "string",
+                "const": "top-start"
+              },
+              {
+                "type": "string",
+                "const": "top-end"
+              }
+            ],
+            "description": "Preferred side. The menu flips when it would leave the viewport. Defaults to `bottom-end`."
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "sm"
+              },
+              {
+                "type": "string",
+                "const": "md"
+              }
+            ]
+          },
+          "triggerText": {
+            "type": "string",
+            "description": "Visible trigger text. When omitted the trigger is an icon-only \"more\" button. Keep the visible text inside `label` (WCAG 2.5.3)."
+          }
+        },
+        "required": [
+          "label"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "items",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onOpenChange",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "radioGroup",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.status-toast",
+      "version": 1,
+      "export": "@ensured/xds/components/StatusToast",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Polite role=status toast with one optional action (e.g. Undo): a persistent live region, 10 s timer that pauses on hover or focus, never takes focus, one message at a time; the error tone stays until dismissed.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "closeLabel": {
+            "type": "string",
+            "description": "Accessible name of the close button. Defaults to \"Dismiss message\"."
+          },
+          "duration": {
+            "type": "number",
+            "description": "Milliseconds before a neutral toast dismisses itself. Defaults to 10000. The timer pauses\nwhile the toast is hovered or has focus (WCAG 2.2.1). Pass 0 to keep it until dismissed.\nThe error tone ignores this and stays until dismissed."
+          },
+          "errorPrefix": {
+            "type": "string",
+            "description": "Hidden prefix read before an error message. Defaults to \"Error:\"."
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "The message, e.g. \"SUB-8401 moved from New to Triage.\". When empty, nothing is shown but the\n`role=\"status\"` region stays mounted, so the next message is announced."
+          },
+          "messageId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "description": "Identifies one message. A new id replaces the current toast and restarts its timer, even when\nthe text is the same (e.g. two moves of the same submission). Defaults to the message text."
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "inline"
+              },
+              {
+                "type": "string",
+                "const": "fixed"
+              }
+            ],
+            "description": "`fixed` (default) pins the toast to the bottom centre of the viewport, above modals.\n`inline` renders it in the normal flow, for previews and tests."
+          },
+          "tone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "neutral"
+              },
+              {
+                "type": "string",
+                "const": "error"
+              }
+            ],
+            "description": "`error` stays until dismissed, shows a close button and a hidden \"Error:\" prefix."
+          }
+        }
+      },
+      "excludedProps": [
+        {
+          "name": "action",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onDismiss",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "returnFocusRef",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
         }
