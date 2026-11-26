@@ -41,7 +41,7 @@ export type ScrollFilmProps = {
 };
 const PageSnap = createGlobalStyle`
   @media (max-width: 1099px) and (prefers-reduced-motion: no-preference) {
-    html:has([data-film-pagination='pages'][data-film-snap-active='true']):not(:has([role='dialog'])) {
+    html:has([data-film-pagination='pages'][data-film-snap-active='true']:not([data-film-target-navigation='true'])):not(:has([role='dialog'])) {
       scroll-snap-type: y mandatory;
     }
   }
@@ -309,6 +309,37 @@ export default function ScrollFilm({
     (reducedMotion || staticFallback || !enhanced) && shots.every((shot) => shot.posterSrc);
   const inlineVisual = narrowVisualPlacement === 'inline' && !staticStory;
   const pages = narrowPagination && inlineVisual && !reducedMotion && !staticFallback;
+  // Explicit semantic targets must remain visible even between native page stops.
+  const allowTargetScroll = () => {
+    if (pages && window.innerWidth < 1100 && rootNode.current) {
+      rootNode.current.dataset.filmTargetNavigation = 'true';
+    }
+  };
+  useEffect(() => {
+    if (!pages) return;
+    const resumeSnap = () => {
+      delete rootNode.current?.dataset.filmTargetNavigation;
+    };
+    const resumeForKey = (event: KeyboardEvent) => {
+      if (
+        event.target instanceof HTMLElement &&
+        event.target.closest(
+          'input, textarea, select, button, a, [contenteditable], [role="dialog"]',
+        )
+      )
+        return;
+      if (['PageDown', 'PageUp', 'ArrowDown', 'ArrowUp', 'Home', 'End', ' '].includes(event.key))
+        resumeSnap();
+    };
+    window.addEventListener('wheel', resumeSnap, { passive: true });
+    window.addEventListener('touchmove', resumeSnap, { passive: true });
+    window.addEventListener('keydown', resumeForKey);
+    return () => {
+      window.removeEventListener('wheel', resumeSnap);
+      window.removeEventListener('touchmove', resumeSnap);
+      window.removeEventListener('keydown', resumeForKey);
+    };
+  }, [pages]);
   const count = 1 + shots.reduce((sum, s) => sum + s.beats.length, 0);
   const beatCounts = shots.map((s) => s.beats.length).join(',');
   useEffect(() => {
@@ -413,6 +444,7 @@ export default function ScrollFilm({
     const bounded = Math.max(0, Math.min(count - 1, index));
     const node = nodes.current[bounded];
     if (!node) return;
+    allowTargetScroll();
     node.scrollIntoView({ behavior: 'auto', block: 'start' });
     setActive(bounded);
     const heading = node.querySelector<HTMLElement>('h1,h2,h3');
@@ -482,6 +514,7 @@ export default function ScrollFilm({
         event.preventDefault();
         setReturnTarget(id!);
         setReturnDetail(currentShot);
+        allowTargetScroll();
         target.scrollIntoView({ behavior: 'auto', block: 'start' });
         target.focus({ preventScroll: true });
       }}
@@ -652,10 +685,12 @@ export default function ScrollFilm({
             const target = id ? document.getElementById(id) : null;
             if (!target) return;
             event.preventDefault();
+            allowTargetScroll();
             setReturnTarget(id!);
             setReturnDetail(detail);
             setDetail(null);
             requestAnimationFrame(() => {
+              allowTargetScroll();
               target.scrollIntoView({ behavior: 'auto', block: 'start' });
               target.setAttribute('tabindex', '-1');
               target.focus({ preventScroll: true });
