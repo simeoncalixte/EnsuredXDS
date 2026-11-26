@@ -634,6 +634,22 @@
       "kind": "display",
       "fieldTypes": [],
       "description": "Incoming and bound expected loss ratios compared with aggregated ultimate claims, including actuarial evidence."
+    },
+    {
+      "id": "xds.banner",
+      "version": 1,
+      "export": "@ensured/xds/components/Banner",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Page-level notice (info, warning or neutral) with a title, body, optional action and dismiss; a polite status, never an alert."
+    },
+    {
+      "id": "xds.callout-panel",
+      "version": 1,
+      "export": "@ensured/xds/components/CalloutPanel",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Two-column \"what it is / what it isn't\" panel with a title and two real lists; meaning carried by headings, never icons or colour."
     }
   ],
   "policyVersion": 1,
