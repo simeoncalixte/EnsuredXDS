@@ -97,6 +97,8 @@ export const WithEmptyLane: Story = {
 export const InteractionRendersLanesAndCards: Story = {
   render: () => <Stateful />,
   play: async ({ canvasElement }) => {
+    // Hidden lane-count text must stay inside the board's scroll container (AIN-353).
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
     const canvas = within(canvasElement);
 
     // Every stage label is present
