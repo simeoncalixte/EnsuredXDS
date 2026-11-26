@@ -80,6 +80,10 @@ const Visual = styled.div<{ $rows: number; $static: boolean }>`
     grid-row: 3;
     z-index: 2;
   }
+  @media (max-height: 650px) {
+    position: relative;
+    top: auto;
+  }
 `;
 const Shot = styled.section`
   grid-column: 1;
@@ -193,7 +197,9 @@ export default function ScrollFilm({
           ? Math.min(
               window.innerHeight - 100,
               (controlsNode.current?.getBoundingClientRect().height ?? 64) +
-                (visualNode.current?.getBoundingClientRect().height ?? 0) +
+                (window.innerHeight > 650
+                  ? (visualNode.current?.getBoundingClientRect().height ?? 0)
+                  : 0) +
                 16,
             )
           : 80;

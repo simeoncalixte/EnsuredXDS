@@ -356,7 +356,8 @@ export function createGlobeRenderer(
       candidates.unshift({
         id: 'decision-chip',
         text: chipText,
-        kind: chipText.startsWith('PLATFORM') ? 'platform' : 'person',
+        kind:
+          chipText.startsWith('PLATFORM') || chipText.startsWith('Pending') ? 'platform' : 'person',
         point: detailObject.clone().multiplyScalar(1.04),
       });
     if (shot >= 5 && frame.seat !== 'capacity') {
@@ -377,7 +378,7 @@ export function createGlobeRenderer(
       candidates.splice(chipText ? 1 : 0, 0, ...recordLabels);
     }
     for (const candidate of candidates) {
-      if (labels.length >= (window.innerWidth < 600 ? 6 : 10)) break;
+      if (labels.length >= (window.innerWidth < 600 ? 6 : 20)) break;
       if (candidate.point.clone().normalize().dot(camera.position.clone().normalize()) < 0.1)
         continue;
       const projected = candidate.point.clone().project(camera);
@@ -386,18 +387,26 @@ export function createGlobeRenderer(
           ? 44
           : Math.min(
               width - 24,
-              candidate.kind ? 280 : 240,
+              candidate.kind
+                ? frame.hasDetail && window.innerWidth >= 1100
+                  ? Math.max(
+                      100,
+                      Math.min(280, Math.max(cardLeft - 36, width - cardLeft - cardWidth - 36)),
+                    )
+                  : 280
+                : 240,
               Math.max(100, candidate.text.length * 7 + 16),
             );
       const labelHeight =
         candidate.kind === 'record'
           ? 44
           : Math.ceil((candidate.text.length * 7) / Math.max(1, labelWidth - 12)) * 19 + 6;
-      let x = Math.max(
-        12,
-        Math.min(width - labelWidth - 12, ((projected.x + 1) * width) / 2 - labelWidth / 2),
-      );
-      let y = Math.max(64, Math.min(height - 125, ((1 - projected.y) * height) / 2));
+      const anchorX = ((projected.x + 1) * width) / 2;
+      const anchorY = ((1 - projected.y) * height) / 2;
+      const baseX = Math.max(12, Math.min(width - labelWidth - 12, anchorX - labelWidth / 2));
+      const baseY = Math.max(64, Math.min(height - labelHeight - 16, anchorY));
+      let x = baseX,
+        y = baseY;
       const overlaps = () =>
         labels.some(
           (label) =>
@@ -406,26 +415,75 @@ export function createGlobeRenderer(
             x < label.x + (label.width ?? 100) + 24 &&
             x + labelWidth + 24 > label.x,
         );
-      if (overlaps()) y += labelHeight + 16;
-      if (overlaps() || y > height - 125) continue;
-      if (
-        frame.hasDetail &&
-        window.innerWidth >= 1100 &&
-        x + labelWidth > cardLeft - 24 &&
-        x < cardLeft + cardWidth + 24 &&
-        y + labelHeight > cardTop - 24 &&
-        y < cardTop + height * 0.65 + 24
-      ) {
-        if (candidate.kind === 'platform' || candidate.kind === 'person') {
+      const inCard = () =>
+        Boolean(
+          frame.hasDetail &&
+          window.innerWidth >= 1100 &&
+          x + labelWidth > cardLeft - 24 &&
+          x < cardLeft + cardWidth + 24 &&
+          y + labelHeight > cardTop - 24 &&
+          y < cardTop + height * 0.65 + 24,
+        );
+      const offsets =
+        candidate.kind === 'record'
+          ? [
+              [0, 0],
+              [0, 60],
+              [0, -60],
+              [0, 120],
+              [0, -120],
+              [-68, 60],
+              [68, 60],
+              [-136, 60],
+              [136, 60],
+              [-68, 120],
+              [68, 120],
+              [0, 180],
+              [0, -180],
+            ]
+          : [
+              [0, 0],
+              [0, labelHeight + 16],
+              [0, -labelHeight - 16],
+            ];
+      let placed = false;
+      for (const [dx, dy] of offsets) {
+        x = Math.max(12, Math.min(width - labelWidth - 12, baseX + dx));
+        y = Math.max(64, Math.min(height - labelHeight - 16, baseY + dy));
+        if (inCard() && (candidate.kind === 'platform' || candidate.kind === 'person')) {
           if (cardLeft > labelWidth + 36) x = cardLeft - labelWidth - 24;
-          else y = Math.max(12, cardTop - labelHeight - 24);
-        } else continue;
+          else if (width - cardLeft - cardWidth > labelWidth + 36) x = cardLeft + cardWidth + 24;
+          else if (cardTop - labelHeight - 24 >= 12) y = cardTop - labelHeight - 24;
+          else y = cardTop + height * 0.65 + 24;
+        }
+        if (!overlaps() && !inCard() && y + labelHeight <= height - 12) {
+          placed = true;
+          break;
+        }
       }
+      if (!placed && candidate.kind === 'record') {
+        const slots: { x: number; y: number; distance: number }[] = [];
+        for (let sy = 64; sy + 44 <= height - 16; sy += 60)
+          for (let sx = 12; sx + 44 <= width - 12; sx += 68)
+            slots.push({ x: sx, y: sy, distance: (sx - baseX) ** 2 + (sy - baseY) ** 2 });
+        slots.sort((a, b) => a.distance - b.distance);
+        for (const slot of slots) {
+          x = slot.x;
+          y = slot.y;
+          if (!overlaps() && !inCard()) {
+            placed = true;
+            break;
+          }
+        }
+      }
+      if (!placed) continue;
       labels.push({
         id: candidate.id,
         text: candidate.text,
         x,
         y,
+        anchorX,
+        anchorY,
         width: labelWidth,
         height: labelHeight,
         kind: candidate.kind,

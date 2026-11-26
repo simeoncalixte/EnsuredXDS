@@ -310,6 +310,30 @@ export default function RiskGlobe({
         />
         {ready && !fallback && (
           <div data-film-detail>
+            <svg
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                pointerEvents: 'none',
+              }}
+            >
+              {labels
+                .filter((label) => label.kind === 'record')
+                .map((label) => (
+                  <line
+                    key={label.id}
+                    x1={label.anchorX}
+                    y1={label.anchorY}
+                    x2={label.x + 22}
+                    y2={label.y + 22}
+                    stroke={colors.outlineVariant}
+                    strokeDasharray="3 3"
+                  />
+                ))}
+            </svg>
             {labels
               .filter((label) => label.id !== 'detail-anchor')
               .map((label) =>

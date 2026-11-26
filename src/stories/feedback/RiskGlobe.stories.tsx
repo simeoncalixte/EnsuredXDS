@@ -200,7 +200,20 @@ export const ProjectedRecord: Story = {
       () => expect(c.getAllByRole('link', { name: /Example record/ }).length).toBeGreaterThan(0),
       { timeout: 15000 },
     );
+    if (window.innerWidth >= 1100)
+      await expect(c.getAllByRole('link', { name: /Example record/ })).toHaveLength(10);
     await userEvent.click(c.getAllByRole('link', { name: /Example record/ })[0]);
     await expect(c.getByRole('heading', { name: 'Example record destination' })).toHaveFocus();
+  },
+};
+
+export const ProjectedRecordWithDetails: Story = {
+  ...ProjectedRecord,
+  args: {
+    ...ProjectedRecord.args,
+    detail: {
+      title: 'Example record summary',
+      content: <p>All ten numbered decisions remain reachable while the detail card is visible.</p>,
+    },
   },
 };

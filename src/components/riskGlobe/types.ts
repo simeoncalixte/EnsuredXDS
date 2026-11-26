@@ -30,6 +30,8 @@ export type GlobeLabel = {
   text: string;
   x: number;
   y: number;
+  anchorX?: number;
+  anchorY?: number;
   width?: number;
   height?: number;
   kind?: 'platform' | 'person' | 'record';
