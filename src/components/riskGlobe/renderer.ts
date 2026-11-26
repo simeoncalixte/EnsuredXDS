@@ -65,6 +65,52 @@ export function createGlobeRenderer(
     Array.from({ length: 101 }, (_, i) => ringPoint((span * i) / 100)),
   );
   scene.add(new THREE.Line(pathGeometry, new THREE.LineBasicMaterial({ color: palette.text })));
+  // A procedural alpha sprite: no downloaded asset, clock, or second context.
+  const spriteSize = 32;
+  const pixels = new Uint8Array(spriteSize * spriteSize * 4);
+  for (let y = 0; y < spriteSize; y++)
+    for (let x = 0; x < spriteSize; x++) {
+      const radius = Math.hypot(
+        (x + 0.5 - spriteSize / 2) / (spriteSize / 2),
+        (y + 0.5 - spriteSize / 2) / (spriteSize / 2),
+      );
+      const at = (y * spriteSize + x) * 4;
+      pixels[at] = pixels[at + 1] = pixels[at + 2] = 255;
+      pixels[at + 3] = Math.round(255 * Math.pow(Math.max(0, 1 - radius), 2));
+    }
+  const glowTexture = new THREE.DataTexture(pixels, spriteSize, spriteSize);
+  glowTexture.needsUpdate = true;
+  const handoff = new THREE.Group();
+  scene.add(handoff);
+  const trail = Array.from({ length: lowPower ? 18 : 36 }, (_, i) => {
+    const strength = 1 - i / (lowPower ? 18 : 36);
+    const sprite = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: glowTexture,
+        color: palette.origin,
+        transparent: true,
+        opacity: strength * 0.85,
+        depthWrite: false,
+        depthTest: false,
+      }),
+    );
+    sprite.scale.setScalar(0.018 + 0.07 * strength);
+    sprite.renderOrder = 2;
+    handoff.add(sprite);
+    return sprite;
+  });
+  const star = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: glowTexture,
+      color: palette.text,
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
+    }),
+  );
+  star.scale.setScalar(0.13);
+  star.renderOrder = 3;
+  handoff.add(star);
   const packet = new THREE.Group();
   for (let i = 0; i < 4; i++) {
     const paper = new THREE.Mesh(
@@ -184,6 +230,31 @@ export function createGlobeRenderer(
     capacityPreview.visible = capacity && shot >= 1;
     markerGroup.visible = !capacity || shot === 0;
     const stageProgress = Math.max(0, Math.min(1, (beat - 0.15) / 0.6));
+    // Follow the handoff for the current scene. Scroll reversal retraces the same arc.
+    const journey =
+      shot === 0
+        ? beat * 0.25
+        : shot === 1
+          ? 0
+          : shot === 2
+            ? beat * 0.25
+            : shot === 3
+              ? 0.25 + beat * 0.25
+              : shot === 4
+                ? 0.5 + beat * 0.25
+                : shot === 5
+                  ? 0.75 + beat * 0.25
+                  : 1;
+    handoff.visible = !capacity;
+    star.position.copy(ringPoint(span * journey));
+    trail.forEach((sprite, i) => {
+      const behind = ((i + 1) / trail.length) * 0.14;
+      sprite.visible = !frame.reducedMotion && journey > behind;
+      sprite.position.copy(ringPoint(span * Math.max(0, journey - behind)));
+    });
+    canvas.dataset.handoffProgress = journey.toFixed(4);
+    canvas.dataset.handoffTrail = String(!capacity && !frame.reducedMotion);
+
     packet.visible = shot === 0 || (shot === 2 && beat < 0.48 && frame.seat !== 'underwriter');
     const launch = new THREE.CatmullRomCurve3([
       position(-80.19, 25.76, 1.03),
@@ -513,6 +584,7 @@ export function createGlobeRenderer(
     },
     dispose() {
       disposeObject(scene);
+      glowTexture.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
     },

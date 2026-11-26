@@ -26,6 +26,8 @@ export type RiskGlobeProps = {
   fallback?: boolean;
   onAvailability?: (available: boolean) => void;
   caption?: string;
+  /** Keep semantic equivalents without the redundant visible footer legend. */
+  showLegend?: boolean;
   detail?: { title: string; content: React.ReactNode };
   className?: string;
 };
@@ -85,7 +87,8 @@ const RecordLink = styled(LinkButton)<{ $x: number; $y: number }>`
   min-width: 44px;
   justify-content: center;
 `;
-const Legend = styled.figcaption`
+const Legend = styled.figcaption<{ $hidden: boolean }>`
+  ${({ $hidden }) => ($hidden ? 'position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;' : '')}
   background: ${colors.surface};
   padding: ${spacing.sm}px;
   display: grid;
@@ -159,6 +162,7 @@ export default function RiskGlobe({
   onAvailability,
   detail,
   caption = 'Example data. Dots are submission origins; diamonds are sample providers.',
+  showLegend = true,
   className,
 }: RiskGlobeProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -392,7 +396,7 @@ export default function RiskGlobe({
           </DetailCard>
         )}
       </Stage>
-      <Legend>
+      <Legend $hidden={!showLegend} data-globe-legend={showLegend ? 'visible' : 'semantic'}>
         <span>{caption}</span>
         <Steps aria-label="Illustrative workflow steps">
           <li>Intake</li>
@@ -401,21 +405,32 @@ export default function RiskGlobe({
           <li>Match: broker chooses</li>
           <li>Bind by the carrier</li>
         </Steps>
-        <details>
-          <summary>Example origins and sample providers</summary>
+        {showLegend ? (
+          <details>
+            <summary>Example origins and sample providers</summary>
+            <ul aria-label="Example origins and providers">
+              {markers.map((marker) => (
+                <li key={marker.id}>
+                  {marker.label}
+                  {marker.kind === 'provider'
+                    ? marker.matched
+                      ? ' · example appetite fit'
+                      : ' · no example appetite fit'
+                    : ''}
+                </li>
+              ))}
+            </ul>
+          </details>
+        ) : (
           <ul aria-label="Example origins and providers">
             {markers.map((marker) => (
               <li key={marker.id}>
                 {marker.label}
-                {marker.kind === 'provider'
-                  ? marker.matched
-                    ? ' · example appetite fit'
-                    : ' · no example appetite fit'
-                  : ''}
+                {marker.matched ? ' · example appetite fit' : ''}
               </li>
             ))}
           </ul>
-        </details>
+        )}
       </Legend>
     </Figure>
   );
