@@ -33845,13 +33845,46 @@
       "export": "@ensured/xds/components/Modal",
       "kind": "layout",
       "fieldTypes": [],
-      "description": "Dialog for a form or section; the renderer supplies body, footer and close behavior.",
+      "description": "Dialog for a form or section, with an alertdialog confirmation mode (initial focus on the safe action, consequence description, submitting and error states); the renderer supplies body, footer and close behavior.",
       "propsSchema": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "ariaLabel": {
+            "type": "string",
+            "description": "Accessible name when there is no visible `title`."
+          },
+          "closeOnEscape": {
+            "type": "boolean",
+            "description": "Esc calls `onClose` (acts as Cancel). Default true. Ignored while `submitting`."
+          },
+          "closeOnScrimClick": {
+            "type": "boolean",
+            "description": "Clicking the scrim calls `onClose`. Default true for `dialog`, false for `alertdialog`."
+          },
+          "describedBy": {
+            "type": "string",
+            "description": "Id of the element (usually inside `children`) that states the consequence."
+          },
           "open": {
             "type": "boolean"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "dialog"
+              },
+              {
+                "type": "string",
+                "const": "alertdialog"
+              }
+            ],
+            "description": "`alertdialog` is for confirming irreversible or superseding actions (supersede a\nsent quote, accept or decline terms, bind). It defaults `closeOnScrimClick` to\nfalse. Pair it with `describedBy` and an `initialFocusRef` on the safe action."
+          },
+          "submitting": {
+            "type": "boolean",
+            "description": "The action is in flight: sets `aria-busy`, disables the close button and ignores\nEsc and scrim clicks. The caller disables its footer buttons and sets the\nin-progress label (for example \"Superseding…\")."
           },
           "title": {
             "type": "string"
@@ -33871,12 +33904,27 @@
           "reason": "Owned by the UI renderer/data binding"
         },
         {
+          "name": "error",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
           "name": "footer",
           "required": false,
           "reason": "Non-JSON type"
         },
         {
+          "name": "initialFocusRef",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
           "name": "onClose",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "returnFocusRef",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
         }
@@ -36304,6 +36352,157 @@
           "reason": "Function or constructor supplied by the UI"
         }
       ]
+    },
+    {
+      "id": "xds.banner",
+      "version": 1,
+      "export": "@ensured/xds/components/Banner",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Page-level notice (info, warning or neutral) with a title, body, optional action and dismiss; a polite status, never an alert.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "dismissible": {
+            "type": "boolean",
+            "description": "Shows a dismiss button. Prefer a controlled banner (`open` + `onDismiss`) and move focus to the nearest heading or the next control, because the button unmounts on dismiss."
+          },
+          "dismissLabel": {
+            "type": "string",
+            "description": "Accessible name of the dismiss button. Defaults to \"Dismiss notice\", plus the title when there is one."
+          },
+          "open": {
+            "type": "boolean",
+            "description": "Controlled visibility. Leave it unset to let the banner hide itself after dismissal."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short, bold first line. Also names the banner for assistive technology."
+          },
+          "tone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "warning"
+              },
+              {
+                "type": "string",
+                "const": "info"
+              },
+              {
+                "type": "string",
+                "const": "neutral"
+              }
+            ],
+            "description": "Sets the icon, accent stripe and hidden tone prefix. Defaults to `info`."
+          },
+          "toneLabel": {
+            "type": "string",
+            "description": "Overrides the hidden tone prefix (\"Information\", \"Warning\" or \"Notice\")."
+          }
+        }
+      },
+      "excludedProps": [
+        {
+          "name": "action",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
+          "name": "children",
+          "required": false,
+          "reason": "Owned by the UI renderer/data binding"
+        },
+        {
+          "name": "onDismiss",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
+      "id": "xds.callout-panel",
+      "version": 1,
+      "export": "@ensured/xds/components/CalloutPanel",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Two-column \"what it is / what it isn't\" panel with a title and two real lists; meaning carried by headings, never icons or colour.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "emptyLabel": {
+            "type": "string",
+            "description": "Shown in a column that has no statements. Defaults to \"Nothing listed yet\"."
+          },
+          "headingLevel": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 3
+              },
+              {
+                "type": "number",
+                "const": 4
+              }
+            ],
+            "description": "Heading level of the panel title, so it fits the page outline. Columns use the next level. Defaults to 2."
+          },
+          "isLabel": {
+            "type": "string",
+            "description": "Heading of the \"is\" column. Defaults to \"What it is\"."
+          },
+          "isntLabel": {
+            "type": "string",
+            "description": "Heading of the \"isn't\" column. Defaults to \"What it isn't\"."
+          },
+          "items": {
+            "type": "object",
+            "properties": {
+              "is": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Statements for the \"is\" column, e.g. \"A place to structure and check submissions\"."
+              },
+              "isnt": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Statements for the \"isn't\" column, e.g. \"An insurer, broker or carrier\"."
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "is",
+              "isnt"
+            ],
+            "description": "The two lists. Each column renders as a real `ul`."
+          },
+          "title": {
+            "type": "string",
+            "description": "Panel heading, e.g. \"What the platform is and isn't\". Also names the region."
+          }
+        },
+        "required": [
+          "items",
+          "title"
+        ]
+      },
+      "excludedProps": []
     },
     {
       "id": "xds.menu-button",
