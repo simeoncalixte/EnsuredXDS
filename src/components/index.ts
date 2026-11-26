@@ -128,3 +128,6 @@ export type { PlaybackControlsProps } from './PlaybackControls.js';
 
 export { default as SequenceReveal } from './SequenceReveal.js';
 export type { SequenceRevealProps } from './SequenceReveal.js';
+
+export { default as RiskGlobe } from './RiskGlobe.js';
+export type { RiskGlobeProps, GlobeMarker, GlobeSeat } from './RiskGlobe.js';

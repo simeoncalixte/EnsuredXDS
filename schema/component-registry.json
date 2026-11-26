@@ -688,6 +688,13 @@
       "export": "@ensured/xds/components/SequenceReveal",
       "fieldTypes": [],
       "description": "Progressively enhanced ordered sequence with reduced-motion support"
+    },
+    {
+      "id": "xds.risk-globe",
+      "version": 1,
+      "export": "@ensured/xds/components/RiskGlobe",
+      "fieldTypes": [],
+      "description": "One scroll-driven globe renderer with a readable static fallback"
     }
   ],
   "policyVersion": 1,
