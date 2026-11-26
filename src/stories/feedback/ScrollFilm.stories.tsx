@@ -464,3 +464,30 @@ export const OverflowingPage: Story = {
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
   },
 };
+
+export const PagedKeyboardTargets: Story = {
+  ...PageScrollJourney,
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    for (let index = 0; index < 4; index++) {
+      await userEvent.click(c.getByRole('button', { name: 'Next story beat' }));
+      await waitFor(() => expect(document.activeElement?.tagName).toBe('H3'));
+      await waitFor(() => {
+        const rect = document.activeElement!.getBoundingClientRect();
+        expect(rect.top).toBeGreaterThanOrEqual(0);
+        expect(rect.bottom).toBeLessThanOrEqual(innerHeight);
+      });
+    }
+    if (innerWidth < 1100) {
+      await expect(getComputedStyle(document.documentElement).scrollSnapType).toBe('none');
+      // A native input resumes CSS snapping; it never drives JS scrolling.
+      window.dispatchEvent(new WheelEvent('wheel'));
+      await waitFor(() =>
+        expect(canvasElement.querySelector('[data-film-pagination]')).not.toHaveAttribute(
+          'data-film-target-navigation',
+        ),
+      );
+    }
+    await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
+  },
+};
