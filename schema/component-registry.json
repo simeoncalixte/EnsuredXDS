@@ -702,6 +702,13 @@
       "export": "@ensured/xds/components/InputString",
       "fieldTypes": [],
       "description": "Controlled, keyboard-operable illustrative sentence input with gated flows"
+    },
+    {
+      "id": "xds.scroll-film",
+      "version": 1,
+      "export": "@ensured/xds/components/ScrollFilm",
+      "fieldTypes": [],
+      "description": "Native-scroll scene composition with one persistent visual and accessible detail sheets"
     }
   ],
   "policyVersion": 1,

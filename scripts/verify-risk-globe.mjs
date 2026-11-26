@@ -13,7 +13,13 @@ const types = {
 };
 const server = createServer(async (req, res) => {
   try {
-    const p = resolve(root, '.' + new URL(req.url, 'http://local').pathname);
+    const pathname = new URL(req.url, 'http://local').pathname;
+    if (pathname === '/nojs-film.html') {
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(await readFile(resolve('output/homepage-nojs.html')));
+      return;
+    }
+    const p = resolve(root, '.' + pathname);
     if (!p.startsWith(root + '/')) throw Error();
     const data = await readFile(p);
     res.writeHead(200, { 'Content-Type': types[extname(p)] ?? 'application/octet-stream' });
@@ -64,6 +70,39 @@ try {
       scrollChangesPixels: true,
       reverseRestoresPixels: true,
       ...(reducedMotion === 'reduce' ? { staticWithinShot: true } : {}),
+    });
+    await context.close();
+  }
+  for (const width of [1280, 390]) {
+    const context = await browser.newContext({
+      viewport: { width, height: 900 },
+      javaScriptEnabled: false,
+    });
+    const page = await context.newPage();
+    await page.route('**/*', (route) =>
+      route.request().url().startsWith(origin) ? route.continue() : route.abort(),
+    );
+    await page.goto(origin + '/nojs-film.html');
+    assert.ok(
+      await page.getByRole('heading', { name: 'Example homepage without JavaScript' }).isVisible(),
+    );
+    assert.ok(
+      await page.getByRole('heading', { name: 'The carrier binds approved version 2' }).isVisible(),
+    );
+    await page.getByText('Read example details', { exact: true }).click();
+    assert.ok(
+      await page
+        .getByText('Example source document, page 2. Confirmed by the broker.', { exact: true })
+        .isVisible(),
+    );
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+    await page.screenshot({ path: resolve(`output/nojs-film-${width}.png`), fullPage: true });
+    results.push({
+      javaScriptEnabled: false,
+      width,
+      fullStoryReadable: true,
+      nativeDetails: true,
+      noOverflow: true,
     });
     await context.close();
   }

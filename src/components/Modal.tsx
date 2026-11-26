@@ -13,6 +13,8 @@ export type ModalProps = {
   children?: React.ReactNode;
   footer?: React.ReactNode;
   width?: string;
+  /** Additive bottom-sheet placement; default centered behavior is unchanged. */
+  placement?: 'center' | 'bottom';
   /**
    * `alertdialog` is for confirming irreversible or superseding actions (supersede a
    * sent quote, accept or decline terms, bind). It defaults `closeOnScrimClick` to
@@ -118,6 +120,7 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   footer,
   width = 'min(640px, 94%)',
+  placement = 'center',
   role = 'dialog',
   describedBy,
   ariaLabel,
@@ -206,7 +209,7 @@ export const Modal: React.FC<ModalProps> = ({
         position: 'fixed',
         inset: 0,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: placement === 'bottom' ? 'flex-end' : 'center',
         justifyContent: 'center',
         background: withAlpha(colors.scrim, 0.6),
         zIndex: zIndices.modal,

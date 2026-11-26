@@ -22,3 +22,6 @@ simplemaps_worldcities_*
 *.traineddata
 storage/registration-documents/
 storage/uploads/
+
+# Generated browser and no-JS verification artifacts
+output/
