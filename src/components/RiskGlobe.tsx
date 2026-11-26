@@ -121,6 +121,10 @@ const DetailCard = styled.aside<{ $left: number; $top: number }>`
     width: min(360px, 48%);
     max-height: 65%;
     overflow: auto;
+    &:focus-visible {
+      outline: 2px solid ${colors.primary};
+      outline-offset: 2px;
+    }
     box-sizing: border-box;
     padding: 16px;
     background: ${colors.surface};
@@ -376,7 +380,13 @@ export default function RiskGlobe({
           </DetailLeader>
         )}
         {detail && (
-          <DetailCard $left={cardLeft} $top={cardTop} aria-label={detail.title} data-film-detail>
+          <DetailCard
+            $left={cardLeft}
+            $top={cardTop}
+            aria-label={detail.title}
+            tabIndex={0}
+            data-film-detail
+          >
             <h3>{detail.title}</h3>
             {detail.content}
           </DetailCard>
