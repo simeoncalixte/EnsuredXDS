@@ -32,9 +32,12 @@ export type ScrollFilmProps = {
   staticFallback?: boolean;
   /** Share a desktop overlap strip between the copy and visual panels. */
   composition?: 'split' | 'connected';
+  /** Below the side-by-side breakpoint, place the shared visual in scene gaps. */
+  narrowVisualPlacement?: 'sticky' | 'inline';
   className?: string;
 };
 const Root = styled.div<{ $static: boolean; $connected: boolean }>`
+  position: relative;
   display: grid;
   grid-template-columns: ${({ $static }) => ($static ? 'minmax(0,1fr)' : 'minmax(0,.9fr) minmax(0,1.4fr)')};
   gap: ${spacing.lg}px;
@@ -85,7 +88,7 @@ const Hero = styled.header`
   min-width: 0;
   scroll-margin-top: 80px;
 `;
-const Visual = styled.div<{ $rows: number; $static: boolean }>`
+const Visual = styled.div<{ $rows: number; $static: boolean; $inline: boolean }>`
   display: ${({ $static }) => ($static ? 'none' : 'block')};
   grid-column: 2;
   grid-row: 2 / span ${({ $rows }) => $rows};
@@ -102,6 +105,38 @@ const Visual = styled.div<{ $rows: number; $static: boolean }>`
     position: relative;
     top: auto;
   }
+  ${({ $inline }) =>
+    $inline
+      ? `
+    @media (max-width: 1099px) {
+      position: absolute;
+      top: var(--film-inline-top, 0px);
+      left: 0; right: 0;
+      grid-row: auto; grid-column: auto;
+    }
+  `
+      : ''}
+`;
+const InlineSlot = styled.div`
+  display: none;
+  min-width: 0;
+  @media (max-width: 1099px) {
+    display: block;
+  }
+`;
+const SlotSpace = styled.div`
+  position: relative;
+  overflow: hidden;
+  height: var(--film-inline-height, clamp(240px, 46vh, 440px));
+  @media (min-width: 600px) {
+    height: var(--film-inline-height, 58vh);
+  }
+`;
+const SlotStill = styled.img`
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 `;
 const Shot = styled.section`
   grid-column: 1;
@@ -127,7 +162,7 @@ const Eyebrow = styled.p`
   color: ${colors.onSurfaceVariant};
   margin: 0 0 ${spacing.sm}px;
 `;
-const Beat = styled.div<{ $past: boolean; $active: boolean; $static: boolean }>`
+const Beat = styled.div<{ $past: boolean; $active: boolean; $static: boolean; $inline: boolean }>`
   min-height: ${({ $static }) => ($static ? 'auto' : '40vh')};
   padding-block: ${spacing.lg}px;
   scroll-margin-top: 80px;
@@ -140,15 +175,15 @@ const Beat = styled.div<{ $past: boolean; $active: boolean; $static: boolean }>`
     color: inherit;
   }
   @media (max-width: 1099px) {
-    min-height: ${({ $static }) => ($static ? 'auto' : '50vh')};
+    min-height: ${({ $static, $inline }) => ($static || $inline ? 'auto' : '50vh')};
     scroll-margin-top: var(--film-reading-top, 55vh);
-    font-size: ${({ $past, $static }) => ($past && !$static ? '1.125rem' : '1.25rem')};
+    font-size: ${({ $past, $static, $inline }) => ($past && !$static && !$inline ? '1.125rem' : '1.25rem')};
     line-height: 1.5;
     & > p {
       font-size: inherit;
       line-height: inherit;
     }
-    ${({ $past, $static }) => ($past && !$static ? 'h3,p{display:inline;}h3{margin-right:8px;}' : '')}
+    ${({ $past, $static, $inline }) => ($past && !$static && !$inline ? 'h3,p{display:inline;}h3{margin-right:8px;}' : '')}
   }
 `;
 const BeatTitle = styled.h3`
@@ -193,6 +228,7 @@ export default function ScrollFilm({
   detailMode = 'dialog',
   staticFallback = false,
   composition = 'split',
+  narrowVisualPlacement = 'sticky',
   className,
 }: ScrollFilmProps) {
   const nodes = useRef<(HTMLElement | null)[]>([]);
@@ -211,26 +247,52 @@ export default function ScrollFilm({
     () => true,
     () => false,
   );
+  const staticStory =
+    (reducedMotion || staticFallback || !enhanced) && shots.every((shot) => shot.posterSrc);
+  const inlineVisual = narrowVisualPlacement === 'inline' && !staticStory;
   const count = 1 + shots.reduce((sum, s) => sum + s.beats.length, 0);
   const beatCounts = shots.map((s) => s.beats.length).join(',');
   useEffect(() => {
     let frame = 0;
     const update = () => {
       frame = 0;
+      const inlineNarrow = inlineVisual && window.innerWidth < 1100;
+      const root = rootNode.current;
+      if (root && inlineNarrow && visualNode.current) {
+        const height = visualNode.current.getBoundingClientRect().height;
+        root.style.setProperty('--film-inline-height', `${height}px`);
+        const slots = Array.from(root.querySelectorAll<HTMLElement>('[data-film-visual-slot]'));
+        const center = window.innerHeight / 2;
+        const slot = slots.sort((a, b) => {
+          const ar = a.getBoundingClientRect(),
+            br = b.getBoundingClientRect();
+          return (
+            Math.abs(ar.top + ar.height / 2 - center) - Math.abs(br.top + br.height / 2 - center)
+          );
+        })[0];
+        if (slot) {
+          root.style.setProperty(
+            '--film-inline-top',
+            `${slot.getBoundingClientRect().top - root.getBoundingClientRect().top}px`,
+          );
+          visualNode.current.dataset.inlineSlot = slot.dataset.filmVisualSlot;
+        }
+      }
       const readingTop =
         window.innerWidth < 1100
           ? Math.min(
               window.innerHeight - 100,
               (controlsNode.current?.getBoundingClientRect().height ?? 64) +
-                (window.innerHeight > 650
+                (!inlineNarrow && window.innerHeight > 650
                   ? (visualNode.current?.getBoundingClientRect().height ?? 0)
                   : 0) +
                 16,
             )
           : 80;
       rootNode.current?.style.setProperty('--film-reading-top', `${readingTop}px`);
-      const line =
-        window.innerWidth < 1100
+      const line = inlineNarrow
+        ? readingTop + 24
+        : window.innerWidth < 1100
           ? Math.max(window.innerHeight * 0.7, readingTop + 24)
           : window.innerHeight * 0.4;
       let index = 0;
@@ -239,9 +301,11 @@ export default function ScrollFilm({
       if (window.scrollY === 0) index = 0;
       const node = nodes.current[index];
       const rect = node?.getBoundingClientRect();
-      const local = rect
-        ? Math.max(0, Math.min(1, (line - rect.top) / Math.max(1, rect.height)))
-        : 0;
+      const extent =
+        inlineNarrow && nodes.current[index + 1]
+          ? nodes.current[index + 1]!.getBoundingClientRect().top - (rect?.top ?? 0)
+          : (rect?.height ?? 1);
+      const local = rect ? Math.max(0, Math.min(1, (line - rect.top) / Math.max(1, extent))) : 0;
       setActive(index);
       const counts = beatCounts.split(',').map(Number);
       let segment = local;
@@ -265,6 +329,7 @@ export default function ScrollFilm({
     const resizeObserver = new ResizeObserver(schedule);
     if (visualNode.current) resizeObserver.observe(visualNode.current);
     if (controlsNode.current) resizeObserver.observe(controlsNode.current);
+    if (rootNode.current) resizeObserver.observe(rootNode.current);
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
     update();
@@ -274,7 +339,7 @@ export default function ScrollFilm({
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
     };
-  }, [count, beatCounts]);
+  }, [count, beatCounts, inlineVisual]);
   const go = (index: number) => {
     const bounded = Math.max(0, Math.min(count - 1, index));
     const node = nodes.current[bounded];
@@ -291,8 +356,44 @@ export default function ScrollFilm({
   const shotIndex = Math.min(shots.length - 1, Math.floor(progress * (shots.length + 1)) - 1);
   const currentShot = shots[shotIndex];
   const beatIndex = Math.min(2, Math.floor(((progress * (shots.length + 1)) % 1) * 3));
-  const staticStory =
-    (reducedMotion || staticFallback || !enhanced) && shots.every((shot) => shot.posterSrc);
+
+  const renderActions = (shot: ScrollFilmShot | undefined, index: number) =>
+    detailMode === 'responsive' && enhanced ? (
+      <MobileActions>
+        {shot?.details && (
+          <Control variant="secondary" onClick={() => setDetail(shot)}>
+            {shot.detailLabel ?? 'Read the example details'}
+          </Control>
+        )}
+        {index >= 2 && (
+          <Control
+            variant="text"
+            onClick={() => {
+              const node = document.getElementById(shots[shots.length - 1].id);
+              node?.scrollIntoView({ behavior: 'auto' });
+              node?.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
+            }}
+          >
+            Skip to the end · Request pilot access
+          </Control>
+        )}
+      </MobileActions>
+    ) : null;
+  const renderSlot = (shot?: ScrollFilmShot, index = -1) => (
+    <InlineSlot data-film-inline-slot>
+      <SlotSpace data-film-visual-slot={shot?.id ?? 'hero'}>
+        {(shot?.posterSrc ?? shots[0]?.posterSrc) && (
+          <SlotStill
+            src={shot?.posterSrc ?? shots[0]?.posterSrc}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+          />
+        )}
+      </SlotSpace>
+      {renderActions(shot, index)}
+    </InlineSlot>
+  );
   let offset = 1;
   return (
     <Root
@@ -300,6 +401,7 @@ export default function ScrollFilm({
       className={className}
       $static={staticStory}
       $connected={composition === 'connected'}
+      data-narrow-visual={narrowVisualPlacement}
       onClick={(event) => {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
           return;
@@ -354,7 +456,14 @@ export default function ScrollFilm({
       >
         {hero}
       </Hero>
-      <Visual data-film-visual ref={visualNode} $rows={shots.length + 1} $static={staticStory}>
+      {inlineVisual && renderSlot()}
+      <Visual
+        data-film-visual
+        ref={visualNode}
+        $rows={shots.length + 1}
+        $static={staticStory}
+        $inline={inlineVisual}
+      >
         {renderVisual({
           progress,
           paused: paused || detail !== null,
@@ -362,29 +471,9 @@ export default function ScrollFilm({
           shotIndex,
           beatIndex,
         })}
-        {detailMode === 'responsive' && enhanced && (
-          <MobileActions>
-            {currentShot?.details && (
-              <Control variant="secondary" onClick={() => setDetail(currentShot)}>
-                {currentShot.detailLabel ?? 'Read the example details'}
-              </Control>
-            )}
-            {shotIndex >= 2 && (
-              <Control
-                variant="text"
-                onClick={() => {
-                  const node = document.getElementById(shots[shots.length - 1].id);
-                  node?.scrollIntoView({ behavior: 'auto' });
-                  node?.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
-                }}
-              >
-                Skip to the end · Request pilot access
-              </Control>
-            )}
-          </MobileActions>
-        )}
+        {!inlineVisual && renderActions(currentShot, shotIndex)}
       </Visual>
-      {shots.map((shot) => {
+      {shots.map((shot, sceneIndex) => {
         const start = offset;
         offset += shot.beats.length;
         return (
@@ -401,34 +490,38 @@ export default function ScrollFilm({
               />
             )}
             {shot.beats.map((beat, index) => (
-              <Beat
-                key={beat.label}
-                $past={start + index < active}
-                $active={start + index === active}
-                $static={!enhanced || reducedMotion || staticFallback}
-                ref={(node) => {
-                  nodes.current[start + index] = node;
-                }}
-              >
-                <BeatTitle
-                  aria-label={beat.label}
-                  id={`${shot.id}-beat-${index + 1}`}
-                  tabIndex={-1}
+              <React.Fragment key={beat.label}>
+                <Beat
+                  data-film-beat
+                  $inline={inlineVisual}
+                  $past={start + index < active}
+                  $active={start + index === active}
+                  $static={!enhanced || reducedMotion || staticFallback}
+                  ref={(node) => {
+                    nodes.current[start + index] = node;
+                  }}
                 >
-                  {enhanced && !reducedMotion && start + index < active
-                    ? '✓ '
-                    : enhanced && !reducedMotion && start + index === active + 1
-                      ? 'Next · '
-                      : ''}
-                  {beat.label}
-                </BeatTitle>
-                {beat.content}
-                {returnDetail && returnTarget === `${shot.id}-beat-${index + 1}` && (
-                  <Control variant="text" onClick={() => setDetail(returnDetail)}>
-                    Back to example record
-                  </Control>
-                )}
-              </Beat>
+                  <BeatTitle
+                    aria-label={beat.label}
+                    id={`${shot.id}-beat-${index + 1}`}
+                    tabIndex={-1}
+                  >
+                    {enhanced && !reducedMotion && start + index < active
+                      ? '✓ '
+                      : enhanced && !reducedMotion && start + index === active + 1
+                        ? 'Next · '
+                        : ''}
+                    {beat.label}
+                  </BeatTitle>
+                  {beat.content}
+                  {returnDetail && returnTarget === `${shot.id}-beat-${index + 1}` && (
+                    <Control variant="text" onClick={() => setDetail(returnDetail)}>
+                      Back to example record
+                    </Control>
+                  )}
+                </Beat>
+                {inlineVisual && index === 0 && renderSlot(shot, sceneIndex)}
+              </React.Fragment>
             ))}
             {shot.details &&
               (enhanced && detailMode === 'responsive' ? (

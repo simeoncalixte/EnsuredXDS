@@ -37298,6 +37298,19 @@
               }
             ]
           },
+          "narrowVisualPlacement": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "inline"
+              },
+              {
+                "type": "string",
+                "const": "sticky"
+              }
+            ],
+            "description": "Below the side-by-side breakpoint, place the shared visual in scene gaps."
+          },
           "reducedMotion": {
             "type": "boolean"
           },
