@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { within, userEvent, expect } from '@storybook/test';
 import InfoCard from '../../components/InfoCard.js';
 
