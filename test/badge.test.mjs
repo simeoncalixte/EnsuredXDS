@@ -110,3 +110,139 @@ test('Badge archived variant renders visible text and a hidden icon', () =>
     assert.doesNotMatch(bound, /<svg/);
     assert.match(bound, /Bound/);
   }));
+
+// AIN-362: statusPresentation() and the Badge emphasis / icon props.
+const expectedPresentations = {
+  draft: { tone: 'neutral', emphasis: 'outline' },
+  submitted: { tone: 'info', emphasis: 'outline' },
+  modeling: { tone: 'info', emphasis: 'outline' },
+  priced: { tone: 'info', emphasis: 'outline' },
+  approved: { tone: 'success', emphasis: 'tint', icon: 'check' },
+  rejected: { tone: 'danger', emphasis: 'tint', icon: 'cross' },
+  quoted: { tone: 'warning', emphasis: 'tint', icon: 'arrowUpRight' },
+  bound: { tone: 'success', emphasis: 'solid', icon: 'dot' },
+};
+
+test('statusPresentation maps every system status; tone matches statusTone except approved and quoted', () =>
+  withBadge(({ statusPresentation, statusTone, SUBMISSION_SYSTEM_STATUSES }) => {
+    assert.deepEqual(
+      Object.fromEntries(SUBMISSION_SYSTEM_STATUSES.map((s) => [s, statusPresentation(s)])),
+      expectedPresentations,
+    );
+    // Revised AC2 (PM 11154): the only tone differences from statusTone().
+    const exceptions = { approved: 'success', quoted: 'warning' };
+    for (const s of SUBMISSION_SYSTEM_STATUSES)
+      assert.equal(statusPresentation(s).tone, exceptions[s] ?? statusTone(s), s);
+    // statusTone() itself is unchanged.
+    assert.equal(statusTone('approved'), 'primary');
+    assert.equal(statusTone('quoted'), 'primary');
+    for (const other of ['Awaiting loss runs', '', null, undefined, '__proto__', ' BOUND '])
+      assert.equal(statusPresentation(other).tone, statusTone(other), String(other));
+    assert.equal(statusPresentation(' Approved ').tone, 'success');
+    assert.deepEqual(statusPresentation('Broker follow-up'), {
+      tone: 'surface',
+      emphasis: 'outline',
+    });
+    assert.deepEqual(statusPresentation(' Bound '), expectedPresentations.bound);
+    // Approved vs declined and bound vs submitted never differ by hue alone.
+    const p = statusPresentation;
+    assert.notEqual(p('approved').icon, p('rejected').icon);
+    assert.notEqual(p('bound').emphasis, p('submitted').emphasis);
+    assert.ok(p('bound').icon);
+  }));
+
+// AC2b (PM 11154): approved and quoted never share declined's tone or fill, in either theme.
+test('approved and quoted resolve to different tones and computed fills from declined', () =>
+  withBadge(({ statusPresentation }) => {
+    // Tint fill token for each tone, mirroring variantThemes in Badge.tsx.
+    const tintBase = { success: 'success', warning: 'warning', danger: 'danger' };
+    const declined = statusPresentation('rejected');
+    for (const status of ['approved', 'quoted']) {
+      const p = statusPresentation(status);
+      assert.equal(p.emphasis, declined.emphasis, `${status} is tinted like declined`);
+      assert.notEqual(p.tone, declined.tone, `${status} tone`);
+      for (const theme of Object.values(xdsThemes)) {
+        const c = theme.colors;
+        const fill = (tone) => tint(rgb(c[tintBase[tone]]), rgb(c.surface), 0.12);
+        const a = fill(p.tone).map((v) => Math.round(v * 255));
+        const b = fill(declined.tone).map((v) => Math.round(v * 255));
+        assert.notDeepEqual(a, b, `${theme.name} ${status} vs declined fill`);
+        // and the tinted text stays at 4.5:1 on its own fill.
+        for (const bg of [
+          'background',
+          'surface',
+          'surfacePanel',
+          'surfaceContainer',
+          'surfaceRaised',
+        ]) {
+          const ratio = contrast(rgb(c[p.tone]), tint(rgb(c[p.tone]), rgb(c[bg]), 0.12));
+          assert.ok(ratio >= 4.5, `${theme.name} ${status} tint on ${bg}: ${ratio.toFixed(2)}`);
+        }
+      }
+    }
+  }));
+
+test('outline and solid badge text meets 4.5:1 in light and dark themes', () => {
+  const backgrounds = [
+    'background',
+    'surface',
+    'surfacePanel',
+    'surfaceContainer',
+    'surfaceRaised',
+  ];
+  // Must mirror variantInk / solidThemes in Badge.tsx.
+  const ink = {
+    primary: 'primarySoft',
+    secondary: 'secondary',
+    success: 'success',
+    warning: 'warning',
+    danger: 'danger',
+    info: 'info',
+    neutral: 'onSurfaceVariant',
+  };
+  const solid = {
+    primary: ['primary', 'onPrimary'],
+    secondary: ['secondary', 'textInverse'],
+    success: ['success', 'textInverse'],
+    warning: ['warning', 'textInverse'],
+    danger: ['danger', 'textInverse'],
+    info: ['info', 'textInverse'],
+    neutral: ['onSurface', 'surface'],
+  };
+  for (const theme of Object.values(xdsThemes)) {
+    const c = theme.colors;
+    for (const bg of backgrounds)
+      for (const [tone, fg] of Object.entries(ink)) {
+        const ratio = contrast(rgb(c[fg]), rgb(c[bg]));
+        assert.ok(ratio >= 4.5, `${theme.name} outline ${tone} on ${bg}: ${ratio.toFixed(2)}`);
+      }
+    for (const [tone, [fill, fg]] of Object.entries(solid)) {
+      const ratio = contrast(rgb(c[fg]), rgb(c[fill]));
+      assert.ok(ratio >= 4.5, `${theme.name} solid ${tone}: ${ratio.toFixed(2)}`);
+    }
+  }
+});
+
+test('Badge emphasis and icon props render; omitting them keeps the default markup', () =>
+  withBadge(({ Badge }) => {
+    const render = (props) => renderToStaticMarkup(React.createElement(Badge, props));
+    const plain = render({ variant: 'success', children: 'Bound' });
+    assert.doesNotMatch(plain, /data-xds-emphasis/);
+    assert.doesNotMatch(plain, /data-xds-icon/);
+
+    const bound = render({ variant: 'success', emphasis: 'solid', icon: 'dot', children: 'Bound' });
+    assert.match(bound, /data-xds-emphasis="solid"/);
+    assert.match(bound, /<span[^>]*aria-hidden="true"[^>]*data-xds-icon="dot"/);
+    assert.match(bound, /Bound<\/span>$/);
+
+    for (const icon of ['check', 'cross', 'arrowUpRight']) {
+      const html = render({ variant: 'primary', emphasis: 'tint', icon, children: 'X' });
+      assert.match(html, new RegExp(`<svg[^>]*aria-hidden="true"[^>]*data-xds-icon="${icon}"`));
+    }
+    // icon wins over dot; archived keeps its own icon.
+    assert.equal(
+      render({ variant: 'danger', icon: 'cross', dot: true }).match(/aria-hidden="true"/g).length,
+      1,
+    );
+    assert.doesNotMatch(render({ variant: 'archived', icon: 'check' }), /data-xds-icon/);
+  }));

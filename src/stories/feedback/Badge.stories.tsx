@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, userEvent, expect } from '@storybook/test';
 import Badge, {
+  type XdsBadgeEmphasis,
   type XdsBadgeVariant,
   SUBMISSION_SYSTEM_STATUSES,
+  statusPresentation,
   statusTone,
 } from '../../components/Badge.js';
+import { expectStoryViewport, storyViewport, type StoryViewportWidth } from '../viewport.js';
 import { cssVariables, xdsThemes, type XdsThemeName } from '../../palette.js';
 import { colors } from '../../colors.js';
 
@@ -235,5 +238,147 @@ export const Archived: Story = {
     const icons = canvasElement.querySelectorAll('[data-xds-variant="archived"] svg');
     expect(icons).toHaveLength(2);
     icons.forEach((icon) => expect(icon).toHaveAttribute('aria-hidden', 'true'));
+  },
+};
+
+// ---------------------------------------------------------------------------
+// AIN-362: statusPresentation() and the Badge emphasis / icon props.
+// statusTone() is unchanged. statusPresentation(s).tone === statusTone(s) except
+// approved → success and quoted → warning (PM decision 11154).
+// ---------------------------------------------------------------------------
+
+const emphases: XdsBadgeEmphasis[] = ['outline', 'tint', 'solid'];
+const allStatuses = [...SUBMISSION_SYSTEM_STATUSES, ...boardStatuses];
+const labelFor = (status: string) => statusLabels[status] ?? status;
+
+const PresentationRow: React.FC = () => (
+  <ul
+    aria-label="Submission statuses"
+    style={{ display: 'flex', gap: 12, flexWrap: 'wrap', listStyle: 'none', margin: 0, padding: 0 }}
+  >
+    {allStatuses.map((status) => {
+      const { tone, emphasis, icon } = statusPresentation(status);
+      return (
+        <li key={status} data-status={status}>
+          <Badge variant={tone} emphasis={emphasis} icon={icon}>
+            {labelFor(status)}
+          </Badge>
+        </li>
+      );
+    })}
+  </ul>
+);
+
+/** Every status at every emphasis level, so each level can be checked for contrast. */
+const EmphasisMatrix: React.FC = () => (
+  <div style={{ display: 'grid', gap: 12 }}>
+    {emphases.map((emphasis) => (
+      <section key={emphasis} aria-label={`${emphasis} emphasis`} data-emphasis-row={emphasis}>
+        <Row>
+          {allStatuses.map((status) => {
+            const { tone, icon } = statusPresentation(status);
+            return (
+              <Badge key={status} variant={tone} emphasis={emphasis} icon={icon}>
+                {labelFor(status)}
+              </Badge>
+            );
+          })}
+        </Row>
+      </section>
+    ))}
+  </div>
+);
+
+const expectedIcons: Record<string, string | null> = {
+  draft: null,
+  submitted: null,
+  modeling: null,
+  priced: null,
+  quoted: 'arrowUpRight',
+  approved: 'check',
+  rejected: 'cross',
+  bound: 'dot',
+};
+
+const presentationPlay = async (canvasElement: HTMLElement) => {
+  for (const status of allStatuses) {
+    const badge = canvasElement.querySelector(`[data-status="${status}"] [data-xds-variant]`);
+    expect(badge).not.toBeNull();
+    const p = statusPresentation(status);
+    expect(badge?.getAttribute('data-xds-variant')).toBe(p.tone);
+    expect(badge?.getAttribute('data-xds-emphasis')).toBe(p.emphasis);
+    // The label is always visible text; the icon is decorative only.
+    expect(badge).toHaveTextContent(labelFor(status));
+    const icon = badge?.querySelector('[data-xds-icon]');
+    expect(icon?.getAttribute('data-xds-icon') ?? null).toBe(expectedIcons[status] ?? null);
+    if (icon) expect(icon).toHaveAttribute('aria-hidden', 'true');
+  }
+  // Approved and declined, and bound and submitted, never look alike.
+  const look = (s: string) => {
+    const el = canvasElement.querySelector(`[data-status="${s}"] [data-xds-variant]`)!;
+    const cs = getComputedStyle(el);
+    return [cs.backgroundColor, el.querySelector('[data-xds-icon]')?.getAttribute('data-xds-icon')];
+  };
+  expect(look('approved')).not.toEqual(look('rejected'));
+  // AC2b: approved and quoted have a different computed fill from declined.
+  const fill = (s: string) =>
+    getComputedStyle(canvasElement.querySelector(`[data-status="${s}"] [data-xds-variant]`)!)
+      .backgroundColor;
+  expect(fill('approved')).not.toBe(fill('rejected'));
+  expect(fill('quoted')).not.toBe(fill('rejected'));
+  expect(look('bound')).not.toEqual(look('submitted'));
+};
+
+const presentation = (theme: XdsThemeName, width: StoryViewportWidth): Story => ({
+  name: `Status presentation · ${theme} · ${width} px`,
+  parameters: storyViewport(width),
+  render: () => (
+    <ThemeFrame theme={theme}>
+      <div style={{ display: 'grid', gap: 24 }}>
+        <PresentationRow />
+        <EmphasisMatrix />
+      </div>
+    </ThemeFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    expectStoryViewport(width);
+    await presentationPlay(canvasElement);
+    // The badge row wraps instead of overflowing at phone width.
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+    for (const emphasis of emphases)
+      expect(
+        canvasElement.querySelectorAll(
+          `[data-emphasis-row="${emphasis}"] [data-xds-emphasis="${emphasis}"]`,
+        ),
+      ).toHaveLength(allStatuses.length);
+  },
+});
+
+export const StatusPresentationDark1280 = presentation('dark', 1280);
+export const StatusPresentationLight1280 = presentation('light', 1280);
+export const StatusPresentationDark375 = presentation('dark', 375);
+export const StatusPresentationLight375 = presentation('light', 375);
+
+export const EmphasisLevels: Story = {
+  name: 'Emphasis levels (outline / tint / solid)',
+  render: () => (
+    <div style={{ display: 'grid', gap: 12 }}>
+      {emphases.map((emphasis) => (
+        <Row key={emphasis}>
+          {tones.map((tone) => (
+            <Badge key={tone} variant={tone} emphasis={emphasis}>
+              {`${tone} ${emphasis}`}
+            </Badge>
+          ))}
+          <Badge variant="primary" emphasis={emphasis}>{`primary ${emphasis}`}</Badge>
+        </Row>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    // Default (no emphasis) badges render without the attribute; set levels render with it.
+    expect(canvasElement.querySelectorAll('[data-xds-emphasis]')).toHaveLength(
+      emphases.length * (tones.length + 1),
+    );
   },
 };
