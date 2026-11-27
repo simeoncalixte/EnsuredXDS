@@ -36,6 +36,7 @@ export * from './components/Modal.js';
 export * from './components/MultiLineChart.js';
 export * from './components/Navigation.js';
 export * from './components/NumberInput.js';
+export * from './components/OnboardingChecklist.js';
 export * from './components/ProgressBar.js';
 export * from './components/Range.js';
 export * from './components/SectionHeader.js';

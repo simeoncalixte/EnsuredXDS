@@ -20063,19 +20063,56 @@
       "export": "@ensured/xds/components/OnboardingChecklist",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Checklist of tasks and completion state.",
+      "description": "Checklist of tasks and completion state; the readiness variant lists conditions (met / not met / bypassed) that must hold before an irreversible action such as bind.",
       "propsSchema": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "ariaLabel": {
+            "type": "string",
+            "description": "Accessible name of the list, e.g. \"Ready to bind checklist\"."
+          },
           "className": {
             "type": "string"
+          },
+          "emptyMessage": {
+            "type": "string",
+            "description": "Readiness: shown instead of the list when `steps` is empty."
+          },
+          "loading": {
+            "type": "boolean",
+            "description": "Readiness: show aria-hidden skeleton rows. The parent owns the role=\"status\" text."
+          },
+          "loadingRows": {
+            "type": "number",
+            "description": "Readiness: number of skeleton rows while loading (default 3)."
           },
           "subtitle": {
             "type": "string"
           },
+          "summary": {
+            "type": "string",
+            "description": "Readiness: a summary line above the list, e.g. \"2 of 5 conditions not met\"."
+          },
+          "summaryId": {
+            "type": "string",
+            "description": "Readiness: id given to the summary line, so a disabled button elsewhere can\npoint `aria-describedby` at it. Only rendered when `summary` is set."
+          },
           "title": {
             "type": "string"
+          },
+          "variant": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "onboarding"
+              },
+              {
+                "type": "string",
+                "const": "readiness"
+              }
+            ],
+            "description": "`onboarding` (default, unchanged): progress bar, dismiss, current-step highlight.\n`readiness`: a plain list of conditions with met / not met / bypassed status,\na detail line and a link or action per row. No progress bar, no dismiss, no\ncurrent-step highlight."
           }
         }
       },
@@ -20084,6 +20121,11 @@
           "name": "onDismiss",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "statusLabels",
+          "required": false,
+          "reason": "Unresolved, unconstrained, or unsupported type"
         },
         {
           "name": "steps",
