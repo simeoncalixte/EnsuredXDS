@@ -337,7 +337,7 @@ Empty values (`null`, `undefined` or `''`) show "—", which is hidden from scre
 
 **Phone widths.** Use `stacked` (or `stacked="always"` in a narrow panel) for tables people read on a phone. A non-stacked table keeps its columns, so at 375 px it can be wider than the screen. DataTable then scrolls inside its own region and the page doesn't scroll sideways (WCAG 1.4.10, AIN-372):
 
-- The table sits in a `role="region"` named by its `caption`, or by `regionLabel` when there is no caption (legacy `rows` tables default to "Contracts"). Give every non-stacked table a caption or a `regionLabel`.
+- The table sits in a `role="region"` named by its `caption`, or by `regionLabel` when there is no caption (legacy `rows` tables default to "Contracts"). Give every non-stacked table a caption or a `regionLabel`. The region joins the tab order only while the table overflows it; if the region has focus when it stops overflowing (a rotate or resize), it keeps its tab stop until it loses focus.
 - While the table is wider than the region, the region gets `tabindex="0"`, so keyboard users can reach it and scroll with the arrow keys. A table that fits adds no tab stop.
 - Right-aligned cells (amounts, rates) don't wrap mid-value.
 - `stacked="always"` tables never scroll sideways and get no region.

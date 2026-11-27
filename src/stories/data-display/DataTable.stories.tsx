@@ -660,3 +660,44 @@ const legacyAt = (width: ScrollWidth): Story => ({
 
 export const LegacyRows390 = legacyAt(390);
 export const LegacyRows1280 = legacyAt(1280);
+
+/**
+ * AIN-372 review check 1: when the focused region stops overflowing (a rotate or a resize of
+ * its container), it keeps its tab stop until it loses focus, so focus never drops silently to
+ * <body>. After blur, a region that fits has no tab stop again.
+ */
+export const RegionKeepsFocusWhenOverflowEnds: Story = {
+  name: 'Scroll region keeps focus when overflow ends · 390 px',
+  parameters: storyViewport(390),
+  render: () => (
+    <div data-testid="resizable-container" style={{ width: 360 }}>
+      <DataTable<LedgerRow>
+        columns={ledgerColumns}
+        data={ledgerRows}
+        caption="Treaty ledger, amounts in USD"
+        rowKey={(row) => row.id}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    expectStoryViewport(390);
+    const c = within(canvasElement);
+    const region = c.getByRole('region', { name: 'Treaty ledger, amounts in USD' });
+    await waitFor(() => expect(region).toHaveAttribute('tabindex', '0'));
+    region.focus();
+    await expect(region).toHaveFocus();
+    // Widen the container (as a rotate to landscape would) so the table fits.
+    const container = c.getByTestId('resizable-container');
+    container.style.width = '1600px';
+    await waitFor(() => expect(region).toHaveAttribute('data-xds-scroll-region', ''));
+    await expect(region.scrollWidth).toBeLessThanOrEqual(region.clientWidth);
+    // Still focused and still in the tab order: focus did not fall to <body>.
+    await expect(region).toHaveFocus();
+    await expect(region).toHaveAttribute('tabindex', '0');
+    // Once focus leaves, a region that fits drops its tab stop.
+    region.blur();
+    await waitFor(() => expect(region).not.toHaveAttribute('tabindex'));
+    container.style.width = '360px';
+    await waitFor(() => expect(region).toHaveAttribute('tabindex', '0'));
+  },
+};

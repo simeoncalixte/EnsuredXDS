@@ -136,8 +136,8 @@ type ScrollRegionProps = React.PropsWithChildren<{
 
 /**
  * The region is always named (when a name is available) and always contains the table. It joins
- * the tab order only while the table is wider than the region, so keyboard users can reach and
- * scroll it, and tables that fit add no extra tab stop.
+ * the tab order only while the table is wider than the region (or while the region itself has
+ * focus), so keyboard users can reach and scroll it, and tables that fit add no extra tab stop.
  */
 function TableScrollRegion({ children, ...name }: ScrollRegionProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -154,12 +154,22 @@ function TableScrollRegion({ children, ...name }: ScrollRegionProps) {
     if (table) observer.observe(table);
     return () => observer.disconnect();
   }, []);
+  // If the region has focus when it stops overflowing (a rotate or a resize), it keeps its tab
+  // stop until it loses focus, so focus never drops silently to <body>.
+  const [focused, setFocused] = useState(false);
+  const focusable = overflowing || focused;
   const hasName = Boolean(name['aria-label'] || name['aria-labelledby']);
   return (
     <ScrollRegion
       ref={ref}
       {...(hasName ? { role: 'region', ...name } : {})}
-      {...(overflowing ? { tabIndex: 0 } : {})}
+      {...(focusable ? { tabIndex: 0 } : {})}
+      onFocus={(event) => {
+        if (event.target === event.currentTarget) setFocused(true);
+      }}
+      onBlur={(event) => {
+        if (event.target === event.currentTarget) setFocused(false);
+      }}
       data-xds-scroll-region={overflowing ? 'overflowing' : ''}
     >
       {children}
