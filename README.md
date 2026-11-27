@@ -335,7 +335,14 @@ Empty values (`null`, `undefined` or `''`) show "—", which is hidden from scre
 - `skeletonRows` shows a table-shaped skeleton while `loading`, sets `aria-busy` and reads `loadingLabel`. Without it, the existing "Loading..." line is shown.
 - `stacked` shows each row as a card with field labels below 600 px. Column `label` sets the field label when `header` isn't a string.
 
-**Phone widths.** Use `stacked` (or `stacked="always"` in a narrow panel) for tables people read on a phone. A non-stacked table keeps its columns, so at 375 px it's wider than the screen. Horizontal scrolling is acceptable only when it happens inside the table's own scroll container and the page itself doesn't scroll sideways (WCAG 1.4.10). The non-stacked examples (`LegacyRows`, `SortableHeader`, `CaptionFocus`) don't meet that yet: they widen the page at 375 and 390 px. That is a known bug, and AIN-372 adds a named, keyboard-focusable scroll region to fix it. Until then, wrap a non-stacked table in your own `overflow-x: auto` container with `position: relative`.
+**Phone widths.** Use `stacked` (or `stacked="always"` in a narrow panel) for tables people read on a phone. A non-stacked table keeps its columns, so at 375 px it can be wider than the screen. DataTable then scrolls inside its own region and the page doesn't scroll sideways (WCAG 1.4.10, AIN-372):
+
+- The table sits in a `role="region"` named by its `caption`, or by `regionLabel` when there is no caption (legacy `rows` tables default to "Contracts"). Give every non-stacked table a caption or a `regionLabel`.
+- While the table is wider than the region, the region gets `tabindex="0"`, so keyboard users can reach it and scroll with the arrow keys. A table that fits adds no tab stop.
+- Right-aligned cells (amounts, rates) don't wrap mid-value.
+- `stacked="always"` tables never scroll sideways and get no region.
+
+You no longer need your own `overflow-x: auto` wrapper around a DataTable.
 
 See **Data Display/DataTable** in Storybook.
 
