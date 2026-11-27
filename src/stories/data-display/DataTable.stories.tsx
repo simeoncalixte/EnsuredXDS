@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { within, userEvent, expect } from '@storybook/test';
+import { within, userEvent, expect, waitFor } from '@storybook/test';
 import DataTable, {
   type DataTableColumn,
   type DataTableGenericProps,
@@ -509,3 +509,154 @@ const rowActionsInScroller = (width: 1280 | 375): Story => ({
 
 export const RowActionsInScroller1280 = rowActionsInScroller(1280);
 export const RowActionsInScroller375 = rowActionsInScroller(375);
+
+/* ---------------------------------------------------------------------------
+ * AIN-372: non-stacked tables at phone width. A table that is wider than the
+ * viewport scrolls inside a named region (role="region", named by the caption)
+ * that joins the tab order (tabindex="0") while it overflows, instead of widening the page (WCAG
+ * 1.4.10). Headers, aria-sort and caption focus are unchanged, and amounts in
+ * right-aligned cells never wrap mid-value. Illustrative fixtures only.
+ * ------------------------------------------------------------------------- */
+
+type LedgerRow = {
+  id: string;
+  treaty: string;
+  layer: string;
+  cededPremium: string;
+  retention: string;
+  limit: string;
+};
+
+const ledgerRows: LedgerRow[] = [
+  {
+    id: 'TR-2027-014',
+    treaty: 'Property cat XoL',
+    layer: '2nd layer',
+    cededPremium: 'USD 1,240,000.00',
+    retention: 'USD 25,000,000.00',
+    limit: 'USD 50,000,000.00',
+  },
+  {
+    id: 'TR-2027-021',
+    treaty: 'Casualty quota share',
+    layer: '30% cession',
+    cededPremium: 'USD 450,200.00',
+    retention: 'USD 0.00',
+    limit: 'USD 10,000,000.00',
+  },
+];
+
+const ledgerColumns: DataTableColumn<LedgerRow>[] = [
+  { key: 'id', header: 'Treaty ID' },
+  { key: 'treaty', header: 'Treaty' },
+  { key: 'layer', header: 'Layer' },
+  { key: 'cededPremium', header: 'Ceded premium', align: 'right' },
+  { key: 'retention', header: 'Retention', align: 'right' },
+  { key: 'limit', header: 'Limit', align: 'right' },
+];
+
+type ScrollWidth = 390 | 1280;
+
+const NonStackedTables = () => {
+  const [sort, setSort] = useState<'ascending' | 'descending'>('descending');
+  const columns = submissionColumns.map((col) =>
+    col.key === 'updated'
+      ? {
+          ...col,
+          sort,
+          onSort: () => setSort((s) => (s === 'descending' ? 'ascending' : 'descending')),
+        }
+      : col,
+  );
+  return (
+    <div style={{ display: 'grid', gap: 24 }}>
+      <DataTable<SubmissionRow>
+        columns={columns}
+        data={submissions}
+        caption="Submissions, sorted by last updated"
+        rowKey={(row) => row.id}
+      />
+      <DataTable<LedgerRow>
+        columns={ledgerColumns}
+        data={ledgerRows}
+        caption="Treaty ledger, amounts in USD"
+        rowKey={(row) => row.id}
+      />
+    </div>
+  );
+};
+
+const nonStacked = (theme: XdsThemeName, width: ScrollWidth): Story => ({
+  name: `Non-stacked scroll region · ${theme} · ${width} px`,
+  decorators: themed(theme),
+  parameters: storyViewport(width),
+  render: () => <NonStackedTables />,
+  play: async ({ canvasElement }) => {
+    expectStoryViewport(width);
+    const c = within(canvasElement);
+    const submissionsRegion = c.getByRole('region', {
+      name: 'Submissions, sorted by last updated',
+    });
+    const ledgerRegion = c.getByRole('region', { name: 'Treaty ledger, amounts in USD' });
+    for (const region of [submissionsRegion, ledgerRegion]) {
+      await expect(within(region).getByRole('table')).toBeInTheDocument();
+      // At phone width the table is wider than its region, so the region scrolls.
+      if (width < 600) await expect(region.scrollWidth).toBeGreaterThan(region.clientWidth);
+      // AC2: a region that scrolls is in the tab order; one that fits adds no tab stop.
+      if (region.scrollWidth > region.clientWidth) {
+        await waitFor(() => expect(region).toHaveAttribute('tabindex', '0'));
+      } else {
+        await expect(region).not.toHaveAttribute('tabindex');
+      }
+    }
+    // AC2: the page itself never scrolls sideways.
+    const doc = canvasElement.ownerDocument.documentElement;
+    await expect(doc.scrollWidth).toBeLessThanOrEqual(doc.clientWidth);
+    // AC1: headers, aria-sort and the sort button still work.
+    const header = within(submissionsRegion).getByRole('columnheader', { name: /Last updated/ });
+    await expect(header).toHaveAttribute('aria-sort', 'descending');
+    await userEvent.click(within(header).getByRole('button', { name: /Last updated/ }));
+    await expect(header).toHaveAttribute('aria-sort', 'ascending');
+    // Keyboard: at phone width Tab reaches the region, then the controls inside it.
+    if (width < 600) {
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(submissionsRegion).toHaveFocus();
+      await userEvent.tab();
+      await expect(
+        within(submissionsRegion).getByRole('button', { name: /Last updated/ }),
+      ).toHaveFocus();
+    }
+    // AC3: amounts sit on one line, never wrapped mid-value.
+    const amount = within(ledgerRegion).getByText('USD 25,000,000.00');
+    await expect(getComputedStyle(amount).whiteSpace).toBe('nowrap');
+    const range = canvasElement.ownerDocument.createRange();
+    range.selectNodeContents(amount);
+    await expect(range.getClientRects()).toHaveLength(1);
+  },
+});
+
+export const NonStackedDark390 = nonStacked('dark', 390);
+export const NonStackedLight390 = nonStacked('light', 390);
+export const NonStackedDark1280 = nonStacked('dark', 1280);
+export const NonStackedLight1280 = nonStacked('light', 1280);
+
+const legacyAt = (width: ScrollWidth): Story => ({
+  ...LegacyRows,
+  name: `Legacy rows in scroll region · ${width} px`,
+  parameters: storyViewport(width),
+  play: async ({ canvasElement }) => {
+    expectStoryViewport(width);
+    const c = within(canvasElement);
+    const region = c.getByRole('region', { name: 'Contracts' });
+    if (width < 600) {
+      await expect(region.scrollWidth).toBeGreaterThan(region.clientWidth);
+      await waitFor(() => expect(region).toHaveAttribute('tabindex', '0'));
+    }
+    const doc = canvasElement.ownerDocument.documentElement;
+    await expect(doc.scrollWidth).toBeLessThanOrEqual(doc.clientWidth);
+  },
+});
+
+export const LegacyRows390 = legacyAt(390);
+export const LegacyRows1280 = legacyAt(1280);

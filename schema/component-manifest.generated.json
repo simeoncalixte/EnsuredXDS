@@ -19835,6 +19835,10 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
+              "regionLabel": {
+                "type": "string",
+                "description": "Accessible name of the horizontal scroll region. Defaults to \"Contracts\"."
+              },
               "rows": {
                 "type": "array",
                 "items": {
@@ -19907,6 +19911,10 @@
               "loadingLabel": {
                 "type": "string",
                 "description": "Loading text: the visible line, or the hidden label with `skeletonRows`. Defaults to \"Loading...\"."
+              },
+              "regionLabel": {
+                "type": "string",
+                "description": "Accessible name of the horizontal scroll region when there is no `caption`. With a\ncaption, the region is named by the caption (`aria-labelledby`) and this is ignored."
               },
               "skeletonRows": {
                 "type": "number",

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { colors, withAlpha } from '../colors.js';
 import { radii, spacing, typography } from '../tokens.js';
@@ -56,6 +56,8 @@ export type DataTableRowTone = 'default' | 'muted';
 /** Props for the legacy fixed-Row API (backward compatible). */
 export type DataTableLegacyProps = {
   rows: Row[];
+  /** Accessible name of the horizontal scroll region. Defaults to "Contracts". */
+  regionLabel?: string;
 };
 
 /** Props for the generic columns/data API. */
@@ -90,6 +92,11 @@ export type DataTableGenericProps<T = any> = {
   stacked?: boolean | 'always';
   /** Component used for links instead of `<a>`, e.g. a router link. It receives `href`, and `to` with the same value. */
   linkAs?: React.ComponentType<any>;
+  /**
+   * Accessible name of the horizontal scroll region when there is no `caption`. With a
+   * caption, the region is named by the caption (`aria-labelledby`) and this is ignored.
+   */
+  regionLabel?: string;
 };
 
 export type DataTableProps<T = any> = DataTableLegacyProps | DataTableGenericProps<T>;
@@ -104,6 +111,61 @@ const Table = styled.table`
   border-collapse: collapse;
   font-family: ui-monospace, Menlo, monospace;
 `;
+
+/**
+ * Horizontal scroll region around a non-stacked table (AIN-372, WCAG 1.4.10 / 2.1.1). A wide
+ * table scrolls inside this region instead of widening the page, and keyboard users can focus
+ * the region to scroll it with the arrow keys.
+ */
+const ScrollRegion = styled.div`
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: ${radii.sm}px;
+
+  &:focus-visible {
+    outline: 2px solid ${colors.secondary};
+    outline-offset: 2px;
+  }
+`;
+
+type ScrollRegionProps = React.PropsWithChildren<{
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+}>;
+
+/**
+ * The region is always named (when a name is available) and always contains the table. It joins
+ * the tab order only while the table is wider than the region, so keyboard users can reach and
+ * scroll it, and tables that fit add no extra tab stop.
+ */
+function TableScrollRegion({ children, ...name }: ScrollRegionProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [overflowing, setOverflowing] = useState(false);
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return undefined;
+    const measure = () => setOverflowing(element.scrollWidth > element.clientWidth);
+    measure();
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    const table = element.firstElementChild;
+    if (table) observer.observe(table);
+    return () => observer.disconnect();
+  }, []);
+  const hasName = Boolean(name['aria-label'] || name['aria-labelledby']);
+  return (
+    <ScrollRegion
+      ref={ref}
+      {...(hasName ? { role: 'region', ...name } : {})}
+      {...(overflowing ? { tabIndex: 0 } : {})}
+      data-xds-scroll-region={overflowing ? 'overflowing' : ''}
+    >
+      {children}
+    </ScrollRegion>
+  );
+}
 
 const HeaderRow = styled.tr`
   background: ${withAlpha(colors.onSurface, 0.02)};
@@ -125,6 +187,8 @@ const BodyRow = styled.tr`
 const BodyCell = styled.td<{ $align?: Align; $variant?: 'primary' | 'muted' }>`
   padding: 12px;
   text-align: ${(p) => p.$align ?? 'left'};
+  /* Right-aligned cells hold amounts and rates: never wrap them mid-value (AIN-372 AC3). */
+  ${(p) => (p.$align === 'right' ? 'white-space: nowrap;' : '')}
   color: ${(p) => (p.$variant === 'muted' ? colors.onSurfaceVariant : colors.text.primary)};
 `;
 
@@ -204,6 +268,10 @@ const GenericTable = styled(Table)<{ $stacked: boolean | 'always' }>`
           width: 100%;
           box-sizing: border-box;
           overflow-wrap: anywhere;
+        }
+
+        & > tbody > tr > td {
+          white-space: normal;
         }
 
         & > thead {
@@ -328,30 +396,32 @@ function isGeneric<T>(props: DataTableProps<T>): props is DataTableGenericProps<
  * Legacy fixed-Row rendering. Visual output is identical to the previous
  * inline-styled implementation.
  */
-const LegacyDataTable: React.FC<DataTableLegacyProps> = ({ rows }) => {
+const LegacyDataTable: React.FC<DataTableLegacyProps> = ({ rows, regionLabel = 'Contracts' }) => {
   return (
-    <Table>
-      <thead>
-        <HeaderRow>
-          <HeaderCell>Contract ID</HeaderCell>
-          <HeaderCell>Tranche</HeaderCell>
-          <HeaderCell $align="right">Value (USD)</HeaderCell>
-          <HeaderCell $align="center">Status</HeaderCell>
-        </HeaderRow>
-      </thead>
-      <tbody>
-        {rows.map((r) => (
-          <BodyRow key={r.id}>
-            <BodyCell>{r.id}</BodyCell>
-            <BodyCell $variant="muted">{r.tranche}</BodyCell>
-            <BodyCell $align="right">{r.value}</BodyCell>
-            <BodyCell $align="center">
-              <StatusBadge $statusVariant={r.statusVariant}>{r.status}</StatusBadge>
-            </BodyCell>
-          </BodyRow>
-        ))}
-      </tbody>
-    </Table>
+    <TableScrollRegion aria-label={regionLabel}>
+      <Table>
+        <thead>
+          <HeaderRow>
+            <HeaderCell>Contract ID</HeaderCell>
+            <HeaderCell>Tranche</HeaderCell>
+            <HeaderCell $align="right">Value (USD)</HeaderCell>
+            <HeaderCell $align="center">Status</HeaderCell>
+          </HeaderRow>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <BodyRow key={r.id}>
+              <BodyCell>{r.id}</BodyCell>
+              <BodyCell $variant="muted">{r.tranche}</BodyCell>
+              <BodyCell $align="right">{r.value}</BodyCell>
+              <BodyCell $align="center">
+                <StatusBadge $statusVariant={r.statusVariant}>{r.status}</StatusBadge>
+              </BodyCell>
+            </BodyRow>
+          ))}
+        </tbody>
+      </Table>
+    </TableScrollRegion>
   );
 };
 
@@ -376,7 +446,9 @@ function GenericDataTable<T>({
   loadingLabel = 'Loading...',
   stacked = false,
   linkAs,
+  regionLabel,
 }: DataTableGenericProps<T>) {
+  const captionId = useId();
   const columnCount = columns.length + (rowActions ? 1 : 0);
   const skeleton = Boolean(loading && skeletonRows && skeletonRows > 0);
   // The stacked layout changes table display, which drops table semantics in some
@@ -471,10 +543,15 @@ function GenericDataTable<T>({
     });
   }
 
-  return (
+  const table = (
     <GenericTable {...role('table')} $stacked={stacked} aria-busy={skeleton ? true : undefined}>
       {caption ? (
-        <Caption $hidden={captionHidden} ref={captionRef} {...(captionRef ? { tabIndex: -1 } : {})}>
+        <Caption
+          id={captionId}
+          $hidden={captionHidden}
+          ref={captionRef}
+          {...(captionRef ? { tabIndex: -1 } : {})}
+        >
           {caption}
           {skeleton ? <VisuallyHidden>{`, ${loadingLabel}`}</VisuallyHidden> : null}
         </Caption>
@@ -516,6 +593,18 @@ function GenericDataTable<T>({
       </thead>
       <tbody {...role('rowgroup')}>{body}</tbody>
     </GenericTable>
+  );
+
+  // A table that always stacks never scrolls sideways, so it needs no scroll region.
+  if (stacked === 'always') return table;
+
+  // The region is named by the caption, or by `regionLabel` when there is no caption.
+  return (
+    <TableScrollRegion
+      {...(caption ? { 'aria-labelledby': captionId } : { 'aria-label': regionLabel })}
+    >
+      {table}
+    </TableScrollRegion>
   );
 }
 
