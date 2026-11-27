@@ -4,12 +4,7 @@ import { within, expect } from '@storybook/test';
 import KeyValueList, { type KeyValueListItem } from '../../components/KeyValueList.js';
 import { cssVariables, xdsThemes, type XdsThemeName } from '../../palette.js';
 import { colors } from '../../colors.js';
-
-const viewports = {
-  xds375: { name: '375 px', styles: { width: '375px', height: '812px' }, type: 'mobile' },
-  xds768: { name: '768 px', styles: { width: '768px', height: '1024px' }, type: 'tablet' },
-  xds1440: { name: '1440 px', styles: { width: '1440px', height: '900px' }, type: 'desktop' },
-};
+import { expectStoryViewport, storyViewport, storyViewports } from '../viewport.js';
 
 /** Illustrative submission header fixture (AIN-280 detail screen). Not live data. */
 const submission: KeyValueListItem[] = [
@@ -30,7 +25,7 @@ const meta = {
   title: 'Data Display/KeyValueList',
   component: KeyValueList,
   args: { items: submission, columns: 3 },
-  parameters: { viewport: { viewports } },
+  parameters: { viewport: { viewports: storyViewports } },
 } satisfies Meta<typeof KeyValueList>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -162,13 +157,12 @@ const expectedColumns: Record<Width, number> = { 375: 1, 768: 2, 1440: 3 };
 const responsive = (theme: XdsThemeName, width: Width): Story => ({
   name: `Submission detail · ${theme} · ${width} px`,
   decorators: themed(theme),
-  parameters: { viewport: { defaultViewport: `xds${width}` } },
+  parameters: storyViewport(width),
   play: async ({ canvasElement }) => {
+    expectStoryViewport(width);
     const root = list(canvasElement);
     // 3 columns at 1024 px and up, 2 from 600 px, 1 below 600 px.
-    if (window.innerWidth === width) {
-      await expect(columnCount(root)).toBe(expectedColumns[width]);
-    }
+    await expect(columnCount(root)).toBe(expectedColumns[width]);
     await expect(within(root).getByText('01 Jan 2027')).toBeVisible();
   },
 });
