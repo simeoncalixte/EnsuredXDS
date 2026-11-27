@@ -23,8 +23,27 @@ export type XdsBadgeVariant =
   | 'neutral'
   | 'archived';
 
+/**
+ * How strongly the badge is drawn (AIN-362). Omit it to keep the default look of each
+ * variant exactly as it was before this prop existed.
+ * - outline: no fill, tone-coloured text and border (a working / in-progress state).
+ * - tint: the tone at 12% fill with a matching border (today's look for semantic tones).
+ * - solid: a full tone fill with inverse text (a final state, e.g. bound).
+ */
+export type XdsBadgeEmphasis = 'outline' | 'tint' | 'solid';
+
+/**
+ * Decorative leading icon. The badge text always carries the meaning, so icons are
+ * rendered with aria-hidden. `dot` is a filled circle (larger than the `dot` prop mark).
+ */
+export type XdsBadgeIcon = 'check' | 'cross' | 'arrowUpRight' | 'dot';
+
 export type XdsBadgeProps = {
   variant?: XdsBadgeVariant;
+  /** Fill strength. Omit for the variant's default look (unchanged from 0.4.x). */
+  emphasis?: XdsBadgeEmphasis;
+  /** Optional decorative leading icon. Takes precedence over `dot`; ignored for `archived`. */
+  icon?: XdsBadgeIcon;
   /** Optional leading dot rendered before the children. Ignored for `archived`, which shows an icon. */
   dot?: boolean;
   /** Visible badge text. The `archived` variant defaults to "Archived". */
@@ -99,6 +118,47 @@ const variantThemes: Record<XdsBadgeVariant, VariantTheme> = {
   },
 };
 
+/** Text colour of each variant, used by the outline and solid emphasis levels. */
+const variantInk: Record<XdsBadgeVariant, string> = {
+  primary: colors.primarySoft,
+  secondary: colors.secondary,
+  tertiary: colors.onSurfaceVariant,
+  surface: colors.onSurfaceVariant,
+  success: colors.success,
+  warning: colors.warning,
+  danger: colors.danger,
+  info: colors.info,
+  neutral: colors.onSurfaceVariant,
+  archived: colors.onSurfaceVariant,
+};
+
+/** Fill and text for `emphasis="solid"`. Neutral families use the inverse surface pair. */
+const solidThemes: Record<XdsBadgeVariant, { background: string; color: string }> = {
+  primary: { background: colors.primary, color: colors.onPrimary },
+  secondary: { background: colors.secondary, color: colors.text.inverse },
+  tertiary: { background: colors.onSurface, color: colors.surface },
+  surface: { background: colors.onSurface, color: colors.surface },
+  success: { background: colors.success, color: colors.text.inverse },
+  warning: { background: colors.warning, color: colors.text.inverse },
+  danger: { background: colors.danger, color: colors.text.inverse },
+  info: { background: colors.info, color: colors.text.inverse },
+  neutral: { background: colors.onSurface, color: colors.surface },
+  archived: { background: colors.onSurface, color: colors.surface },
+};
+
+const themeFor = (variant: XdsBadgeVariant, emphasis?: XdsBadgeEmphasis): VariantTheme => {
+  if (emphasis === 'outline') {
+    const ink = variantInk[variant];
+    return { background: 'transparent', color: ink, border: `1px solid ${ink}` };
+  }
+  if (emphasis === 'solid') {
+    const solid = solidThemes[variant];
+    return { ...solid, border: `1px solid ${solid.background}` };
+  }
+  // `tint` and the default share today's styles (neutral families keep their container look).
+  return variantThemes[variant];
+};
+
 /** System submission statuses (AIN-238). Org boards may add their own statuses. */
 export const SUBMISSION_SYSTEM_STATUSES = [
   'draft',
@@ -152,7 +212,47 @@ export function statusTone(status: string | null | undefined): SubmissionStatusT
     : 'surface';
 }
 
-const StyledBadge = styled.span<{ $variant: XdsBadgeVariant }>`
+/** Presentation of a submission status: pass all three to Badge (AIN-362). */
+export type SubmissionStatusPresentation = {
+  tone: SubmissionStatusTone;
+  emphasis: XdsBadgeEmphasis;
+  icon?: XdsBadgeIcon;
+};
+
+const submissionStatusPresentations: Record<
+  SubmissionSystemStatus,
+  Omit<SubmissionStatusPresentation, 'tone'>
+> = {
+  draft: { emphasis: 'outline' },
+  submitted: { emphasis: 'outline' },
+  modeling: { emphasis: 'outline' },
+  priced: { emphasis: 'outline' },
+  quoted: { emphasis: 'tint', icon: 'arrowUpRight' },
+  approved: { emphasis: 'tint', icon: 'check' },
+  rejected: { emphasis: 'tint', icon: 'cross' },
+  bound: { emphasis: 'solid', icon: 'dot' },
+};
+
+/**
+ * Full badge presentation for a submission status: tone plus emphasis plus icon, so
+ * status families never rely on hue alone. Working states (submitted, modeling, priced)
+ * and draft are outline with no icon; quoted (↗), approved (✓) and declined (✕) are
+ * tinted; bound is solid with a filled dot because the contract is final. Org board
+ * statuses, unknown and empty values → surface, outline, no icon.
+ *
+ * `tone` always equals `statusTone(status)`, which is unchanged since 0.3.0.
+ * Always render the status label as the badge text.
+ */
+export function statusPresentation(
+  status: string | null | undefined,
+): SubmissionStatusPresentation {
+  const key = normaliseStatus(status);
+  const tone = statusTone(key);
+  if (!isSubmissionSystemStatus(key)) return { tone, emphasis: 'outline' };
+  return { tone, ...submissionStatusPresentations[key as SubmissionSystemStatus] };
+}
+
+const StyledBadge = styled.span<{ $variant: XdsBadgeVariant; $emphasis?: XdsBadgeEmphasis }>`
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -163,8 +263,8 @@ const StyledBadge = styled.span<{ $variant: XdsBadgeVariant }>`
   text-transform: uppercase;
   letter-spacing: 1px;
 
-  ${({ $variant }: { $variant: XdsBadgeVariant }) => {
-    const theme = variantThemes[$variant];
+  ${({ $variant, $emphasis }: { $variant: XdsBadgeVariant; $emphasis?: XdsBadgeEmphasis }) => {
+    const theme = themeFor($variant, $emphasis);
     return css`
       background: ${theme.background};
       color: ${theme.color};
@@ -204,16 +304,65 @@ const ArchiveIcon = () => (
   </ArchiveSvg>
 );
 
+const IconDot = styled.span`
+  width: 8px;
+  height: 8px;
+  border-radius: ${radii.round}px;
+  background: currentColor;
+  flex: 0 0 auto;
+`;
+
+const iconPaths: Record<Exclude<XdsBadgeIcon, 'dot'>, React.ReactNode> = {
+  check: <path d="M5 12.5l4.5 4.5L19 7.5" />,
+  cross: <path d="M6 6l12 12M18 6L6 18" />,
+  arrowUpRight: <path d="M7 17L17 7M9 7h8v8" />,
+};
+
+const BadgeIcon: React.FC<{ icon: XdsBadgeIcon }> = ({ icon }) =>
+  icon === 'dot' ? (
+    <IconDot aria-hidden="true" data-xds-icon="dot" />
+  ) : (
+    <ArchiveSvg
+      aria-hidden="true"
+      focusable="false"
+      data-xds-icon={icon}
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {iconPaths[icon]}
+    </ArchiveSvg>
+  );
+
 export const Badge: React.FC<XdsBadgeProps> = ({
   variant = 'surface',
+  emphasis,
+  icon,
   dot = false,
   children,
   className,
 }) => {
   const archived = variant === 'archived';
   return (
-    <StyledBadge $variant={variant} className={className} data-xds-variant={variant}>
-      {archived ? <ArchiveIcon /> : dot ? <Dot aria-hidden="true" /> : null}
+    <StyledBadge
+      $variant={variant}
+      $emphasis={emphasis}
+      className={className}
+      data-xds-variant={variant}
+      data-xds-emphasis={emphasis}
+    >
+      {archived ? (
+        <ArchiveIcon />
+      ) : icon ? (
+        <BadgeIcon icon={icon} />
+      ) : dot ? (
+        <Dot aria-hidden="true" />
+      ) : null}
       {archived && (children === undefined || children === null || children === '')
         ? 'Archived'
         : children}

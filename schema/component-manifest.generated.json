@@ -18834,6 +18834,44 @@
             "type": "boolean",
             "description": "Optional leading dot rendered before the children. Ignored for `archived`, which shows an icon."
           },
+          "emphasis": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "outline"
+              },
+              {
+                "type": "string",
+                "const": "tint"
+              },
+              {
+                "type": "string",
+                "const": "solid"
+              }
+            ],
+            "description": "Fill strength. Omit for the variant's default look (unchanged from 0.4.x)."
+          },
+          "icon": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "check"
+              },
+              {
+                "type": "string",
+                "const": "cross"
+              },
+              {
+                "type": "string",
+                "const": "arrowUpRight"
+              },
+              {
+                "type": "string",
+                "const": "dot"
+              }
+            ],
+            "description": "Optional decorative leading icon. Takes precedence over `dot`; ignored for `archived`."
+          },
           "variant": {
             "anyOf": [
               {

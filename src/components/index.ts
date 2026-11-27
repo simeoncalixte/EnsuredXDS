@@ -2,14 +2,18 @@
 export {
   default as Badge,
   statusTone,
+  statusPresentation,
   isSubmissionSystemStatus,
   SUBMISSION_SYSTEM_STATUSES,
 } from './Badge.js';
 export type {
   XdsBadgeVariant,
   XdsBadgeProps,
+  XdsBadgeEmphasis,
+  XdsBadgeIcon,
   SubmissionSystemStatus,
   SubmissionStatusTone,
+  SubmissionStatusPresentation,
 } from './Badge.js';
 export { LinkButton, type XdsLinkButtonProps } from './Button.js';
 export { default as Button } from './Button.js';
