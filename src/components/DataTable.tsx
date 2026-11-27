@@ -94,7 +94,12 @@ export type DataTableGenericProps<T = any> = {
 
 export type DataTableProps<T = any> = DataTableLegacyProps | DataTableGenericProps<T>;
 
+// Positioned so visually hidden descendants (the "Actions" header label, the caption's loading
+// text and the stacked-mode thead) are contained by the table. Without this, their containing
+// block can sit outside a consumer's non-positioned `overflow-x: auto` wrapper and widen the
+// page (AIN-361; same fix class as AIN-353).
 const Table = styled.table`
+  position: relative;
   width: 100%;
   border-collapse: collapse;
   font-family: ui-monospace, Menlo, monospace;
