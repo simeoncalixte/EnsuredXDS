@@ -3,7 +3,8 @@ import styled, { css } from 'styled-components';
 import { colors } from '../colors.js';
 import { radii, typography } from '../tokens.js';
 
-export type XdsButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'text';
+export type XdsButtonVariant =
+  'primary' | 'secondary' | 'ghost' | 'outline' | 'text' | 'inline-select';
 export type XdsButtonTone = 'default' | 'success' | 'warning' | 'danger';
 export type XdsButtonSize = 'sm' | 'md';
 
@@ -66,6 +67,28 @@ const variantStyles = (variant: XdsButtonVariant, tone: XdsButtonTone) => {
         color: ${tinted ? accent : colors.text.primary};
         border: 1px solid ${tinted ? accent : colors.secondaryContainer};
       `;
+    case 'inline-select':
+      return css`
+        display: inline-flex;
+        align-items: center;
+        vertical-align: baseline;
+        gap: 8px;
+        min-height: 44px;
+        background: transparent;
+        color: ${colors.text.primary};
+        border: 0;
+        border-bottom: 1px solid currentColor;
+        border-radius: 0;
+        font: inherit;
+        white-space: nowrap;
+        & svg {
+          flex: none;
+        }
+        &:hover:not(:disabled) {
+          background: transparent;
+          border-bottom-color: ${colors.primary};
+        }
+      `;
     case 'text':
       return css`
         background: transparent;
@@ -99,7 +122,12 @@ const StyledButton = styled.button<StyledButtonProps>`
   font-weight: ${typography.weights.semibold};
   font-family: Inter, system-ui, sans-serif;
   ${({ $variant, $tone }) => variantStyles($variant, $tone)}
-  ${({ $size }) => sizeStyles($size)}
+  ${({ $size, $variant }) =>
+    $variant === 'inline-select'
+      ? css`
+          padding: 2px 4px;
+        `
+      : sizeStyles($size)}
 
   &:hover:not(:disabled) {
     background: ${({ $variant, $tone }) =>

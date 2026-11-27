@@ -398,6 +398,13 @@ export const PageScrollJourney: Story = {
       await waitFor(() =>
         expect(Math.abs(first.getBoundingClientRect().top - readingTop)).toBeLessThan(2),
       );
+      await waitFor(() =>
+        expect(
+          getComputedStyle(
+            within(canvasElement).getByRole('button', { name: 'View example source fields' }),
+          ).pointerEvents,
+        ).not.toBe('none'),
+      );
       await userEvent.click(
         within(canvasElement).getByRole('button', { name: 'View example source fields' }),
       );
@@ -489,5 +496,70 @@ export const PagedKeyboardTargets: Story = {
       );
     }
     await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
+  },
+};
+
+export const SeamlessPageStage: Story = {
+  ...PageScrollJourney,
+  args: {
+    ...PageScrollJourney.args,
+    shots: shots.map((shot) => ({
+      ...shot,
+      posterSrc: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"/%3E',
+    })),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = canvasElement.querySelector('canvas');
+    await waitFor(() => expect(canvas).toHaveAttribute('data-renderer-ready', 'true'), {
+      timeout: 15000,
+    });
+    await expect(canvasElement.querySelectorAll('[data-film-slot-still]')).toHaveLength(0);
+    if (innerWidth < 1100) {
+      const root = canvasElement.querySelector<HTMLElement>('[data-film-pagination]')!;
+      const visual = canvasElement.querySelector<HTMLElement>('[data-film-visual]')!;
+      const hero = canvasElement.querySelector<HTMLElement>('[data-film-page="hero"]')!;
+      const heroSlot = hero.querySelector<HTMLElement>('[data-film-inline-slot]')!;
+      const heroCopy = heroSlot.previousElementSibling!;
+      await expect(getComputedStyle(hero).justifyContent).toBe('center');
+      await expect(
+        heroSlot.getBoundingClientRect().top -
+          heroCopy.getBoundingClientRect().bottom -
+          parseFloat(getComputedStyle(heroCopy).marginBottom),
+      ).toBeLessThanOrEqual(32);
+      const first = document.getElementById('mechanics')!;
+      const next = document.getElementById('reserves')!;
+      // Sample native scroll positions independently of the browser's snap settling.
+      const oldSnap = document.documentElement.style.scrollSnapType;
+      document.documentElement.style.scrollSnapType = 'none';
+      try {
+        const readingTop = parseFloat(root.style.getPropertyValue('--film-reading-top'));
+        const start = first.getBoundingClientRect().top + scrollY - readingTop;
+        const end = next.getBoundingClientRect().top + scrollY - readingTop;
+        const positions: number[] = [];
+        for (const part of [0, 0.25, 0.5, 0.75, 1, 0.75, 0.5, 0.25, 0]) {
+          scrollTo(0, start + (end - start) * part);
+          await new Promise<void>((done) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => done())),
+          );
+          positions.push(visual.getBoundingClientRect().top + scrollY);
+          if (part === 0.5)
+            await expect(getComputedStyle(first.querySelector('h2')!).opacity).toBe('0');
+          if (part === 0)
+            await expect(getComputedStyle(first.querySelector('h2')!).opacity).toBe('1');
+          await expect(canvasElement.querySelector('canvas')).toBe(canvas);
+        }
+        for (let index = 1; index < 4; index++) {
+          await expect(
+            Math.abs(
+              positions[index] - (positions[0] + ((positions[4] - positions[0]) * index) / 4),
+            ),
+          ).toBeLessThan(3);
+          await expect(Math.abs(positions[index] - positions[8 - index])).toBeLessThan(3);
+        }
+        await expect(canvasElement.querySelectorAll('canvas')).toHaveLength(1);
+      } finally {
+        document.documentElement.style.scrollSnapType = oldSnap;
+      }
+    }
   },
 };

@@ -241,3 +241,23 @@ export const Horizontal: Story = {
   args: { orientation: 'horizontal' },
   parameters: { viewport: { defaultViewport: 'xds390' } },
 };
+
+export const CompactOptions: Story = {
+  args: {
+    name: 'compact-seat',
+    legend: 'Perspective',
+    compact: true,
+    options: [
+      { value: 'public', label: 'Public user' },
+      { value: 'broker', label: 'Broker' },
+    ],
+    onChange: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const option = within(canvasElement).getByRole('radio', { name: 'Broker' });
+    await userEvent.click(option);
+    await expect(option).toBeChecked();
+    await expect(args.onChange).toHaveBeenCalledWith('broker', expect.anything());
+    await expect(option.closest('label')!.getBoundingClientRect().height).toBeLessThan(44);
+  },
+};

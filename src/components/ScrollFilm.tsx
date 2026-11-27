@@ -25,9 +25,12 @@ export type ScrollFilmFrame = {
 };
 export type ScrollFilmProps = {
   hero: React.ReactNode;
+  /** Intro actions placed after the shared visual on narrow paginated layouts. */
+  heroActions?: React.ReactNode;
   shots: ScrollFilmShot[];
   renderVisual: (frame: ScrollFilmFrame) => React.ReactNode;
   seatControl?: React.ReactNode;
+  showControls?: boolean;
   reducedMotion?: boolean;
   detailMode?: 'dialog' | 'responsive';
   staticFallback?: boolean;
@@ -102,6 +105,29 @@ const Root = styled.div<{ $static: boolean; $connected: boolean }>`
       & [data-film-page] > [data-film-inline-slot] {
         margin-block: auto;
       }
+      & [data-film-page='hero'] {
+        justify-content: center;
+        gap: ${spacing.lg}px;
+      }
+      & [data-film-page='hero'] > [data-film-inline-slot] {
+        margin-block: 0;
+      }
+      & [data-film-page] > :not([data-film-inline-slot]) {
+        position: relative;
+        z-index: 3;
+        background: ${colors.surface};
+        opacity: var(--film-copy-opacity, 1);
+        pointer-events: var(--film-copy-events, auto);
+      }
+      & [data-film-page] [data-film-actions] {
+        opacity: var(--film-copy-opacity, 1);
+        pointer-events: var(--film-copy-events, auto);
+      }
+      &[data-film-target-navigation='true'] [data-film-page] > :not([data-film-inline-slot]),
+      &[data-film-target-navigation='true'] [data-film-actions] {
+        opacity: 1;
+        pointer-events: auto;
+      }
       & [data-film-beat] {
         padding-block: ${spacing.sm}px;
       }
@@ -141,7 +167,15 @@ const Hero = styled.header`
   grid-column: 1;
   grid-row: 2;
   min-width: 0;
-  scroll-margin-top: 80px;
+  scroll-margin-top: var(--film-reading-top, 160px);
+  & > [data-film-hero-actions] {
+    margin-top: ${spacing.lg}px;
+  }
+  @media (max-width: 1099px) {
+    &[data-film-page] > [data-film-hero-actions] {
+      margin-top: 0;
+    }
+  }
 `;
 const Visual = styled.div<{ $rows: number; $static: boolean; $inline: boolean }>`
   display: ${({ $static }) => ($static ? 'none' : 'block')};
@@ -149,7 +183,7 @@ const Visual = styled.div<{ $rows: number; $static: boolean; $inline: boolean }>
   grid-row: 2 / span ${({ $rows }) => $rows};
   align-self: start;
   position: sticky;
-  top: 64px;
+  top: calc(var(--film-host-header-height, 48px) + 16px);
   min-width: 0;
   @media (max-width: 1099px) {
     grid-column: 1;
@@ -198,7 +232,7 @@ const SlotStill = styled.img`
 const Shot = styled.section`
   grid-column: 1;
   min-width: 0;
-  scroll-margin-top: 80px;
+  scroll-margin-top: var(--film-reading-top, 160px);
   padding-block: ${spacing.xl}px;
   border-top: 1px solid ${colors.outlineVariant};
 `;
@@ -222,7 +256,7 @@ const Eyebrow = styled.p`
 const Beat = styled.div<{ $past: boolean; $active: boolean; $static: boolean; $inline: boolean }>`
   min-height: ${({ $static }) => ($static ? 'auto' : '40vh')};
   padding-block: ${spacing.lg}px;
-  scroll-margin-top: 80px;
+  scroll-margin-top: var(--film-reading-top, 160px);
   line-height: 1.6;
   font-size: 1.25rem;
   color: ${colors.text.primary};
@@ -264,6 +298,8 @@ const InlineDetail = styled.div`
   }
 `;
 const MobileActions = styled.div<{ $pages: boolean }>`
+  position: relative;
+  z-index: 3;
   display: none;
   @media (max-width: ${({ $pages }) => ($pages ? 1099 : 599)}px) {
     display: flex;
@@ -278,9 +314,11 @@ const subscribe = () => () => {};
  * scroll only updates the shared visual. No wheel interception or playback clock. */
 export default function ScrollFilm({
   hero,
+  heroActions,
   shots,
   renderVisual,
   seatControl,
+  showControls = true,
   reducedMotion = false,
   detailMode = 'dialog',
   staticFallback = false,
@@ -348,12 +386,15 @@ export default function ScrollFilm({
       frame = 0;
       const inlineNarrow = inlineVisual && window.innerWidth < 1100;
       const root = rootNode.current;
+      const hostHeaderHeight = root
+        ? parseFloat(getComputedStyle(root).getPropertyValue('--film-host-header-height')) || 0
+        : 0;
       if (root && inlineNarrow && visualNode.current) {
         const height = visualNode.current.getBoundingClientRect().height;
         root.style.setProperty('--film-inline-height', `${height}px`);
         const slots = Array.from(root.querySelectorAll<HTMLElement>('[data-film-visual-slot]'));
         const center = window.innerHeight / 2;
-        const slot = slots.sort((a, b) => {
+        const slot = [...slots].sort((a, b) => {
           const ar = a.getBoundingClientRect(),
             br = b.getBoundingClientRect();
           return (
@@ -361,10 +402,57 @@ export default function ScrollFilm({
           );
         })[0];
         if (slot) {
-          root.style.setProperty(
-            '--film-inline-top',
-            `${slot.getBoundingClientRect().top - root.getBoundingClientRect().top}px`,
-          );
+          const rootTop = root.getBoundingClientRect().top;
+          let top = slot.getBoundingClientRect().top - rootTop;
+          if (pages) {
+            // One persistent stage travels between page anchors. Its position is a
+            // continuous function of scroll, so reversing never swaps or resets it.
+            const readingTop = Math.min(
+              window.innerHeight - 100,
+              hostHeaderHeight +
+                (controlsNode.current?.getBoundingClientRect().height ?? (showControls ? 64 : 0)) +
+                16,
+            );
+            const anchors = slots.map((space) => {
+              const page = (space.closest('[data-film-page]') ?? space) as HTMLElement;
+              const rect = page.getBoundingClientRect();
+              const scroll = rect.top + window.scrollY - readingTop;
+              return {
+                page,
+                top: space.getBoundingClientRect().top - rootTop,
+                scroll,
+                exit: Math.max(scroll, rect.bottom + window.scrollY - window.innerHeight),
+              };
+            });
+            let index = 0;
+            while (index + 1 < anchors.length && window.scrollY > anchors[index + 1].scroll)
+              index++;
+            const from = anchors[index];
+            const to = anchors[index + 1] ?? from;
+            const fraction = Math.max(
+              0,
+              Math.min(1, (window.scrollY - from.exit) / Math.max(1, to.scroll - from.exit)),
+            );
+            top = from.top + (to.top - from.top) * fraction;
+            for (let pageIndex = 0; pageIndex < anchors.length; pageIndex++) {
+              const anchor = anchors[pageIndex];
+              const previous = anchors[pageIndex - 1];
+              const next = anchors[pageIndex + 1];
+              let opacity = 1;
+              if (previous && window.scrollY < anchor.scroll) {
+                const arrival =
+                  (window.scrollY - previous.exit) / Math.max(1, anchor.scroll - previous.exit);
+                opacity = Math.max(0, Math.min(1, (arrival - 0.65) / 0.35));
+              } else if (next && window.scrollY > anchor.exit) {
+                const departure =
+                  (window.scrollY - anchor.exit) / Math.max(1, next.scroll - anchor.exit);
+                opacity = Math.max(0, Math.min(1, 1 - departure / 0.35));
+              }
+              anchor.page.style.setProperty('--film-copy-opacity', String(opacity));
+              anchor.page.style.setProperty('--film-copy-events', opacity === 0 ? 'none' : 'auto');
+            }
+          }
+          root.style.setProperty('--film-inline-top', `${top}px`);
           visualNode.current.dataset.inlineSlot = slot.dataset.filmVisualSlot;
         }
       }
@@ -372,13 +460,14 @@ export default function ScrollFilm({
         window.innerWidth < 1100
           ? Math.min(
               window.innerHeight - 100,
-              (controlsNode.current?.getBoundingClientRect().height ?? 64) +
+              hostHeaderHeight +
+                (controlsNode.current?.getBoundingClientRect().height ?? (showControls ? 64 : 0)) +
                 (!inlineNarrow && window.innerHeight > 650
                   ? (visualNode.current?.getBoundingClientRect().height ?? 0)
                   : 0) +
                 16,
             )
-          : 80;
+          : Math.max(80, hostHeaderHeight + 16);
       rootNode.current?.style.setProperty('--film-reading-top', `${readingTop}px`);
       if (root) {
         const intro = nodes.current[0]?.getBoundingClientRect();
@@ -439,7 +528,7 @@ export default function ScrollFilm({
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
     };
-  }, [count, beatCounts, inlineVisual, pages]);
+  }, [count, beatCounts, inlineVisual, pages, showControls]);
   const go = (index: number) => {
     const bounded = Math.max(0, Math.min(count - 1, index));
     const node = nodes.current[bounded];
@@ -460,7 +549,7 @@ export default function ScrollFilm({
 
   const renderActions = (shot: ScrollFilmShot | undefined, index: number) =>
     detailMode === 'responsive' && enhanced ? (
-      <MobileActions $pages={pages}>
+      <MobileActions $pages={pages} data-film-actions>
         {shot?.details && (
           <Control variant="secondary" onClick={() => setDetail(shot)}>
             {shot.detailLabel ?? 'Read the example details'}
@@ -483,8 +572,9 @@ export default function ScrollFilm({
   const renderSlot = (shot?: ScrollFilmShot, index = -1) => (
     <InlineSlot data-film-inline-slot>
       <SlotSpace data-film-visual-slot={shot?.id ?? 'hero'}>
-        {(shot?.posterSrc ?? shots[0]?.posterSrc) && (
+        {!pages && (shot?.posterSrc ?? shots[0]?.posterSrc) && (
           <SlotStill
+            data-film-slot-still
             src={shot?.posterSrc ?? shots[0]?.posterSrc}
             alt=""
             aria-hidden="true"
@@ -504,6 +594,9 @@ export default function ScrollFilm({
       $connected={composition === 'connected'}
       data-narrow-visual={narrowVisualPlacement}
       data-film-pagination={pages ? 'pages' : undefined}
+      onFocusCapture={(event) => {
+        if (event.target.closest('[data-film-page]')) allowTargetScroll();
+      }}
       onClick={(event) => {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
           return;
@@ -529,38 +622,41 @@ export default function ScrollFilm({
           </>,
           document.body,
         )}
-      <Controls
-        $compact={detailMode === 'responsive'}
-        role="group"
-        aria-label="Scroll story controls"
-      >
-        <Control
-          variant="secondary"
-          disabled={active === 0}
-          onClick={() => go(active - 1)}
-          aria-label="Previous story beat"
+      {showControls && (
+        <Controls
+          $compact={detailMode === 'responsive'}
+          role="group"
+          aria-label="Scroll story controls"
         >
-          ‹
-        </Control>
-        <Control variant="secondary" onClick={() => setPaused(!paused)} aria-pressed={paused}>
-          {paused ? 'Resume' : 'Pause'}
-        </Control>
-        <Control
-          variant="secondary"
-          disabled={active >= count - 1}
-          onClick={() => go(active + 1)}
-          aria-label="Next story beat"
-        >
-          ›
-        </Control>
-        <Control variant="text" onClick={() => go(0)} aria-label="Return to story beginning">
-          ↺
-        </Control>
-        {seatControl}
-        <Hidden role="status" aria-live="polite">
-          {announcement}
-        </Hidden>
-      </Controls>
+          <Control
+            variant="secondary"
+            disabled={active === 0}
+            onClick={() => go(active - 1)}
+            aria-label="Previous story beat"
+          >
+            ‹
+          </Control>
+          <Control variant="secondary" onClick={() => setPaused(!paused)} aria-pressed={paused}>
+            {paused ? 'Resume' : 'Pause'}
+          </Control>
+          <Control
+            variant="secondary"
+            disabled={active >= count - 1}
+            onClick={() => go(active + 1)}
+            aria-label="Next story beat"
+          >
+            ›
+          </Control>
+          <Control variant="text" onClick={() => go(0)} aria-label="Return to story beginning">
+            ↺
+          </Control>
+          {seatControl}
+          <Hidden role="status" aria-live="polite">
+            {announcement}
+          </Hidden>
+        </Controls>
+      )}
+      {!showControls && <div aria-hidden="true" style={{ gridColumn: '1 / -1', height: 0 }} />}
       <Hero
         data-film-page={pages ? 'hero' : undefined}
         data-film-copy
@@ -570,6 +666,7 @@ export default function ScrollFilm({
       >
         {hero}
         {pages && renderSlot()}
+        {heroActions && <div data-film-hero-actions>{heroActions}</div>}
       </Hero>
       {inlineVisual && !pages && renderSlot()}
       <Visual

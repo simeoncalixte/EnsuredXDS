@@ -38,6 +38,8 @@ export type RadioGroupProps = {
   /** Error message (e.g. "Choose Approve or Decline."), linked to the fieldset with aria-describedby. */
   error?: React.ReactNode;
   /** `vertical` (default) stacks options; `horizontal` lays them out in a wrapping row. */
+  /** Compact rows for anchored option menus. */
+  compact?: boolean;
   orientation?: 'vertical' | 'horizontal';
   /** Visually hide the legend (it stays the accessible name). Use only when a heading already names the group. */
   legendHidden?: boolean;
@@ -57,13 +59,22 @@ const visuallyHidden = `
   border: 0;
 `;
 
-const Fieldset = styled.fieldset`
+const Fieldset = styled.fieldset<{ $compact: boolean }>`
   margin: 0;
   padding: 0;
   border: none;
   min-width: 0;
   font-family: ${typography.fontFamily};
   color: ${colors.text.primary};
+  ${({ $compact }) =>
+    $compact
+      ? `
+    & > div { gap: 0; }
+    & label { padding: 7px 8px; border: none; box-shadow: none; border-radius: 4px; }
+    & label:hover { background: ${colors.surfaceContainerLow}; }
+    & label:focus-within { outline-offset: -2px; }
+  `
+      : ''}
 `;
 
 const Legend = styled.legend<{ $hidden?: boolean }>`
@@ -221,6 +232,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
   disabled = false,
   error,
   orientation = 'vertical',
+  compact = false,
   legendHidden = false,
   id,
   className,
@@ -242,6 +254,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 
   return (
     <Fieldset
+      $compact={compact}
       id={baseId}
       className={className}
       aria-describedby={groupDescribedBy}
