@@ -228,7 +228,7 @@ export const SelectCommand: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(trigger(canvasElement));
     await userEvent.click(canvas.getByRole('menuitem', { name: 'Assign underwriter' }));
-    const assign = args.items?.[1] as { onSelect: ReturnType<typeof fn> };
+    const assign = args.items?.[1] as unknown as { onSelect: ReturnType<typeof fn> };
     await expect(assign.onSelect).toHaveBeenCalledTimes(1);
     await expect(canvas.queryByRole('menu')).toBeNull();
     await expect(trigger(canvasElement)).toHaveFocus();
@@ -301,7 +301,7 @@ export const KeyboardMove: Story = {
     await userEvent.keyboard('{Enter}');
     await expect(canvas.queryByRole('menu')).toBeNull();
     await expect(button).toHaveFocus();
-    const onMove = (args as { onMove: ReturnType<typeof fn> }).onMove;
+    const onMove = (args as unknown as { onMove: ReturnType<typeof fn> }).onMove;
     await expect(onMove).toHaveBeenCalledWith('in-review');
     await expect(canvas.getByTestId('stage')).toHaveTextContent('Stage: in-review');
     // Choosing the current stage again does nothing.

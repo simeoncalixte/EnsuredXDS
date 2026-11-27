@@ -9,19 +9,13 @@ import Badge from '../../components/Badge.js';
 import { formatDateOnly } from '../../formatDateOnly.js';
 import { cssVariables, xdsThemes, type XdsThemeName } from '../../palette.js';
 import { colors } from '../../colors.js';
-
-const viewports = {
-  xds375: { name: '375 px', styles: { width: '375px', height: '812px' }, type: 'mobile' },
-  xds768: { name: '768 px', styles: { width: '768px', height: '1024px' }, type: 'tablet' },
-  xds1280: { name: '1280 px', styles: { width: '1280px', height: '900px' }, type: 'desktop' },
-  xds1440: { name: '1440 px', styles: { width: '1440px', height: '900px' }, type: 'desktop' },
-};
+import { expectStoryViewport, storyViewport, storyViewports } from '../viewport.js';
 
 const meta: Meta<typeof DataTable> = {
   id: 'xds-datatable',
   title: 'Data Display/DataTable',
   component: DataTable,
-  parameters: { viewport: { viewports } },
+  parameters: { viewport: { viewports: storyViewports } },
 };
 
 export default meta;
@@ -436,15 +430,16 @@ type Width = 375 | 768 | 1440;
 const responsive = (theme: XdsThemeName, width: Width): Story => ({
   name: `Submissions · ${theme} · ${width} px`,
   decorators: themed(theme),
-  parameters: { viewport: { defaultViewport: `xds${width}` } },
+  parameters: storyViewport(width),
   render: () => <SubmissionsTable />,
   play: async ({ canvasElement }) => {
+    expectStoryViewport(width);
     const table = canvasElement.querySelector('table') as HTMLTableElement;
     const firstCell = table.querySelector('tbody td') as HTMLElement;
-    if (window.innerWidth === width) {
-      // Stacked cards below 600 px; a real table from 600 px.
-      await expect(getComputedStyle(firstCell).display).toBe(width < 600 ? 'block' : 'table-cell');
-    }
+    // Stacked cards below 600 px; a real table from 600 px.
+    await expect(getComputedStyle(firstCell).display).toBe(width < 600 ? 'block' : 'table-cell');
+    // Neither layout may widen the page.
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(width);
     await expect(within(table).getAllByRole('link')).toHaveLength(3);
     if (width < 600) await expect(firstCell).toHaveAttribute('data-label', 'Insured');
   },
@@ -496,9 +491,10 @@ const NarrowScrollerWithRowActions = () => (
 
 const rowActionsInScroller = (width: 1280 | 375): Story => ({
   name: `Row actions in a non-positioned scroller · ${width} px`,
-  parameters: { viewport: { defaultViewport: `xds${width}` } },
+  parameters: storyViewport(width),
   render: () => <NarrowScrollerWithRowActions />,
   play: async ({ canvasElement }) => {
+    expectStoryViewport(width);
     const c = within(canvasElement);
     // AC2: the actions column keeps its accessible name.
     await expect(c.getByRole('columnheader', { name: 'Actions' })).toBeInTheDocument();

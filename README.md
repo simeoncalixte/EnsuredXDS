@@ -335,6 +335,8 @@ Empty values (`null`, `undefined` or `''`) show "—", which is hidden from scre
 - `skeletonRows` shows a table-shaped skeleton while `loading`, sets `aria-busy` and reads `loadingLabel`. Without it, the existing "Loading..." line is shown.
 - `stacked` shows each row as a card with field labels below 600 px. Column `label` sets the field label when `header` isn't a string.
 
+**Phone widths.** Use `stacked` (or `stacked="always"` in a narrow panel) for tables people read on a phone. A non-stacked table keeps its columns, so at 375 px it's wider than the screen. Horizontal scrolling is acceptable only when it happens inside the table's own scroll container and the page itself doesn't scroll sideways (WCAG 1.4.10). The non-stacked examples (`LegacyRows`, `SortableHeader`, `CaptionFocus`) don't meet that yet: they widen the page at 375 and 390 px. That is a known bug, and AIN-372 adds a named, keyboard-focusable scroll region to fix it. Until then, wrap a non-stacked table in your own `overflow-x: auto` container with `position: relative`.
+
 See **Data Display/DataTable** in Storybook.
 
 ## Kanban boards: confirm before a move, card controls
@@ -569,6 +571,12 @@ when used inside a Filters panel. Domain forms belong under `Form Elements/Insur
 while read-only domain compositions belong under `Insurance`. Full-page examples
 belong in Page Compositions. Empty planned categories do not imply implemented
 components. See [ROADMAP.md](ROADMAP.md) for the planned component mapping.
+
+## Viewport-specific stories
+
+Some stories check layout that depends on a media query, for example stacked DataTable rows below 600 px or 44 px Pagination targets below 1024 px. Each declares its width with `storyViewport(width)` from `src/stories/viewport.ts`. That sets the viewport addon default (used in the Storybook UI) and `parameters.xds.viewportWidth`. Test runners that load `iframe.html` directly must open the page at that width.
+
+The play function calls `expectStoryViewport(width)` first. At any other width it fails with a message naming the width it needs, so it can't pass just because it ran at the wrong width. Stories without the parameter, such as `Form Elements/Range/Controlled`, must pass at any width.
 
 ## Storybook hosting
 

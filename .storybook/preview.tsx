@@ -33,7 +33,8 @@ const withLocationPathControl: Decorator = (Story, context) => {
     };
   }
 
-  return withRouter(Story, context);
+  // The addon types withRouter as () => any; at runtime it is a decorator.
+  return (withRouter as unknown as Decorator)(Story, context);
 };
 
 export const decorators = [withXdsTheme, withLocationPathControl];

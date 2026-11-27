@@ -59,6 +59,7 @@
     "check:schema-registry": "node scripts/sync-schema-registry.mjs --check",
     "generate:component-manifest": "node scripts/generate-component-manifest.mjs",
     "test:component-manifest": "node --test test/component-manifest.test.mjs",
+    "typecheck:stories": "tsc -p tsconfig.stories.json",
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix --max-warnings=0",
     "format": "prettier . --write",
