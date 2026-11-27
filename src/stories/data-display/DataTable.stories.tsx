@@ -13,6 +13,7 @@ import { colors } from '../../colors.js';
 const viewports = {
   xds375: { name: '375 px', styles: { width: '375px', height: '812px' }, type: 'mobile' },
   xds768: { name: '768 px', styles: { width: '768px', height: '1024px' }, type: 'tablet' },
+  xds1280: { name: '1280 px', styles: { width: '1280px', height: '900px' }, type: 'desktop' },
   xds1440: { name: '1440 px', styles: { width: '1440px', height: '900px' }, type: 'desktop' },
 };
 
@@ -475,3 +476,40 @@ export const NarrowPanelAtAnyViewport: Story = {
     ).toBe(true);
   },
 };
+
+/**
+ * AIN-361: a table with `rowActions` inside a consumer's narrow `overflow-x: auto` wrapper that is
+ * **not** positioned. The visually hidden "Actions" header label must stay inside the table, so the
+ * wrapper scrolls and the document never grows wider than the viewport.
+ */
+const NarrowScrollerWithRowActions = () => (
+  <div data-testid="scroller" style={{ overflowX: 'auto', width: 240, maxWidth: '100%' }}>
+    <div style={{ width: 1600 }}>
+      <DataTable<DealRow>
+        columns={genericColumns}
+        data={genericData}
+        rowActions={(row) => <button type="button">View {row.deal}</button>}
+      />
+    </div>
+  </div>
+);
+
+const rowActionsInScroller = (width: 1280 | 375): Story => ({
+  name: `Row actions in a non-positioned scroller · ${width} px`,
+  parameters: { viewport: { defaultViewport: `xds${width}` } },
+  render: () => <NarrowScrollerWithRowActions />,
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    // AC2: the actions column keeps its accessible name.
+    await expect(c.getByRole('columnheader', { name: 'Actions' })).toBeInTheDocument();
+    // The wrapper really is narrower than the table, so it scrolls.
+    const scroller = c.getByTestId('scroller');
+    await expect(scroller.scrollWidth).toBeGreaterThan(scroller.clientWidth);
+    // AC1: the hidden label doesn't escape the wrapper and widen the document.
+    const doc = canvasElement.ownerDocument.documentElement;
+    await expect(doc.scrollWidth).toBeLessThanOrEqual(doc.clientWidth);
+  },
+});
+
+export const RowActionsInScroller1280 = rowActionsInScroller(1280);
+export const RowActionsInScroller375 = rowActionsInScroller(375);
