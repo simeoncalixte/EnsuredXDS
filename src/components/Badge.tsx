@@ -212,26 +212,33 @@ export function statusTone(status: string | null | undefined): SubmissionStatusT
     : 'surface';
 }
 
+/**
+ * Badge tones that `statusPresentation()` can return. A superset of `SubmissionStatusTone`
+ * (which is unchanged): approved uses `success` and quoted uses `warning` (AIN-362, PM 11154).
+ */
+export type SubmissionStatusPresentationTone = SubmissionStatusTone | 'warning';
+
 /** Presentation of a submission status: pass all three to Badge (AIN-362). */
 export type SubmissionStatusPresentation = {
-  tone: SubmissionStatusTone;
+  tone: SubmissionStatusPresentationTone;
   emphasis: XdsBadgeEmphasis;
   icon?: XdsBadgeIcon;
 };
 
-const submissionStatusPresentations: Record<
-  SubmissionSystemStatus,
-  Omit<SubmissionStatusPresentation, 'tone'>
-> = {
-  draft: { emphasis: 'outline' },
-  submitted: { emphasis: 'outline' },
-  modeling: { emphasis: 'outline' },
-  priced: { emphasis: 'outline' },
-  quoted: { emphasis: 'tint', icon: 'arrowUpRight' },
-  approved: { emphasis: 'tint', icon: 'check' },
-  rejected: { emphasis: 'tint', icon: 'cross' },
-  bound: { emphasis: 'solid', icon: 'dot' },
-};
+// Tone differs from statusTone() only for approved (success) and quoted (warning), so
+// approved and quoted never share declined's red family in the light theme. Bound would be
+// "solid inverse" in the design, but XDS has no inverse tone, so it stays success + solid.
+const submissionStatusPresentations: Record<SubmissionSystemStatus, SubmissionStatusPresentation> =
+  {
+    draft: { tone: 'neutral', emphasis: 'outline' },
+    submitted: { tone: 'info', emphasis: 'outline' },
+    modeling: { tone: 'info', emphasis: 'outline' },
+    priced: { tone: 'info', emphasis: 'outline' },
+    quoted: { tone: 'warning', emphasis: 'tint', icon: 'arrowUpRight' },
+    approved: { tone: 'success', emphasis: 'tint', icon: 'check' },
+    rejected: { tone: 'danger', emphasis: 'tint', icon: 'cross' },
+    bound: { tone: 'success', emphasis: 'solid', icon: 'dot' },
+  };
 
 /**
  * Full badge presentation for a submission status: tone plus emphasis plus icon, so
@@ -240,16 +247,16 @@ const submissionStatusPresentations: Record<
  * tinted; bound is solid with a filled dot because the contract is final. Org board
  * statuses, unknown and empty values → surface, outline, no icon.
  *
- * `tone` always equals `statusTone(status)`, which is unchanged since 0.3.0.
- * Always render the status label as the badge text.
+ * `tone` equals `statusTone(status)` except approved → success (✓) and quoted →
+ * warning (↗), so approved and quoted never share declined's hue. `statusTone()` itself
+ * is unchanged since 0.3.0. Always render the status label as the badge text.
  */
 export function statusPresentation(
   status: string | null | undefined,
 ): SubmissionStatusPresentation {
   const key = normaliseStatus(status);
-  const tone = statusTone(key);
-  if (!isSubmissionSystemStatus(key)) return { tone, emphasis: 'outline' };
-  return { tone, ...submissionStatusPresentations[key as SubmissionSystemStatus] };
+  if (!isSubmissionSystemStatus(key)) return { tone: 'surface', emphasis: 'outline' };
+  return { ...submissionStatusPresentations[key as SubmissionSystemStatus] };
 }
 
 const StyledBadge = styled.span<{ $variant: XdsBadgeVariant; $emphasis?: XdsBadgeEmphasis }>`

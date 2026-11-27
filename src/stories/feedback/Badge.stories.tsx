@@ -243,7 +243,8 @@ export const Archived: Story = {
 
 // ---------------------------------------------------------------------------
 // AIN-362: statusPresentation() and the Badge emphasis / icon props.
-// statusTone() is unchanged; statusPresentation(s).tone === statusTone(s).
+// statusTone() is unchanged. statusPresentation(s).tone === statusTone(s) except
+// approved → success and quoted → warning (PM decision 11154).
 // ---------------------------------------------------------------------------
 
 const emphases: XdsBadgeEmphasis[] = ['outline', 'tint', 'solid'];
@@ -304,7 +305,7 @@ const presentationPlay = async (canvasElement: HTMLElement) => {
     const badge = canvasElement.querySelector(`[data-status="${status}"] [data-xds-variant]`);
     expect(badge).not.toBeNull();
     const p = statusPresentation(status);
-    expect(badge?.getAttribute('data-xds-variant')).toBe(statusTone(status));
+    expect(badge?.getAttribute('data-xds-variant')).toBe(p.tone);
     expect(badge?.getAttribute('data-xds-emphasis')).toBe(p.emphasis);
     // The label is always visible text; the icon is decorative only.
     expect(badge).toHaveTextContent(labelFor(status));
@@ -319,6 +320,12 @@ const presentationPlay = async (canvasElement: HTMLElement) => {
     return [cs.backgroundColor, el.querySelector('[data-xds-icon]')?.getAttribute('data-xds-icon')];
   };
   expect(look('approved')).not.toEqual(look('rejected'));
+  // AC2b: approved and quoted have a different computed fill from declined.
+  const fill = (s: string) =>
+    getComputedStyle(canvasElement.querySelector(`[data-status="${s}"] [data-xds-variant]`)!)
+      .backgroundColor;
+  expect(fill('approved')).not.toBe(fill('rejected'));
+  expect(fill('quoted')).not.toBe(fill('rejected'));
   expect(look('bound')).not.toEqual(look('submitted'));
 };
 
