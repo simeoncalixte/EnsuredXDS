@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { within, userEvent, expect } from '@storybook/test';
+import { within, userEvent, expect, fn } from '@storybook/test';
 import { Button } from '../../components/Button.js';
 
 const meta: Meta<typeof Button> = {
@@ -10,7 +10,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'ghost', 'outline', 'text'],
+      options: ['primary', 'secondary', 'ghost', 'outline', 'text', 'inline-select'],
     },
     tone: {
       control: 'select',
@@ -106,5 +106,20 @@ export const ClickInteraction: Story = {
     await expect(canvas.getByRole('button', { name: 'Clicked 1' })).toBeInTheDocument();
     await userEvent.click(canvas.getByRole('button', { name: 'Clicked 1' }));
     await expect(canvas.getByRole('button', { name: 'Clicked 2' })).toBeInTheDocument();
+  },
+};
+
+export const InlineSelect: Story = {
+  args: { variant: 'inline-select', children: 'Broker ▾', onClick: fn() },
+  play: async ({ canvasElement, args }) => {
+    const button = within(canvasElement).getByRole('button', { name: 'Broker ▾' });
+    await expect(getComputedStyle(button).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    await expect(getComputedStyle(button).borderTopWidth).toBe('0px');
+    await expect(getComputedStyle(button).borderBottomWidth).toBe('1px');
+    await userEvent.hover(button);
+    await expect(getComputedStyle(button).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
+    await expect(button).toHaveFocus();
   },
 };

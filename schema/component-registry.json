@@ -186,7 +186,7 @@
       "export": "@ensured/xds/components/Button",
       "kind": "action",
       "fieldTypes": [],
-      "description": "Form action button; the renderer supplies content and action handlers."
+      "description": "Form action button; the renderer supplies content and action handlers. Includes a transparent underline-only inline-select trigger variant."
     },
     {
       "id": "xds.card",
@@ -673,7 +673,7 @@
       "export": "@ensured/xds/components/RadioGroup",
       "kind": "field",
       "fieldTypes": [],
-      "description": "Fieldset with a visible legend and native radios, each with a label and optional description; no default selection, controlled (value or null) or uncontrolled, disabled options keep their reason, hint and error linked to the fieldset."
+      "description": "Fieldset with a visible legend and native radios, each with a label and optional description; no default selection, controlled (value or null) or uncontrolled, disabled options keep their reason, hint and error linked to the fieldset. Supports compact rows for anchored option menus."
     },
     {
       "id": "xds.playback-controls",
@@ -708,7 +708,7 @@
       "version": 1,
       "export": "@ensured/xds/components/ScrollFilm",
       "fieldTypes": [],
-      "description": "Native-scroll scene composition with one persistent visual and accessible detail sheets"
+      "description": "Native-scroll scene composition with one persistent visual and accessible detail sheets Supports continuous narrow-page stage travel, hero actions after the visual, optional controls and host-header offsets."
     },
     {
       "id": "xds.link-button",
