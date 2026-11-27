@@ -14,13 +14,13 @@ const items = [
   'Settings',
   'Network',
 ].map((label) => ({ id: `/${label.toLowerCase().replaceAll(' ', '-')}`, label }));
-const meta: Meta<typeof ScrollableNavigation> = {
+const meta = {
   id: 'xds-scrollablenavigation',
   title: 'Navigation/ScrollableNavigation',
   component: ScrollableNavigation,
   args: { items, activeId: '/dashboard' },
   parameters: { layout: 'padded' },
-};
+} satisfies Meta<typeof ScrollableNavigation>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Desktop: Story = {};

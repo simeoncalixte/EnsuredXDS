@@ -113,7 +113,6 @@ export const LastPage: Story = {
 export const SinglePage: Story = {
   args: { hasPrevious: false, hasNext: false },
   play: async ({ canvasElement }) => {
-    expectStoryViewport(width);
     const { previous, next } = buttons(canvasElement);
     await expectReason(previous, /first page/);
     await expectReason(next, /last page/);

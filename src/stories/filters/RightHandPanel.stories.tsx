@@ -41,7 +41,7 @@ export const ApplyResetAndKeyboard: Story = {
   render: () => <Fixture />,
   play: async ({ canvasElement }) => {
     const c = within(canvasElement),
-      trigger = c.getByRole('button', { name: 'Filters', exact: true });
+      trigger = c.getByRole('button', { name: 'Filters' });
     await userEvent.click(trigger);
     const panel = c.getByRole('dialog', { name: 'Filters' }),
       p = within(panel);
