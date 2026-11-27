@@ -167,3 +167,39 @@ test('muted row and secondary-line text meet 4.5:1 in light and dark themes', ()
     }
   }
 });
+
+test('table is positioned so the hidden "Actions" header label cannot escape a scroll wrapper (AIN-361)', async () => {
+  const server = await createServer({
+    configFile: false,
+    logLevel: 'silent',
+    server: { middlewareMode: true, hmr: { server: createHttpServer() } },
+    ssr: { noExternal: ['styled-components'] },
+  });
+  try {
+    const { DataTable } = await server.ssrLoadModule('/src/components/DataTable.tsx');
+    const { ServerStyleSheet } = await server.ssrLoadModule('styled-components');
+    const sheet = new ServerStyleSheet();
+    try {
+      const html = renderToStaticMarkup(
+        sheet.collectStyles(
+          React.createElement(DataTable, {
+            columns: [{ key: 'ref', header: 'Reference', render: (row) => row.ref }],
+            data: [{ ref: 'SUB-10482' }],
+            rowActions: () => React.createElement('button', { type: 'button' }, 'View'),
+          }),
+        ),
+      );
+      assert.match(html, /<span[^>]*>Actions<\/span>/);
+      const tableClasses = html.match(/<table[^>]*class="([^"]+)"/)[1].split(/\s+/);
+      const css = sheet.getStyleTags();
+      const positioned = tableClasses.some((cls) =>
+        new RegExp(`\\.${cls}\\{[^}]*position:relative`).test(css),
+      );
+      assert.ok(positioned, 'expected the <table> to have position: relative');
+    } finally {
+      sheet.seal();
+    }
+  } finally {
+    await server.close();
+  }
+});
