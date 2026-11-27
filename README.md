@@ -406,6 +406,14 @@ const [decision, setDecision] = useState<string | null>(null);
 
 See **Form Elements/RadioGroup** in Storybook.
 
+`Textarea` (`xds.textarea`) takes `maxLength` + `showCount` for a visible "n / max" count under the field (for example a 500-character decline reason). The count is linked with `aria-describedby` (after any ids you pass) and a polite live region announces it once typing pauses (`announceDelay`, default 750 ms). At the limit the count adds "limit reached" in text (`limitReachedText`). `countAnnouncement(count, max)` localises the announcement. Without `showCount` the markup is unchanged.
+
+```tsx
+<Textarea id="decline-reason" maxLength={500} showCount aria-describedby="decline-reason-hint" />
+```
+
+See **Form Elements/Textarea** in Storybook.
+
 ## Status toasts
 
 `StatusToast` (`xds.status-toast`) shows one polite status message with at most one action, such as "SUB-8401 moved from New to Triage." with Undo. Mount it once, after the main content, and pass the current message:
