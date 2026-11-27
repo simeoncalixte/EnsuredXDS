@@ -4,12 +4,7 @@ import { within, userEvent, expect, fn } from '@storybook/test';
 import Pagination from '../../components/Pagination.js';
 import { cssVariables, xdsThemes, type XdsThemeName } from '../../palette.js';
 import { colors } from '../../colors.js';
-
-const viewports = {
-  xds375: { name: '375 px', styles: { width: '375px', height: '812px' }, type: 'mobile' },
-  xds768: { name: '768 px', styles: { width: '768px', height: '1024px' }, type: 'tablet' },
-  xds1440: { name: '1440 px', styles: { width: '1440px', height: '900px' }, type: 'desktop' },
-};
+import { expectStoryViewport, storyViewport, storyViewports } from '../viewport.js';
 
 const meta = {
   id: 'xds-pagination',
@@ -23,7 +18,7 @@ const meta = {
     onNext: fn(),
     pageSizeLabel: '25 per page',
   },
-  parameters: { viewport: { viewports } },
+  parameters: { viewport: { viewports: storyViewports } },
 } satisfies Meta<typeof Pagination>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -162,8 +157,9 @@ const responsive = (theme: XdsThemeName, width: Width): Story => ({
   name: `First page · ${theme} · ${width} px`,
   args: { hasPrevious: false, hasNext: true },
   decorators: themed(theme),
-  parameters: { viewport: { defaultViewport: `xds${width}` } },
+  parameters: storyViewport(width),
   play: async ({ canvasElement }) => {
+    expectStoryViewport(width);
     const { previous, next } = buttons(canvasElement);
     await expectReason(previous, /first page/);
     // 44 px touch targets below 1024 px; at least 24 px everywhere (WCAG 2.5.8).

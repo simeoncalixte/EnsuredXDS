@@ -13,8 +13,18 @@ const StyledRange = styled.input<{ $fill: number }>`
   appearance: none;
   height: 8px;
   border-radius: ${radii.md}px;
+  /* Browsers give range inputs a default margin; with width: 100% that widens the parent. */
+  margin: 0;
   background: ${({ $fill }) => trackFill($fill)};
-  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${colors.primary};
+    outline-offset: 4px;
+  }
 
   &::-webkit-slider-runnable-track {
     height: 8px;
