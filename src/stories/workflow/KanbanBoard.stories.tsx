@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, expect, userEvent, waitFor } from '@storybook/test';
 import styled from 'styled-components';
@@ -9,6 +9,8 @@ import {
   KanbanStage,
 } from '../../components/KanbanBoard.js';
 import { Button } from '../../components/Button.js';
+import MenuButton from '../../components/MenuButton.js';
+import StatusToast from '../../components/StatusToast.js';
 import { colors } from '../../colors.js';
 import { spacing, radii, typography } from '../../tokens.js';
 
@@ -409,5 +411,154 @@ export const DragDisabled: Story = {
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('[draggable="true"]')).toBeNull();
     await expect(within(laneOf(canvasElement, 'decision')).getByText('No items')).toBeVisible();
+  },
+};
+
+// --- AIN-315 acceptance: keyboard-only move through the menu, then Undo from the toast ---
+
+const stageLabel = (key: string) => UW_STAGES.find((stage) => stage.key === key)?.label ?? key;
+
+const MenuCard: React.FC<{ item: Submission; context: KanbanCardContext }> = ({
+  item,
+  context,
+}) => (
+  <DemoCard>
+    <CardLink href={`#/submissions/${item.ref}`}>{item.ref}</CardLink>
+    <CardMeta>{item.insured}</CardMeta>
+    <CardActions>
+      <MenuButton
+        size="sm"
+        label={`More actions for ${item.ref}`}
+        triggerText="Move"
+        disabled={context.movePending}
+        radioGroup={{
+          label: 'Move to a stage',
+          value: item.stageKey,
+          options: UW_STAGES.map((stage) => ({ value: stage.key, label: stage.label })),
+          onChange: (toStageKey) => void context.requestMove(toStageKey),
+        }}
+      />
+    </CardActions>
+  </DemoCard>
+);
+
+type LastMove = { id: number; itemId: string; from: string; to: string };
+
+/**
+ * Story harness for the composed pattern. The app owns the items, the toast message and focus:
+ * a moved card re-mounts in its new lane, so after each move (and after Undo) the harness puts
+ * focus on that card's menu button once it has rendered. `returnFocusRef` is not used here,
+ * because its target would be the card's old, unmounting button.
+ */
+const MenuAndUndoBoard: React.FC = () => {
+  const [items, setItems] = useState<Submission[]>(UW_ITEMS);
+  const [lastMove, setLastMove] = useState<LastMove | null>(null);
+  const [focusItemId, setFocusItemId] = useState<string | null>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
+  const moveCount = useRef(0);
+
+  useEffect(() => {
+    if (!focusItemId) return;
+    const trigger = boardRef.current?.querySelector<HTMLButtonElement>(
+      `[data-item-id="${focusItemId}"] button[aria-haspopup="menu"]`,
+    );
+    trigger?.focus();
+    setFocusItemId(null);
+  }, [focusItemId, items]);
+
+  const moveItem = (itemId: string, toStageKey: string) => {
+    const from = items.find((it) => it.id === itemId)?.stageKey;
+    if (!from || from === toStageKey) return;
+    setItems((prev) => prev.map((it) => (it.id === itemId ? { ...it, stageKey: toStageKey } : it)));
+    moveCount.current += 1;
+    setLastMove({ id: moveCount.current, itemId, from, to: toStageKey });
+    setFocusItemId(itemId);
+  };
+
+  const undo = () => {
+    if (!lastMove) return;
+    const { itemId, from } = lastMove;
+    setItems((prev) => prev.map((it) => (it.id === itemId ? { ...it, stageKey: from } : it)));
+    setLastMove(null);
+    setFocusItemId(itemId);
+  };
+
+  return (
+    <div ref={boardRef}>
+      <KanbanBoard
+        ariaLabel="Underwriting board"
+        stages={UW_STAGES}
+        items={items}
+        draggable={false}
+        onMoveItem={moveItem}
+        renderCard={(item: Submission, context) => <MenuCard item={item} context={context} />}
+      />
+      <StatusToast
+        position="inline"
+        message={
+          lastMove
+            ? `${lastMove.itemId} moved from ${stageLabel(lastMove.from)} to ${stageLabel(lastMove.to)}.`
+            : null
+        }
+        messageId={lastMove?.id}
+        duration={0}
+        action={{ label: 'Undo', onAction: undo }}
+        onDismiss={() => setLastMove(null)}
+      />
+    </div>
+  );
+};
+
+const menuTrigger = (canvasElement: HTMLElement, itemId: string) =>
+  canvasElement.querySelector(
+    `[data-item-id="${itemId}"] button[aria-haspopup="menu"]`,
+  ) as HTMLButtonElement;
+
+/**
+ * AIN-315 acceptance, keyboard only: open a card's menu, move it with the Move to a stage
+ * radios, Tab to Undo in the toast, and press Enter. Focus follows the card to its new lane, and
+ * after Undo it returns to the same card's menu button in its original lane.
+ */
+export const KeyboardMoveThroughMenuThenUndo: Story = {
+  name: 'Keyboard · move through the menu, Undo from the toast',
+  render: () => <MenuAndUndoBoard />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const status = () => canvas.getByRole('status');
+    await expect(status()).toHaveTextContent('');
+
+    canvas.getByRole('link', { name: 'SUB-8401' }).focus();
+    await userEvent.tab();
+    await expect(menuTrigger(canvasElement, 'SUB-8401')).toHaveFocus();
+    await expect(menuTrigger(canvasElement, 'SUB-8401')).toHaveAccessibleName(
+      'More actions for SUB-8401',
+    );
+
+    await userEvent.keyboard('{Enter}');
+    const menu = await canvas.findByRole('menu');
+    const current = within(menu).getByRole('menuitemradio', { name: /^New/ });
+    await expect(current).toHaveAttribute('aria-checked', 'true');
+    await userEvent.keyboard('{ArrowDown}');
+    await expect(within(menu).getByRole('menuitemradio', { name: /^Triage/ })).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+
+    await waitFor(() =>
+      expect(within(laneOf(canvasElement, 'triage')).getByText('SUB-8401')).toBeInTheDocument(),
+    );
+    await expect(canvas.queryByRole('menu')).toBeNull();
+    await expect(status()).toHaveTextContent('SUB-8401 moved from New to Triage.');
+    await waitFor(() => expect(menuTrigger(canvasElement, 'SUB-8401')).toHaveFocus());
+
+    const undo = canvas.getByRole('button', { name: 'Undo' });
+    for (let i = 0; i < 12 && document.activeElement !== undo; i += 1) await userEvent.tab();
+    await expect(undo).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+
+    await waitFor(() =>
+      expect(within(laneOf(canvasElement, 'new')).getByText('SUB-8401')).toBeInTheDocument(),
+    );
+    await expect(status()).toHaveTextContent('');
+    await waitFor(() => expect(menuTrigger(canvasElement, 'SUB-8401')).toHaveFocus());
+    await expect(canvas.getByRole('heading', { name: /^New \(2 items\)$/ })).toBeVisible();
   },
 };
