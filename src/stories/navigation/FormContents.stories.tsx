@@ -242,17 +242,19 @@ export const NavigateAndFocus: Story = {
   render: function Render(args) {
     const [current, setCurrent] = useState(args.currentId);
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: spacing.lg }}>
-        <FormContents
-          {...args}
-          stickyTop={spacing.md}
-          currentId={current}
-          onNavigate={(id) => {
-            setCurrent(id);
-            args.onNavigate?.(id);
-          }}
-        />
-        <div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: spacing.lg }}>
+        <div style={{ flex: '1 1 260px', maxWidth: 360, minWidth: 0 }}>
+          <FormContents
+            {...args}
+            stickyTop={spacing.md}
+            currentId={current}
+            onNavigate={(id) => {
+              setCurrent(id);
+              args.onNavigate?.(id);
+            }}
+          />
+        </div>
+        <div style={{ flex: '1 1 240px', minWidth: 0 }}>
           {northwind.map((s) => (
             <section
               key={s.id}
