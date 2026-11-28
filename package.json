@@ -1,6 +1,6 @@
 {
   "name": "@simeoncalixte/ensured-xds",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "type": "module",
   "description": "Shared React components and themes for Ensured applications",
   "files": [
