@@ -13,6 +13,25 @@ export interface ResultsPanelProps {
   children?: React.ReactNode;
   onRetry?: () => void;
   className?: string;
+  /** Heading level of the panel title. Defaults to 2. */
+  headingLevel?: 2 | 3 | 4;
+  /**
+   * Why the data is missing (period, valuation basis, "not measured yet"). Shown under the
+   * message in the unavailable and empty states.
+   */
+  basis?: string;
+  /**
+   * Support reference for the error state: the request correlation id. Never a quote,
+   * submission or policy number.
+   */
+  reference?: string;
+  /** Diagnostic content for admins, rendered in a collapsed <details> in the error state. */
+  adminDetails?: React.ReactNode;
+  /**
+   * Whether the state notice is a live region (role=alert for error, role=status otherwise).
+   * Defaults to true, except for unavailable, which is a settled state and stays silent.
+   */
+  announce?: boolean;
 }
 
 export interface ResultsToolbarProps {
@@ -30,8 +49,11 @@ export interface ResultsToolbarProps {
 
 export interface ResultMetricCardProps {
   label: string;
-  /** Already formatted, with currency or units. Null means unavailable; zero is valid. */
-  value: string | null;
+  /**
+   * Already formatted, with currency or units. Null (or undefined) means unavailable and shows
+   * the basis; a zero such as "0" or "$0" is a valid value and is always rendered.
+   */
+  value: string | number | null;
   state?: ResultState;
   message?: string;
   status?: { label: string; tone?: XdsBadgeVariant };
@@ -45,6 +67,13 @@ export interface ResultMetricCardProps {
   /** Period, valuation basis, or revision information relevant to interpreting the result. */
   basis?: string;
   onRetry?: () => void;
+  /** Error state: support reference (request correlation id). */
+  reference?: string;
+  /** Error state: admin-only diagnostics in a collapsed <details>. */
+  adminDetails?: React.ReactNode;
+  /** See ResultsPanelProps.announce. */
+  announce?: boolean;
+  headingLevel?: 2 | 3 | 4;
   className?: string;
 }
 
