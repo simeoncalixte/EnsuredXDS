@@ -203,3 +203,46 @@ test('table is positioned so the hidden "Actions" header label cannot escape a s
     await server.close();
   }
 });
+
+test('DataTable wraps non-stacked tables in a named scroll region (AIN-372)', () =>
+  withDataTable(({ DataTable }) => {
+    // Named by the caption through aria-labelledby.
+    const captioned = renderToStaticMarkup(
+      React.createElement(DataTable, { columns, data: rows, caption: 'Submissions' }),
+    );
+    const region = captioned.match(/^<div([^>]*)>/);
+    assert.ok(region, 'expected the table to be wrapped in a <div>');
+    assert.match(region[1], /role="region"/);
+    // tabindex="0" is only added in the browser once the table overflows the region.
+    assert.doesNotMatch(region[1], /tabindex/);
+    const labelledBy = region[1].match(/aria-labelledby="([^"]+)"/)[1];
+    assert.match(captioned, new RegExp(`<caption[^>]*id="${labelledBy}"[^>]*>Submissions`));
+
+    // Without a caption, regionLabel names it.
+    const labelled = renderToStaticMarkup(
+      React.createElement(DataTable, { columns, data: rows, regionLabel: 'Bordereau lines' }),
+    );
+    assert.match(labelled, /^<div[^>]*role="region"[^>]*aria-label="Bordereau lines"/);
+
+    // stacked="always" never scrolls sideways, so there is no region.
+    const always = renderToStaticMarkup(
+      React.createElement(DataTable, { columns, data: rows, stacked: 'always', caption: 'X' }),
+    );
+    assert.match(always, /^<table/);
+    assert.doesNotMatch(always, /role="region"/);
+
+    // stacked={true} is still a table from 600 px, so it keeps the region.
+    const stacked = renderToStaticMarkup(
+      React.createElement(DataTable, { columns, data: rows, stacked: true, caption: 'X' }),
+    );
+    assert.match(stacked, /^<div[^>]*role="region"/);
+
+    // Legacy rows API: named "Contracts" by default, or by regionLabel.
+    const legacyRow = { id: '#SY-1', tranche: 'Senior', value: '1.00', status: 'ACTIVE' };
+    const legacy = renderToStaticMarkup(React.createElement(DataTable, { rows: [legacyRow] }));
+    assert.match(legacy, /^<div[^>]*role="region"[^>]*aria-label="Contracts"/);
+    const legacyNamed = renderToStaticMarkup(
+      React.createElement(DataTable, { rows: [legacyRow], regionLabel: 'Tranches' }),
+    );
+    assert.match(legacyNamed, /aria-label="Tranches"/);
+  }));
