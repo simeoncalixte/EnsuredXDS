@@ -660,6 +660,45 @@
       "description": "APG menu button: a trigger that opens a menu of commands, labelled groups and a single-choice menuitemradio list (e.g. Move to a status), with arrow keys, Home/End, typeahead and Esc."
     },
     {
+      "id": "xds.structure-tree",
+      "version": 1,
+      "export": "@ensured/xds/components/StructureTree",
+      "kind": "composite",
+      "fieldTypes": [],
+      "description": "WAI-ARIA tree of a submission shape: sections, sub-sections up to maxDepth and their components, with locked, repeatable and AI-proposed/new markers as text; keyboard reorder (Alt+Up/Down), Move-to listbox (M) with reasons, rename (F2) and remove, announced politely; every change is a callback.",
+      "dataSchema": {
+        "$defs": {
+          "node": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "kind", "label"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "kind": { "enum": ["section", "subsection", "component"] },
+              "label": { "type": "string", "minLength": 1 },
+              "kindLabel": { "type": "string" },
+              "componentRef": { "type": "string" },
+              "repeatable": { "type": "boolean" },
+              "locked": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["reason"],
+                "properties": { "reason": { "type": "string", "minLength": 1 } }
+              },
+              "markers": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "enum": ["ai", "new"] }
+              },
+              "children": { "type": "array", "items": { "$ref": "#/$defs/node" } }
+            }
+          }
+        },
+        "type": "array",
+        "items": { "$ref": "#/$defs/node" }
+      }
+    },
+    {
       "id": "xds.status-toast",
       "version": 1,
       "export": "@ensured/xds/components/StatusToast",

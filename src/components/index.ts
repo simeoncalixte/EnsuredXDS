@@ -69,6 +69,17 @@ export type {
   MenuButtonRadioOption,
   MenuButtonPlacement,
 } from './MenuButton.js';
+export { default as StructureTree } from './StructureTree.js';
+export type {
+  StructureTreeProps,
+  StructureTreeNode,
+  StructureTreeNodeKind,
+  StructureTreeMarker,
+  StructureTreeMove,
+  StructureTreeReorder,
+  StructureTreeMoveTarget,
+  StructureTreeAnnouncement,
+} from './StructureTree.js';
 export { default as Navigation } from './Navigation.js';
 export { default as SubNavigation } from './SubNavigation.js';
 

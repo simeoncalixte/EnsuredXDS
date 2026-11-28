@@ -36744,6 +36744,191 @@
       ]
     },
     {
+      "id": "xds.structure-tree",
+      "version": 1,
+      "export": "@ensured/xds/components/StructureTree",
+      "kind": "composite",
+      "fieldTypes": [],
+      "description": "WAI-ARIA tree of a submission shape: sections, sub-sections up to maxDepth and their components, with locked, repeatable and AI-proposed/new markers as text; keyboard reorder (Alt+Up/Down), Move-to listbox (M) with reasons, rename (F2) and remove, announced politely; every change is a callback.",
+      "dataSchema": {
+        "$defs": {
+          "node": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "kind",
+              "label"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "enum": [
+                  "section",
+                  "subsection",
+                  "component"
+                ]
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kindLabel": {
+                "type": "string"
+              },
+              "componentRef": {
+                "type": "string"
+              },
+              "repeatable": {
+                "type": "boolean"
+              },
+              "locked": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "reason"
+                ],
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "markers": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "ai",
+                    "new"
+                  ]
+                }
+              },
+              "children": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/node"
+                }
+              }
+            }
+          }
+        },
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/node"
+        }
+      },
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "disabledAddReason": {
+            "type": "string",
+            "description": "When set, every add control is disabled and points to this reason (e.g. \"This shape is published. Create a new version to edit it.\")."
+          },
+          "emptyMessage": {
+            "type": "string",
+            "description": "Shown when `nodes` is empty. Defaults to \"No sections yet. Add a section to start the shape.\""
+          },
+          "expandedIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Controlled expansion. When omitted, every node starts expanded and the tree tracks it."
+          },
+          "label": {
+            "type": "string",
+            "description": "Accessible name of the tree, e.g. \"Commercial property shape\"."
+          },
+          "loading": {
+            "type": "boolean"
+          },
+          "maxDepth": {
+            "type": "number",
+            "description": "Deepest level a section or sub-section can sit at. Components can go inside any of them. Defaults to 3."
+          },
+          "readOnly": {
+            "type": "boolean",
+            "description": "Navigation and selection only: no toolbar, no keyboard edits."
+          },
+          "selectedId": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "Controlled selection. Selection follows focus."
+          }
+        },
+        "required": [
+          "label"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "announce",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "nodes",
+          "required": true,
+          "reason": "Recursive or deeply nested type requires an explicit schema"
+        },
+        {
+          "name": "onAddChild",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onLockedAttempt",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onMove",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onRemove",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onRename",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onReorder",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onSelect",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        },
+        {
+          "name": "onToggle",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
       "id": "xds.status-toast",
       "version": 1,
       "export": "@ensured/xds/components/StatusToast",
