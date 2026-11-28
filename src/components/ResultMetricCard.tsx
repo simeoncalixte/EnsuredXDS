@@ -41,6 +41,10 @@ export function ResultMetricCard({
   target,
   basis,
   onRetry,
+  reference,
+  adminDetails,
+  announce,
+  headingLevel,
   className,
 }: ResultMetricCardProps) {
   const resolvedState = state === 'ready' && value == null ? 'unavailable' : state;
@@ -62,6 +66,11 @@ export function ResultMetricCard({
       state={resolvedState}
       message={message}
       onRetry={onRetry}
+      basis={basis}
+      reference={reference}
+      adminDetails={adminDetails}
+      announce={announce}
+      headingLevel={headingLevel}
       className={className}
       action={
         resolvedState === 'ready' && status ? (
@@ -70,7 +79,7 @@ export function ResultMetricCard({
       }
     >
       <Details>
-        <Value>{value}</Value>
+        <Value>{String(value)}</Value>
         {comparison && (
           <Change $tone={comparison.tone ?? 'neutral'}>
             {comparison.direction && (

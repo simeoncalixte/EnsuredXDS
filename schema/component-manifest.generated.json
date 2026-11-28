@@ -34090,20 +34090,49 @@
       "export": "@ensured/xds/components/ResultsPanel",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Result container with loading, empty, unavailable and error states.",
+      "description": "Result container with loading, empty, unavailable (with basis) and error states; the error state takes a support reference and collapsed admin details, and announce controls the live region.",
       "propsSchema": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "announce": {
+            "type": "boolean",
+            "description": "Whether the state notice is a live region (role=alert for error, role=status otherwise).\nDefaults to true, except for unavailable, which is a settled state and stays silent."
+          },
+          "basis": {
+            "type": "string",
+            "description": "Why the data is missing (period, valuation basis, \"not measured yet\"). Shown under the\nmessage in the unavailable and empty states."
+          },
           "className": {
             "type": "string"
           },
           "description": {
             "type": "string"
           },
+          "headingLevel": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 3
+              },
+              {
+                "type": "number",
+                "const": 4
+              }
+            ],
+            "description": "Heading level of the panel title. Defaults to 2."
+          },
           "message": {
             "type": "string",
             "description": "Explain missing evidence or a failed request in user-facing language."
+          },
+          "reference": {
+            "type": "string",
+            "description": "Support reference for the error state: the request correlation id. Never a quote,\nsubmission or policy number."
           },
           "state": {
             "anyOf": [
@@ -34144,6 +34173,11 @@
           "reason": "Non-JSON type"
         },
         {
+          "name": "adminDetails",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
           "name": "children",
           "required": false,
           "reason": "Owned by the UI renderer/data binding"
@@ -34166,6 +34200,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "announce": {
+            "type": "boolean",
+            "description": "See ResultsPanelProps.announce."
+          },
           "basis": {
             "type": "string",
             "description": "Period, valuation basis, or revision information relevant to interpreting the result."
@@ -34237,11 +34275,31 @@
               "total"
             ]
           },
+          "headingLevel": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 3
+              },
+              {
+                "type": "number",
+                "const": 4
+              }
+            ]
+          },
           "label": {
             "type": "string"
           },
           "message": {
             "type": "string"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Error state: support reference (request correlation id)."
           },
           "state": {
             "anyOf": [
@@ -34350,6 +34408,11 @@
       },
       "excludedProps": [
         {
+          "name": "adminDetails",
+          "required": false,
+          "reason": "Non-JSON type"
+        },
+        {
           "name": "onRetry",
           "required": false,
           "reason": "Function or constructor supplied by the UI"
@@ -34360,6 +34423,95 @@
           "reason": "Owned by the UI renderer/data binding"
         }
       ]
+    },
+    {
+      "id": "xds.planned-list",
+      "version": 1,
+      "export": "@ensured/xds/components/PlannedList",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Calm list of dashboard panels that are planned but have no data yet: panel, will show, appears once. No role, live region or Retry; rows stack at 768 px.",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "emptyMessage": {
+            "type": "string",
+            "description": "Shown instead of the list when there are no items. Without it, nothing renders."
+          },
+          "heading": {
+            "type": "string",
+            "description": "List heading. The item count is appended as \"(N)\"."
+          },
+          "headingLevel": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 3
+              },
+              {
+                "type": "number",
+                "const": 4
+              }
+            ],
+            "description": "Heading level inside the page outline. Defaults to 2."
+          },
+          "intro": {
+            "type": "string",
+            "description": "Optional sentence under the heading."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Stable key. Defaults to the title."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The panel name, e.g. \"Bound premium by line of business\"."
+                },
+                "summary": {
+                  "type": "string",
+                  "description": "What the panel will show once it exists (\"Will show\")."
+                },
+                "when": {
+                  "type": "string",
+                  "description": "The condition that makes it appear, e.g. \"Binding is enabled for your organization\"."
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "summary",
+                "when"
+              ]
+            }
+          },
+          "summaryLabel": {
+            "type": "string",
+            "description": "Visible label for the \"will show\" value."
+          },
+          "whenLabel": {
+            "type": "string",
+            "description": "Visible label for the \"appears once\" value (always visible when rows stack)."
+          }
+        },
+        "required": [
+          "heading",
+          "items"
+        ]
+      },
+      "excludedProps": []
     },
     {
       "id": "xds.financial-value",

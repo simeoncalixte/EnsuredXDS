@@ -521,7 +521,7 @@
       "export": "@ensured/xds/components/ResultsPanel",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Result container with loading, empty, unavailable and error states."
+      "description": "Result container with loading, empty, unavailable (with basis) and error states; the error state takes a support reference and collapsed admin details, and announce controls the live region."
     },
     {
       "id": "xds.result-metric-card",
@@ -530,6 +530,14 @@
       "kind": "display",
       "fieldTypes": [],
       "description": "Metric result with explicit comparison tone, evidence coverage and target progress."
+    },
+    {
+      "id": "xds.planned-list",
+      "version": 1,
+      "export": "@ensured/xds/components/PlannedList",
+      "kind": "display",
+      "fieldTypes": [],
+      "description": "Calm list of dashboard panels that are planned but have no data yet: panel, will show, appears once. No role, live region or Retry; rows stack at 768 px."
     },
     {
       "id": "xds.financial-value",

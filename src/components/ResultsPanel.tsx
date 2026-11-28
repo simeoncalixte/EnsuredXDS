@@ -23,7 +23,9 @@ const Header = styled.header`
   flex-wrap: wrap;
   gap: ${spacing.md}px;
   margin-bottom: ${spacing.md}px;
-  h2 {
+  h2,
+  h3,
+  h4 {
     margin: 0;
     font-size: ${typography.sizes.md}px;
     font-weight: ${typography.weights.semibold};
@@ -46,12 +48,43 @@ const Notice = styled.div`
   color: ${colors.onSurfaceVariant};
   font-size: ${typography.sizes.sm}px;
   line-height: 1.5;
+  p {
+    margin: 0;
+  }
+  code {
+    font-family: ${typography.labelFamily};
+    color: ${colors.onSurface};
+    overflow-wrap: anywhere;
+  }
+`;
+const Message = styled.div`
+  display: grid;
+  gap: ${spacing.xs}px;
+`;
+const Basis = styled.p`
+  font-size: ${typography.sizes.xs}px;
+`;
+const AdminDetails = styled.details`
+  width: 100%;
+  font-size: ${typography.sizes.xs}px;
+  summary {
+    cursor: pointer;
+    color: ${colors.onSurface};
+  }
+  summary:focus-visible {
+    outline: 2px solid ${colors.primary};
+    outline-offset: 2px;
+  }
+  > div {
+    margin-top: ${spacing.sm}px;
+    overflow-wrap: anywhere;
+  }
 `;
 const messages = {
   loading: 'Loading results…',
   empty: 'No results match the selected filters.',
   unavailable: 'Data is not available for this result.',
-  error: 'Unable to load this result.',
+  error: "We couldn't load this panel. The other panels aren't affected. Try again in a moment.",
 };
 export function ResultsPanel({
   title,
@@ -62,13 +95,22 @@ export function ResultsPanel({
   children,
   onRetry,
   className,
+  headingLevel = 2,
+  basis,
+  reference,
+  adminDetails,
+  announce,
 }: ResultsPanelProps) {
   const headingId = useId();
+  const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
+  const live = announce ?? state !== 'unavailable';
+  const role = live ? (state === 'error' ? 'alert' : 'status') : undefined;
+  const showBasis = basis && (state === 'unavailable' || state === 'empty');
   return (
     <Root className={className} aria-labelledby={headingId} aria-busy={state === 'loading'}>
       <Header>
         <div>
-          <h2 id={headingId}>{title}</h2>
+          <Heading id={headingId}>{title}</Heading>
           {description && <p>{description}</p>}
         </div>
         {action}
@@ -76,12 +118,27 @@ export function ResultsPanel({
       {state === 'ready' ? (
         children
       ) : (
-        <Notice role={state === 'error' ? 'alert' : 'status'}>
-          <span>{message ?? messages[state]}</span>
+        <Notice>
+          <Message role={role}>
+            <p>{message ?? messages[state]}</p>
+            {showBasis && <Basis>{basis}</Basis>}
+            {state === 'error' && reference && (
+              <p>
+                If this keeps happening, contact support and give this reference. Reference:{' '}
+                <code>{reference}</code>
+              </p>
+            )}
+          </Message>
           {state === 'error' && onRetry && (
             <Button type="button" variant="secondary" onClick={onRetry}>
-              Retry
+              Try again
             </Button>
+          )}
+          {state === 'error' && adminDetails && (
+            <AdminDetails>
+              <summary>Technical details (admins only)</summary>
+              <div>{adminDetails}</div>
+            </AdminDetails>
           )}
         </Notice>
       )}
