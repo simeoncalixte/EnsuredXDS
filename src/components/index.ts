@@ -86,6 +86,15 @@ export { default as SubNavigation } from './SubNavigation.js';
 // Advanced Components
 export { default as DataTable } from './DataTable.js';
 export { default as ProgressBar } from './ProgressBar.js';
+export { default as OnboardingChecklist } from './OnboardingChecklist.js';
+export type {
+  OnboardingChecklistProps,
+  OnboardingChecklistVariant,
+  OnboardingStep,
+  OnboardingStepStatus,
+  ReadinessStatus,
+  ReadinessStatusLabels,
+} from './OnboardingChecklist.js';
 
 // Chart Components
 export { default as GaugeChart } from './GaugeChart.js';

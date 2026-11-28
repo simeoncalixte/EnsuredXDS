@@ -386,7 +386,7 @@
       "export": "@ensured/xds/components/OnboardingChecklist",
       "kind": "display",
       "fieldTypes": [],
-      "description": "Checklist of tasks and completion state."
+      "description": "Checklist of tasks and completion state; the readiness variant lists conditions (met / not met / bypassed) that must hold before an irreversible action such as bind."
     },
     {
       "id": "xds.deal-card",
