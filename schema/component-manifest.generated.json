@@ -19100,6 +19100,177 @@
       ]
     },
     {
+      "id": "xds.form-contents",
+      "version": 1,
+      "export": "@ensured/xds/components/FormContents",
+      "kind": "navigation",
+      "fieldTypes": [],
+      "description": "Sticky contents rail for a long shape-generated form: nav landmark with the shape's sections (two levels, ordered lists) each with a text status (complete, N issues, or text), aria-current=\"location\" on the section in view, titled link groups (e.g. changes in this edit, values not in this form) with empty groups hidden, links that jump to and focus their target, a loading skeleton with aria-busy, and a compact disclosure below 1024 px (viewport or the xds-form-layout container).",
+      "propsSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string"
+          },
+          "compact": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "boolean",
+                "const": true
+              },
+              {
+                "type": "string",
+                "const": "auto"
+              }
+            ],
+            "description": "`'auto'` (default): a single disclosure button below a 1024 px viewport, or below\n1024 px of an ancestor with `container: xds-form-layout / inline-size`.\n`true` / `false` force compact or full mode."
+          },
+          "currentId": {
+            "type": "string",
+            "description": "Id of the section in view. Its link gets `aria-current=\"location\"`."
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Group title, e.g. \"Changes in this edit\". The item count is appended: \"Changes in this edit · 3\"."
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "detail": {
+                        "type": "string",
+                        "description": "Secondary line, e.g. \"Deductible: USD 25,000.00 → USD 50,000.00\"."
+                      },
+                      "href": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "label",
+                      "href"
+                    ]
+                  }
+                },
+                "summaryLabel": {
+                  "type": "object",
+                  "properties": {
+                    "one": {
+                      "type": "string"
+                    },
+                    "other": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "one",
+                    "other"
+                  ],
+                  "description": "Plural noun used in the compact summary, e.g. \"changes\" gives \"· 3 changes\".\nLeave it out to keep this group out of the summary."
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "title",
+                "items"
+              ]
+            },
+            "description": "Titled link groups such as changes in this edit or values not in this form. Empty groups are hidden."
+          },
+          "heading": {
+            "type": "string",
+            "description": "Visible heading, e.g. \"Contents · form v2\"."
+          },
+          "headingLevel": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 3
+              },
+              {
+                "type": "number",
+                "const": 4
+              },
+              {
+                "type": "number",
+                "const": 5
+              }
+            ],
+            "description": "Heading level for `heading`; group titles use the next level. Defaults to 2."
+          },
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "description": "Accessible name of the `nav` landmark, e.g. \"Form contents\"."
+          },
+          "loading": {
+            "type": "boolean",
+            "description": "Draws skeleton items with `aria-busy=\"true\"` on the list."
+          },
+          "loadingLabel": {
+            "type": "string",
+            "description": "Screen-reader text while loading. Defaults to \"Loading contents\"."
+          },
+          "stickyTop": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "description": "Sticky offset from the top of the scroll container, in px. Defaults to `spacing.md`. Pass `null` to turn sticky off."
+          }
+        },
+        "required": [
+          "heading",
+          "label"
+        ]
+      },
+      "excludedProps": [
+        {
+          "name": "items",
+          "required": true,
+          "reason": "Recursive or deeply nested type requires an explicit schema"
+        },
+        {
+          "name": "onNavigate",
+          "required": false,
+          "reason": "Function or constructor supplied by the UI"
+        }
+      ]
+    },
+    {
       "id": "xds.breadcrumb",
       "version": 1,
       "export": "@ensured/xds/components/Breadcrumb",
@@ -19284,15 +19455,15 @@
             "anyOf": [
               {
                 "type": "number",
-                "const": 1
-              },
-              {
-                "type": "number",
                 "const": 2
               },
               {
                 "type": "number",
                 "const": 3
+              },
+              {
+                "type": "number",
+                "const": 1
               }
             ],
             "description": "Maximum columns at wide widths. 3 shows 3 columns at 1024 px and up, 2 from 600 px, and 1 below 600 px. Defaults to 1."

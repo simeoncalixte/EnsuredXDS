@@ -114,3 +114,12 @@ export type {
   ScrollFilmBeat,
   ScrollFilmFrame,
 } from './components/ScrollFilm.js';
+
+export { default as FormContents } from './components/FormContents.js';
+export type {
+  FormContentsProps,
+  FormContentsItem,
+  FormContentsStatus,
+  FormContentsGroup,
+  FormContentsGroupItem,
+} from './components/FormContents.js';

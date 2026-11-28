@@ -269,6 +269,14 @@
       "description": "Tabs for navigating form sections."
     },
     {
+      "id": "xds.form-contents",
+      "version": 1,
+      "export": "@ensured/xds/components/FormContents",
+      "kind": "navigation",
+      "fieldTypes": [],
+      "description": "Sticky contents rail for a long shape-generated form: nav landmark with the shape's sections (two levels, ordered lists) each with a text status (complete, N issues, or text), aria-current=\"location\" on the section in view, titled link groups (e.g. changes in this edit, values not in this form) with empty groups hidden, links that jump to and focus their target, a loading skeleton with aria-busy, and a compact disclosure below 1024 px (viewport or the xds-form-layout container)."
+    },
+    {
       "id": "xds.breadcrumb",
       "version": 1,
       "export": "@ensured/xds/components/Breadcrumb",
